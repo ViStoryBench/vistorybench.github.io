@@ -81,5 +81,4 @@ export default defineConfig({
       },
     },
   },
-  base: '/', 
 });

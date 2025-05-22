@@ -130,7 +130,7 @@ const baseUrlForClient = import.meta.env.BASE_URL;
 
 // --- Configuration & State ---
 const astroBaseUrl = clientSideBaseUrl.replace(/\/$/, ''); // Ensure no trailing slash for clean joining
-const IMAGE_OUTPUT_BASE_URL = 'https://bmk.blenet.top/data/outputs/outputs';
+const CDN_PATH = 'https://bmk.blenet.top';
 
 let currentDisplayMode = 'lite'; // 'lite' or 'full'
 const storyIdMap = {
@@ -198,7 +198,7 @@ async function fetchStoryData(storyId) {
     return null;
   }
   currentDataset = storyInfo.dataset_base;
-  const storyJsonPath = `https://bmk.blenet.top/data/outputs/datasets/${currentDataset}/${storyInfo.id}/story.json`;
+  const storyJsonPath = `${CDN_PATH}/data/outputs/datasets/${currentDataset}/${storyInfo.id}/story.json`;
 
   console.log(`Fetching story data from: ${storyJsonPath}`);
   try {
@@ -283,10 +283,10 @@ function populateStorySelector() {
     card.onclick = () => loadStory(story.id);
 
     img.src = story.cover_image_path 
-        ? `${astroBaseUrl}/${story.cover_image_path.replace(/^\/?public\//, '').replace(/^\//, '')}` 
-        : `${astroBaseUrl}/img/placeholder_story_cover.png`;
+        ? `${CDN_PATH}/data/${story.cover_image_path}` 
+        : `${astroBaseUrl}/img/placeholder_error.png`;
     img.alt = story.name;
-    img.onerror = () => { img.src = `${astroBaseUrl}/img/placeholder_story_cover.png`; };
+    img.onerror = () => { img.src = `${astroBaseUrl}/img/placeholder_error.png`; };
     img.loading = "lazy";
     
     const currentUiLang = document.documentElement.lang || 'en';
@@ -362,7 +362,7 @@ function updateCharacterReferences() {
     nameEl.textContent = charName;
     charDiv.appendChild(nameEl);
 
-    const imageBasePath = `https://bmk.blenet.top/data/outputs/datasets/${currentDataset}/${currentStoryId}/image/${charKey}/`;
+    const imageBasePath = `${CDN_PATH}/data/outputs/outputs/datasets/${currentDataset}/${currentStoryId}/image/${charKey}/`;
 
     const imagesContainer = document.createElement('div');
     imagesContainer.className = 'flex flex-wrap gap-3 items-center';
@@ -805,7 +805,7 @@ function loadModelSequence(modelKey) {
   currentStoryData.Shots.forEach((shot, index) => {
     const img = document.createElement('img');
     const shotIndexStr = shot.index.toString().padStart(2, '0');
-    const imagePath = `${IMAGE_OUTPUT_BASE_URL}/${modelKey}/${selectedMode}/${outputDatasetIdentifier}/${selectedLang}/${currentStoryId}/${selectedTimestamp}/shot_${shotIndexStr}.png?x-oss-process=image/resize,p_25`;
+    const imagePath = `${CDN_PATH}/data/outputs/outputs/${modelKey}/${selectedMode}/${outputDatasetIdentifier}/${selectedLang}/${currentStoryId}/${selectedTimestamp}/shot_${shotIndexStr}.png?x-oss-process=image/resize,p_25`;
 
     img.className = 'h-44 md:h-48 w-auto inline-block border-2 border-transparent cursor-pointer transition-all duration-300 rounded-md shadow-sm hover:shadow-md hover:scale-110 object-contain';
     img.src = imagePath;

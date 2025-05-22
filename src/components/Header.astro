@@ -1,0 +1,245 @@
+---
+// src/components/Header.astro
+export interface Props {
+	title?: string; // 允许外部传入页面标题
+    activeNav?: string; // 用于高亮当前导航项，例如 'overview', 'leaderboard_detail'
+}
+
+const { 
+    title = 'Storytelling Benchmark Overview & Leaderboard', // 默认标题
+    activeNav
+} = Astro.props;
+
+const base = "/bmk_leaderboard";
+const navItems = [
+    { href: `${base}/`, key: "nav_overview", text: "Overview", id: "overview" },
+    { href: `${base}/leaderboard_detail`, key: "nav_leaderboard_detail", text: "Detailed Leaderboard", id: "leaderboard_detail" },
+    { href: `${base}/metrics`, key: "nav_metrics", text: "Metrics Definition", id: "metrics" },
+    { href: `${base}/dataset`, key: "nav_dataset", text: "Dataset", id: "dataset" },
+    { href: `${base}/story_detail`, key: "nav_explorer", text: "Result Explorer", id: "story_detail" },
+];
+---
+{/* Always use dark background for header */}
+<header class="bg-slate-900 py-4 shadow-md  border-b border-gray-200 dark:border-slate-700">
+    <nav class="container mx-auto px-4 flex justify-between items-center ">
+        {/* Hamburger button for mobile */}
+        <div class="md:hidden">
+            <button id="mobile-menu-button" aria-label="Open main menu" aria-controls="mobile-menu" aria-expanded="false" class="p-2 rounded-md text-slate-300 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500">
+                <span class="sr-only">Open main menu</span>
+                <svg id="menu-icon-open" class="h-6 w-6 block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <svg id="menu-icon-close" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        {/* Desktop Navigation Links */}
+        <ul class="hidden md:flex md:items-center md:space-x-1 lg:space-x-2">
+            {navItems.map(item => (
+                <li>
+                    <a 
+                        href={item.href} 
+                        class:list={[
+                            "px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 ease-in-out",
+                            item.id === activeNav 
+                                ? "bg-sky-700 text-sky-100" // Active link on dark header
+                                : "text-slate-300 hover:bg-slate-800 hover:text-slate-100" // Inactive link on dark header
+                        ]}
+                        data-lang-key={item.key}
+                    >
+                        {item.text} 
+                    </a>
+                </li>
+            ))}
+        </ul>
+
+        {/* Right side controls: Language and Theme toggles */}
+        <div class="flex items-center space-x-3">
+            <!-- <div class="lang-switcher flex items-center">
+                 {/* Language buttons on dark header - ensure good contrast */}
+                <button id="lang-en-btn" aria-label="Switch to English" class="lang-btn px-3 py-1.5 border border-slate-700 rounded-md text-xs font-medium focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all duration-150 ease-in-out text-slate-300 hover:bg-slate-700">
+                    EN
+                </button>
+                <button id="lang-zh-btn" aria-label="切换到中文" class="lang-btn px-3 py-1.5 border border-slate-700 rounded-md text-xs font-medium ml-2 focus:outline-none focus:ring-2 focus:ring-sky-400 transition-all duration-150 ease-in-out text-slate-300 hover:bg-slate-700">
+                    ZH
+                </button>
+            </div> -->
+            {/* Theme toggle button appearance on dark header */}
+            <button id="theme-toggle" aria-label="Toggle theme" class="p-2 rounded-full hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-400 transition-colors duration-150 ease-in-out">
+                <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg id="theme-toggle-light-icon" class="hidden h-5 w-5 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+    </nav>
+
+    {/* Mobile menu, shown/hidden based on button click and ARIA state */}
+    <div id="mobile-menu" class="hidden md:hidden">
+        <ul class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            {navItems.map(item => (
+                <li>
+                    <a 
+                        href={item.href} 
+                        class:list={[
+                            "block px-3 py-2 rounded-md text-base font-medium transition-colors duration-150 ease-in-out", // text-base for mobile
+                            item.id === activeNav 
+                                ? "bg-sky-700 text-sky-100" // Active link on dark header
+                                : "text-slate-300 hover:bg-slate-800 hover:text-slate-100" // Inactive link on dark header
+                        ]}
+                        data-lang-key={item.key}
+                    >
+                        {item.text} 
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+
+    <div class="container mx-auto px-4 mt-6 pb-2 ">
+        {/* Page title on dark header - responsive font size */}
+        <h1 id="page-main-title" class="text-2xl md:text-3xl font-bold text-slate-100 transition-colors duration-300 ease-in-out" data-lang-key="overview_title">{title}</h1>
+    </div>
+</header>
+
+<script>
+// Hamburger Menu Toggle
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+const menuIconOpen = document.getElementById('menu-icon-open');
+const menuIconClose = document.getElementById('menu-icon-close');
+
+if (mobileMenuButton && mobileMenu && menuIconOpen && menuIconClose) {
+    mobileMenuButton.addEventListener('click', () => {
+        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+        
+        if (isExpanded) {
+            // Collapse menu
+            mobileMenu.classList.add('hidden');
+            menuIconOpen.classList.remove('hidden');
+            menuIconClose.classList.add('hidden');
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+            mobileMenuButton.setAttribute('aria-label', 'Open main menu');
+        } else {
+            // Expand menu
+            mobileMenu.classList.remove('hidden');
+            menuIconOpen.classList.add('hidden');
+            menuIconClose.classList.remove('hidden');
+            mobileMenuButton.setAttribute('aria-expanded', 'true');
+            mobileMenuButton.setAttribute('aria-label', 'Close main menu');
+        }
+    });
+
+    // Optional: Close mobile menu when a nav link is clicked
+    if (mobileMenu) {
+        const mobileNavLinks = mobileMenu.querySelectorAll('a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (mobileMenuButton.getAttribute('aria-expanded') === 'true') {
+                    mobileMenuButton.click(); // Simulate a click on the button to close the menu
+                }
+            });
+        });
+    }
+}
+
+// Function to update language button styles for a persistent dark header
+function updateLangButtonStyles(currentLang: string) {
+    const enBtn = document.getElementById('lang-en-btn');
+    const zhBtn = document.getElementById('lang-zh-btn');
+
+    if (!enBtn || !zhBtn) return;
+
+    // Base styles for buttons on dark header
+    const baseClasses = ['text-slate-300', 'hover:bg-slate-700', 'border-slate-700'];
+    const activeClasses = ['bg-sky-600', 'text-white', 'border-sky-500']; // Active language button on dark header
+
+    enBtn.classList.remove(...activeClasses, 'bg-sky-500', 'dark:bg-sky-600', 'dark:text-white'); // Clean up old classes
+    zhBtn.classList.remove(...activeClasses, 'bg-sky-500', 'dark:bg-sky-600', 'dark:text-white'); // Clean up old classes
+    enBtn.classList.add(...baseClasses);
+    zhBtn.classList.add(...baseClasses);
+
+    if (currentLang === 'en') {
+        enBtn.classList.add(...activeClasses);
+        enBtn.classList.remove(...baseClasses.filter(c => !activeClasses.includes(c))); // remove base if active overrides
+    } else if (currentLang === 'zh') {
+        zhBtn.classList.add(...activeClasses);
+        zhBtn.classList.remove(...baseClasses.filter(c => !activeClasses.includes(c))); // remove base if active overrides
+    }
+}
+
+// Theme toggle logic (largely unchanged, but icons are always on dark background)
+const themeToggleBtn = document.getElementById('theme-toggle');
+const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+function setTheme(isDark: boolean) {
+    console.log('setTheme called with:', isDark);
+    if (isDark) {
+        document.documentElement.classList.add('dark');
+        if (themeToggleDarkIcon) themeToggleDarkIcon.classList.remove('hidden');
+        if (themeToggleLightIcon) themeToggleLightIcon.classList.add('hidden');
+        localStorage.setItem('theme', 'dark');
+        console.log('Applied DARK theme. HTML class list:', document.documentElement.classList);
+    } else {
+        document.documentElement.classList.remove('dark');
+        if (themeToggleDarkIcon) themeToggleDarkIcon.classList.add('hidden');
+        if (themeToggleLightIcon) themeToggleLightIcon.classList.remove('hidden');
+        localStorage.setItem('theme', 'light');
+        console.log('Applied LIGHT theme. HTML class list:', document.documentElement.classList);
+    }
+}
+
+if (localStorage.getItem('theme') === 'dark' || 
+    (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    setTheme(true);
+} else {
+    setTheme(false);
+}
+
+if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+        const currentlyDark = document.documentElement.classList.contains('dark');
+        console.log('Theme toggle clicked. Currently dark:', currentlyDark);
+        setTheme(!currentlyDark);
+    });
+}
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!('theme' in localStorage)) { 
+        setTheme(e.matches);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const currentLang = document.documentElement.lang || 'en';
+    updateLangButtonStyles(currentLang);
+});
+
+const enBtn = document.getElementById('lang-en-btn');
+const zhBtn = document.getElementById('lang-zh-btn');
+
+if (enBtn && zhBtn) {
+    enBtn.addEventListener('click', () => {
+        if (typeof (window as any).changeLanguage === 'function') {
+            (window as any).changeLanguage('en');
+        }
+        updateLangButtonStyles('en'); 
+    });
+
+    zhBtn.addEventListener('click', () => {
+        if (typeof (window as any).changeLanguage === 'function') {
+            (window as any).changeLanguage('zh');
+        }
+        updateLangButtonStyles('zh');
+    });
+}
+
+document.addEventListener('languageChanged', (event) => {
+    const lang = (event as CustomEvent<{ lang: string }>).detail.lang;
+    if (lang) {
+        updateLangButtonStyles(lang);
+    }
+});
+
+</script> 

@@ -1,0 +1,244 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = "Benchmark Metrics Definition"; // Will be replaced by translation
+const activeNav = "metrics";
+---
+<BaseLayout title={pageTitle} activeNav={activeNav}>
+  <main class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 py-12 md:py-16 px-4">
+    <div class="container mx-auto">
+      <header class="mb-10 md:mb-12 text-center">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4" data-lang-key="metrics_page_title">Benchmark Metrics</h1>
+        <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto" data-lang-key="metrics_page_subtitle">
+          用于故事可视化的综合评估指标，评估一致性、依从性、质量、多样性和人类感知。
+        </p>
+      </header>
+
+      <section id="metrics-definitions" class="space-y-8 md:space-y-10">
+
+        <!-- 1. Character Consistency (CRef) -->
+        <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
+          <div class="flex items-start sm:items-center mb-4">
+            <div class="flex-shrink-0 mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-sky-600 dark:text-sky-400">
+                <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.53 1.064 3.005 3.005 0 0 1-1.5 1.434 9.07 9.07 0 0 1-2.55-.042 9.07 9.07 0 0 1-2.55.042c-.928 0-1.79-.304-2.499-1.434a2.25 2.25 0 0 1-.531-1.064l-.002-.144a3.375 3.375 0 0 1 3.375-3.375h3.75a3.375 3.375 0 0 1 3.375 3.375Z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="cref_title">1. 角色一致性 (CRef)</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="cref_desc">评估角色在图像序列中是否保持外观一致。重点关注角色身份特征的自相似性和与参考图像的交叉相似性。</p>
+            </div>
+          </div>
+          <div class="space-y-4 mt-6">
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_accs">aCCS (平均角色相似度)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_accs_desc">使用CLIP图像特征计算跨帧的角色相似度（参考Theatregen, Story-Adapter）。适用于一般角色。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_face">ArcFace / AdaFace</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_face_desc">专用于真实人物的面部识别模型，提取面部特征用于相似度计算。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_ccip">CCIP</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_ccip_desc">适用于动漫风格角色的一致性评估，通常需要图像中单个角色的检测。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_confusion">多人混淆度</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_confusion_desc">衡量在多角色场景中，模型区分不同角色的能力，避免身份错配。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_grounding">Grounding DINO + 相似度</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_grounding_desc">首先使用 Grounding DINO 根据文本描述检测并裁剪出主要角色，然后计算其与参考图像在CLIP、FID或DreamSim等特征空间上的相似度。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_dreamsim">DreamSim 相似度</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_dreamsim_desc">一种跨模态的细粒度匹配指标，用于评估生成图像与参考图像在感知上的相似性。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_vbench">VBench 角色追踪</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_vbench_desc">将视频领域中评估角色一致性的方法应用于图像序列，追踪角色在序列中的稳定性。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_charf1">Char-F1 / Char-Acc</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_charf1_desc">使用预训练的角色分类器识别生成图像中的角色，并与真实标签（Ground Truth）比较，计算F1分数或准确率。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_vlm">VLM 验证</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_vlm_desc">利用视觉语言模型（VLM）对比生成图像中的角色与人工标注的真实角色信息，进行一致性验证。</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Style Consistency (SRef) -->
+        <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
+          <div class="flex items-start sm:items-center mb-4">
+            <div class="flex-shrink-0 mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-teal-600 dark:text-teal-400">
+                <path d="M11.03 2.59a1.5 1.5 0 0 1 1.94 0l7.5 6.363a1.5 1.5 0 0 1 .53 1.144V19.5a1.5 1.5 0 0 1-1.5 1.5h-3a1.5 1.5 0 0 1-1.5-1.5v-3.03a.75.75 0 0 0-.75-.75H8.25a.75.75 0 0 0-.75.75v3.03a1.5 1.5 0 0 1-1.5 1.5h-3a1.5 1.5 0 0 1-1.5-1.5v-9.263a1.5 1.5 0 0 1 .53-1.144l7.5-6.363Z" />
+                <path d="M19.5 9.75V15.75h-4.5V9.75h4.5Z" />
+                <path fill-rule="evenodd" d="M9 2.25a.75.75 0 0 1 .75.75V4.5a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM15.75 3.75a.75.75 0 0 0-1.5 0V4.5a.75.75 0 0 0 1.5 0V3.75Z" clip-rule="evenodd" />
+                <path d="M8.25 12.355a2.25 2.25 0 0 1 2.25-2.25h3a2.25 2.25 0 0 1 2.25 2.25V15a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v-2.645Z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="sref_title">2. 风格一致性 (SRef)</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="sref_desc">评估图像序列中的艺术风格是否保持一致，包括与参考图像的风格交叉相似性以及生成图像间的风格自相似性。</p>
+            </div>
+          </div>
+          <div class="space-y-4 mt-6">
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">CSD (CLIP 风格编码器距离)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">通过CSD-CLIP特征分析量化自相似性（生成图像内部）和交叉相似性（生成图像与参考图像之间）。首先用CLIP视觉编码器提取特征，然后通过CSD层分离内容与风格特征，最后计算风格特征嵌入之间的余弦相似度。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">VLM 评分</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">利用如Qwen或GPT-4o等视觉语言模型对生成图像序列的风格一致性进行打分。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">ArtFID</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">一种针对艺术风格的FID（Fréchet Inception Distance）变体，用于评估生成图像在艺术美学上的真实感和多样性。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">频率分析 / VGG 距离</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">通过分析图像的频率域特征或使用VGG网络提取的深层特征间的距离，来评估风格的相似性，属于更高级的探索性方法。</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Prompt Adherence -->
+        <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
+          <div class="flex items-start sm:items-center mb-4">
+            <div class="flex-shrink-0 mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-indigo-600 dark:text-indigo-400">
+                <path fill-rule="evenodd" d="M5.625 1.5H9a2.25 2.25 0 0 1 2.25 2.25v1.875c0 .097.009.19.026.282A5.96 5.96 0 0 1 14.25 6c.39 0 .772.035 1.148.102.097-.017.19-.026.282-.026V3.75A2.25 2.25 0 0 1 18 1.5h3.375c.621 0 1.125.504 1.125 1.125v20.25c0 .621-.504 1.125-1.125 1.125H2.625A1.125 1.125 0 0 1 1.5 22.875V2.625c0-.621.504-1.125 1.125-1.125h3ZM9 12.75a.75.75 0 0 0 0 1.5h.008a.75.75 0 0 0 0-1.5H9Zm.75 2.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1-.75-.75ZM9.75 9a.75.75 0 0 0-.75.75V12a.75.75 0 0 0 .75.75h5.25a.75.75 0 0 0 .75-.75V9.75a.75.75 0 0 0-.75-.75H9.75Z" clip-rule="evenodd" />
+                <path d="M14.25 7.5a1.5 1.5 0 0 0-1.5 1.5v1.5a1.5 1.5 0 0 0 3 0V9a1.5 1.5 0 0 0-1.5-1.5Z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="prompt_title">3. 提示依从性</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="prompt_desc">评估生成的图像与故事板描述（提示）的吻合程度，包括角色互动、拍摄方法、出场角色数量准确性及个体行为。</p>
+            </div>
+          </div>
+          <div class="space-y-4 mt-6">
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">客观评估 - 实体存在 (VLM)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">使用VLM评估关键实体（物体、颜色、角色数量与描述、行为）是否按提示出现。特别是出场角色数量匹配度（OCCM），通过公式 `100 * exp(-|检测数-期望数| / (epsilon + 期望数))` 计算。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">客观评估 - 相机/镜头类型 (VLM)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">评估生成图像的拍摄方法（如长/中镜头，高/低角度）是否与故事板中的"镜头视角设计"一致。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">客观评估 - 环境一致性 (VLM)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">评估生成图像中的场景属性、时间、地点等是否与故事板中"场景描述"一致。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">主观评估 - 情感 / 氛围 (VLM)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">评估生成图像所传达的情感和氛围是否与提示中的描述（如角色互动、静态描述）相符。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">主观评估 - 动作 / 表情 (Grounding DINO + VLM)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">结合Grounding DINO进行角色分割后，利用VLM验证个体角色的动作和表情是否符合故事板中的"静态镜头描述"。</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 4. Generation Quality -->
+        <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
+          <div class="flex items-start sm:items-center mb-4">
+            <div class="flex-shrink-0 mr-4">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-amber-500 dark:text-amber-400">
+                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="quality_title">4. 生成质量</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="quality_desc">评估生成图像的视觉质量和美学吸引力，以及是否存在"复制粘贴"参考图像的问题。</p>
+            </div>
+          </div>
+          <div class="space-y-4 mt-6">
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">美学评分 (aesthetic-predictor-v2-5)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">使用 Aesthetic Predictor V2.5 (基于SigLIP) 评估图像美感，分数范围1-10，高于5.5分通常认为质量优良。关注图像是否模糊、有噪点等。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">FID (Fréchet Inception Distance)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">衡量生成图像与真实图像在特征空间分布上的相似性，常用于评估真实感图像的质量。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">PickScore</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">基于CLIP的图像质量评估模型，能预测人类对图像的偏好排名，反映生成图像的整体吸引力。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">复制粘贴检测</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">检测模型是否过度依赖或直接复制角色参考图像。对于单图输入模型，比较输出角色与输入图和备用参考图的相似度差异；多图输入模型此项不适用。</p>
+            </div>
+             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">退化分析</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">分析生成质量是否随图像序列长度的增加而下降。</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Diversity -->
+        <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
+          <div class="flex items-start sm:items-center mb-4">
+            <div class="flex-shrink-0 mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-purple-600 dark:text-purple-400">
+                <path fill-rule="evenodd" d="M3 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm4.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm7.5-1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm-7.5-4.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm7.5-1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="diversity_title">5. 多样性</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="diversity_desc">衡量模型从单一提示生成多种不同输出或在序列生成中展现变化的能力。</p>
+            </div>
+          </div>
+          <div class="space-y-4 mt-6">
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">Inception Score (IS)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">评估一批生成图像的清晰度和多样性。对于从单一提示生成的多个结果，IS可以反映其内容的多样性。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">CLIP 特征方差</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">计算故事序列中所有生成图像的CLIP特征的方差，方差越大表明图像间的内容或风格变化越多，多样性越高。</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Human Evaluation -->
+        <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
+          <div class="flex items-start sm:items-center mb-4">
+             <div class="flex-shrink-0 mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-rose-500 dark:text-rose-400">
+                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-2.625 6c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm5.25 0c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm-5.094 6.032c.068.02.135.032.202.032h4.886c.067 0 .134-.012.202-.032a.75.75 0 0 1 .628.878A3.751 3.751 0 0 1 12 16.5a3.751 3.751 0 0 1-3.292-1.602.75.75 0 0 1 .627-.878Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="human_eval_title">6. 人工评估</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="human_eval_desc">由人类评估员对生成结果进行主观评价，通常涵盖环境一致性、角色身份一致性和主观美学。</p>
+            </div>
+          </div>
+          <div class="space-y-4 mt-6">
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">电影摄影</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">评估镜头语言的运用、构图的合理性与美感，以及视觉叙事的有效性。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">叙事连贯性</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">通过问卷等方式评估故事在视觉呈现上的流畅度、情节发展的合理性以及整体故事的理解性。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">视觉连贯性</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">评估图像序列中相邻或相关图像在视觉元素（如光照、色彩、物体摆放）上的连续性和一致性。</p>
+            </div>
+            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium">布局 (漫画)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1">针对漫画生成任务，评估画格(panel)布局的趣味性、叙事引导性以及视觉冲击力。</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+</BaseLayout> 

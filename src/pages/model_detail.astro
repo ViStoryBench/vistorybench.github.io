@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// activeNav can be set based on how users navigate to this page, 
+// for now, we'll leave it undefined or make it dynamic if needed.
+// const activeNav = ""; 
+
+// The page title will be dynamically set in the client-side script
+// based on the URL parameter.
+let pageTitle = "Model Details"; // Default title
+---
+<BaseLayout title={pageTitle} activeNav={undefined}>
+    <main class="container mx-auto px-4 py-8 space-y-12">
+        <section id="model-info" class="prose dark:prose-invert max-w-none">
+            <h2 data-lang-key="model_detail_title" id="model-page-title">Model Details: [Model Name]</h2>
+            <p><i>[Placeholder for model description, version, key config etc.]</i></p>
+        </section>
+
+        <section id="overall-stats" class="prose dark:prose-invert max-w-none">
+            <h2 data-lang-key="overall_stats">Overall Statistics</h2>
+            {/* <!-- Placeholder for overall scores, maybe charts later --> */}
+            <ul class="list-disc pl-5">
+                <li><strong data-lang-key="table_cref">Avg. CRef</strong>: <span id="avg-cref">[Score CRef]</span></li>
+                <li><strong data-lang-key="table_sref">Avg. SRef</strong>: <span id="avg-sref">[Score SRef]</span></li>
+                <li><strong data-lang-key="table_prompt">Avg. Prompt Adherence</strong>: <span id="avg-prompt">[Score Prompt]</span></li>
+                <li><strong data-lang-key="table_quality">Avg. Quality</strong>: <span id="avg-quality">[Score Quality]</span></li>
+                <li><strong data-lang-key="table_overall">Overall Score</strong>: <span id="avg-overall">[Score Overall]</span></li>
+            </ul>
+        </section>
+
+        <section id="story-list">
+            <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4" data-lang-key="stories_evaluated">Stories Evaluated</h2>
+            <div class="overflow-x-auto">
+                <table id="story-list-table" class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                    <thead class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                        <tr>
+                            <th class="py-3 px-4 text-left">Story ID</th>
+                            <th class="py-3 px-4 text-left" data-lang-key="table_cref">CRef</th>
+                            <th class="py-3 px-4 text-left" data-lang-key="table_sref">SRef</th>
+                            <th class="py-3 px-4 text-left" data-lang-key="table_prompt">Prompt Adh.</th>
+                            <th class="py-3 px-4 text-left" data-lang-key="table_quality">Quality</th>
+                            <th class="py-3 px-4 text-left" data-lang-key="table_details">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700 dark:text-gray-200" id="story-list-tbody">
+                        {/* <!-- Placeholder Rows - Will be populated by JS --> */}
+                        <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="py-3 px-4"><a href="/story_detail?model=[Model Name]&story=01" class="text-blue-600 hover:underline">WildStory_en_01</a></td>
+                            <td class="py-3 px-4">[Score]</td>
+                            <td class="py-3 px-4">[Score]</td>
+                            <td class="py-3 px-4">[Score]</td>
+                            <td class="py-3 px-4">[Score]</td>
+                            <td class="py-3 px-4"><a href="/story_detail?model=[Model Name]&story=01" class="text-blue-600 hover:underline" data-lang-key="view_details">View Details</a></td>
+                        </tr>
+                        <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="py-3 px-4"><a href="/story_detail?model=[Model Name]&story=02" class="text-blue-600 hover:underline">WildStory_en_02</a></td>
+                            <td class="py-3 px-4">[Score]</td>
+                            <td class="py-3 px-4">[Score]</td>
+                            <td class="py-3 px-4">[Score]</td>
+                            <td class="py-3 px-4">[Score]</td>
+                            <td class="py-3 px-4"><a href="/story_detail?model=[Model Name]&story=02" class="text-blue-600 hover:underline" data-lang-key="view_details">View Details</a></td>
+                        </tr>
+                        {/* <!-- Add more placeholder stories --> */}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</BaseLayout>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const modelName = urlParams.get('model');
+
+    if (modelName) {
+        // Update page title (document title and H1/H2s)
+        const newTitle = `Model Details: ${modelName}`;
+        document.title = `${modelName} - Model Details | Storytelling Benchmark`; // For browser tab
+        
+        const modelPageTitleElement = document.getElementById('model-page-title');
+        if (modelPageTitleElement) {
+            modelPageTitleElement.textContent = newTitle;
+        }
+        // If there are other H2s that need the model name, select and update them too.
+        // For example, the first H2 in model-info section already has an ID.
+
+        // Update placeholder text and links with the actual model name
+        // This is a basic update. In a real scenario, you'd fetch data for this model.
+        document.querySelectorAll('a[href*="[Model Name]"]').forEach(a => {
+            const anchorElement = a as HTMLAnchorElement; // Type assertion
+            anchorElement.href = anchorElement.href.replace("[Model Name]", modelName);
+        });
+
+        // Placeholder: Dynamically populate stats and story list table
+        // In a real application, you would fetch this data based on modelName
+        // For now, let's just acknowledge the model name is available
+        console.log(`Displaying details for model: ${modelName}`);
+
+        // Example: Update a score (replace with actual data fetching later)
+        // const avgCrefElement = document.getElementById('avg-cref');
+        // if (avgCrefElement) avgCrefElement.textContent = "0.xx (fetched)";
+
+        // Example: Populate story list (replace with actual data fetching)
+        const storyListTbody = document.getElementById('story-list-tbody');
+        if (storyListTbody) {
+            // Clear existing placeholder rows if any, before populating with fetched data
+            // storyListTbody.innerHTML = ''; 
+            // Example: Add a new row dynamically
+            // const newRow = storyListTbody.insertRow();
+            // newRow.innerHTML = `
+            //    <td class="py-3 px-4"><a href="/story_detail?model=${modelName}&story=XYZ" class="text-blue-600 hover:underline">FetchedStory_XYZ</a></td>
+            //    <td class="py-3 px-4">Data</td>
+            //    <td class="py-3 px-4">Data</td>
+            //    <td class="py-3 px-4">Data</td>
+            //    <td class="py-3 px-4">Data</td>
+            //    <td class="py-3 px-4"><a href="/story_detail?model=${modelName}&story=XYZ" class="text-blue-600 hover:underline" data-lang-key="view_details">View Details</a></td>
+            // `;
+        }
+
+    } else {
+        const modelPageTitleElement = document.getElementById('model-page-title');
+        if (modelPageTitleElement) {
+            modelPageTitleElement.textContent = "Model Details: Model Not Specified";
+        }
+        console.warn('Model name not found in URL parameters.');
+        // Optionally, hide sections or show an error message
+    }
+});
+</script> 

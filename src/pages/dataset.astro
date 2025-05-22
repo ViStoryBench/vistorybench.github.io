@@ -1,0 +1,410 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = "ViStoryBench Dataset Deep Dive";
+const activeNav = "dataset";
+---
+<BaseLayout title={pageTitle} activeNav={activeNav}>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <main class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+
+    <!-- Dataset Construction Process Section -->
+    <section class="py-16 sm:py-20 px-4 bg-slate-100 dark:bg-slate-800">
+      <div class="container mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">How ViStoryBench Was Built</h2>
+        <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          <div class="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300">
+            <h3 class="text-2xl font-semibold text-sky-700 dark:text-sky-400">Story & Script Curation</h3>
+            <p>We meticulously gathered 80 story segments from a wide array of sources, including film and television scripts, classic literary works, global myths and legends, contemporary novels, and children's picture books. This diversity ensures a broad spectrum of narrative styles and themes.</p>
+            <p>For narratives that were extensive, Large Language Models (LLMs) were employed to assist in summarizing them into concise versions, typically a few hundred words each. Subsequently, these condensed stories were transformed, again with LLM assistance, into structured scripts. Each script delineates character descriptions and detailed storyboards for visualization.</p>
+            
+            <h3 class="text-2xl font-semibold text-sky-700 dark:text-sky-400 mt-8">Character Reference Imagery</h3>
+            <p>Reference images for each character were manually collected from online sources, ensuring they closely matched the textual descriptions. A critical aspect of this process was maintaining stylistic consistency for all character images within the same story (e.g., all characters in a story share an anime style, or a realistic style).</p>
+            <p>For a subset of characters, reference images were generated using advanced text-to-image models like SDXL, particularly where specific or unique visual traits were required. This dual approach of manual collection and AI generation allowed for a rich and consistent set of visual references. In total, the dataset includes 344 unique character roles and 509 reference images.</p>
+          </div>
+          <div class="bg-white dark:bg-slate-700 p-6 sm:p-8 rounded-xl shadow-xl border border-gray-200 dark:border-gray-600">
+            <h4 class="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-6 text-center">Visualizing Dataset Composition</h4>
+            <div class="space-y-8">
+              <div>
+                <h5 class="font-medium text-slate-700 dark:text-slate-300 mb-4">Character Category Distribution</h5>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                  <div class="bg-sky-50 dark:bg-sky-700/30 p-4 rounded-lg shadow flex flex-col items-center justify-center">
+                    <svg class="w-10 h-10 text-sky-500 dark:text-sky-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    <p class="mt-1 text-slate-700 dark:text-sky-200 font-semibold">Real Human</p>
+                    <p class="text-2xl font-bold text-sky-600 dark:text-sky-400">190</p>
+                  </div>
+                  <div class="bg-teal-50 dark:bg-teal-700/30 p-4 rounded-lg shadow flex flex-col items-center justify-center">
+                    <svg class="w-10 h-10 text-teal-500 dark:text-teal-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="mt-1 text-slate-700 dark:text-teal-200 font-semibold">Virtual Human</p>
+                    <p class="text-2xl font-bold text-teal-600 dark:text-teal-400">135</p>
+                  </div>
+                  <div class="bg-indigo-50 dark:bg-indigo-700/30 p-4 rounded-lg shadow flex flex-col items-center justify-center">
+                    <svg class="w-10 h-10 text-indigo-500 dark:text-indigo-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <!-- Generic alien/non-human face -->
+                    <p class="mt-1 text-slate-700 dark:text-indigo-200 font-semibold">Non-human</p>
+                    <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">19</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h5 class="font-medium text-slate-700 dark:text-slate-300 mb-4">Character Gender Distribution</h5>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                  <div class="bg-rose-50 dark:bg-rose-700/30 p-4 rounded-lg shadow flex flex-col items-center justify-center">
+                    <svg class="w-10 h-10 text-rose-500 dark:text-rose-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <!-- Male icon -->
+                    <p class="mt-1 text-slate-700 dark:text-rose-200 font-semibold">Male</p>
+                    <p class="text-2xl font-bold text-rose-600 dark:text-rose-400">210</p>
+                  </div>
+                  <div class="bg-pink-50 dark:bg-pink-700/30 p-4 rounded-lg shadow flex flex-col items-center justify-center">
+                    <svg class="w-10 h-10 text-pink-500 dark:text-pink-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-4m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <!-- Female icon (simplified) -->
+                    <p class="mt-1 text-slate-700 dark:text-pink-200 font-semibold">Female</p>
+                    <p class="text-2xl font-bold text-pink-600 dark:text-pink-400">108</p>
+                  </div>
+                  <div class="bg-purple-50 dark:bg-purple-700/30 p-4 rounded-lg shadow flex flex-col items-center justify-center">
+                    <svg class="w-10 h-10 text-purple-500 dark:text-purple-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <!-- Neutral/Agender icon -->
+                    <p class="mt-1 text-slate-700 dark:text-purple-200 font-semibold">Agender/Non-binary</p>
+                    <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">26</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h5 class="font-medium text-slate-700 dark:text-slate-300 mb-3">Story Genre Distribution (80 Stories)</h5>
+                <div class="chart-container relative h-64 sm:h-80">
+                  <canvas id="genreBarChart"></canvas>
+                </div>
+                <script is:inline>
+                  const storyTypesData = { "Fable": 13, "Romance": 10, "Mystery": 4, "Horror": 3, "Historical": 6, "Fantasy": 10, "Sci-Fi": 7, "War": 3, "Social Issues": 10, "Adventure": 3, "Fairy Tale": 11 };
+                  const genreLabels = Object.keys(storyTypesData);
+                  const genreCounts = Object.values(storyTypesData);
+                  
+                  document.addEventListener('DOMContentLoaded', () => {
+                    const ctxBar = document.getElementById('genreBarChart');
+                    if (ctxBar) {
+                      new Chart(ctxBar.getContext('2d'), { 
+                        type: 'bar', 
+                        data: { 
+                          labels: genreLabels, 
+                          datasets: [{ 
+                            label: 'Number of Stories', 
+                            data: genreCounts, 
+                            backgroundColor: 'rgba(56, 189, 248, 0.7)', 
+                            borderColor: 'rgba(56, 189, 248, 1)', 
+                            borderWidth: 1 
+                          }] 
+                        }, 
+                        options: { 
+                          indexAxis: 'y', 
+                          responsive: true, 
+                          maintainAspectRatio: false, 
+                          scales: { 
+                            x: { 
+                              beginAtZero: true,
+                              ticks: { color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569' },
+                              grid: { color: document.documentElement.classList.contains('dark') ? 'rgba(203, 213, 225, 0.1)' : 'rgba(0,0,0,0.1)' }
+                            },
+                            y: {
+                              ticks: { color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569' },
+                              grid: { display: false }
+                            }
+                          },
+                          plugins: {
+                            legend: {
+                              labels: { color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569' }
+                            }
+                          }
+                        } 
+                      });
+                    } else {
+                      console.error('genreBarChart canvas element not found');
+                    }
+                  });
+                </script>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 text-center">Bar chart showing story counts per genre.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dataset Analytics: Shots, Characters & Density Section -->
+    <section class="py-16 sm:py-20 px-4">
+      <div class="container mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">Dataset Analytics: Shots, Characters & Density</h2>
+        <p class="text-center text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10">
+          The following scatter plots illustrate the relationship between the number of shots and unique characters per story, categorized by style. The size of each point reflects its "Point Density" value from the dataset, indicating areas of higher data concentration.
+        </p>
+        <div class="grid lg:grid-cols-1 xl:grid-cols-3 gap-8">
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-rose-700 dark:text-rose-400 mb-4 text-center">Realistic Stories</h3>
+            <div class="chart-container relative h-80 sm:h-96">
+              <canvas id="scatterRealistic"></canvas>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 text-center">Shots vs. Unique Characters (Realistic)</p>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-cyan-700 dark:text-cyan-400 mb-4 text-center">Unrealistic Stories</h3>
+            <div class="chart-container relative h-80 sm:h-96">
+              <canvas id="scatterUnrealistic"></canvas>
+            </div>
+             <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 text-center">Shots vs. Unique Characters (Unrealistic)</p>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-lime-700 dark:text-lime-400 mb-4 text-center">All Stories</h3>
+            <div class="chart-container relative h-80 sm:h-96">
+              <canvas id="scatterAll"></canvas>
+            </div>
+             <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 text-center">Shots vs. Unique Characters (All Combined)</p>
+          </div>
+        </div>
+        <script is:inline>
+          const scatterDataFull = [
+            { storyId: 1, shots: 23, chars: 2, category: 'Unrealistic', density: 2 }, { storyId: 2, shots: 10, chars: 2, category: 'Unrealistic', density: 2 },
+            { storyId: 3, shots: 17, chars: 5, category: 'Realistic', density: 2 },   { storyId: 4, shots: 16, chars: 5, category: 'Realistic', density: 3 },
+            { storyId: 5, shots: 9, chars: 5, category: 'Realistic', density: 2 },    { storyId: 6, shots: 5, chars: 3, category: 'Realistic', density: 1 },
+            { storyId: 7, shots: 12, chars: 4, category: 'Realistic', density: 1 },   { storyId: 8, shots: 21, chars: 3, category: 'Unrealistic', density: 2 },
+            { storyId: 9, shots: 25, chars: 6, category: 'Unrealistic', density: 1 }, { storyId: 10, shots: 26, chars: 7, category: 'Unrealistic', density: 1 },
+            { storyId: 11, shots: 24, chars: 7, category: 'Realistic', density: 1 },  { storyId: 12, shots: 22, chars: 10, category: 'Realistic', density: 1 },
+            { storyId: 13, shots: 14, chars: 3, category: 'Unrealistic', density: 1 },{ storyId: 14, shots: 16, chars: 3, category: 'Unrealistic', density: 1 },
+            { storyId: 15, shots: 26, chars: 10, category: 'Realistic', density: 1 }, { storyId: 16, shots: 28, chars: 8, category: 'Realistic', density: 1 },
+            { storyId: 17, shots: 13, chars: 5, category: 'Unrealistic', density: 1 },{ storyId: 18, shots: 15, chars: 3, category: 'Unrealistic', density: 2 },
+            { storyId: 19, shots: 29, chars: 4, category: 'Unrealistic', density: 1 },{ storyId: 20, shots: 24, chars: 6, category: 'Realistic', density: 1 },
+            { storyId: 21, shots: 18, chars: 4, category: 'Realistic', density: 1 },  { storyId: 22, shots: 5, chars: 3, category: 'Unrealistic', density: 3 },
+            { storyId: 23, shots: 5, chars: 5, category: 'Unrealistic', density: 1 }, { storyId: 24, shots: 15, chars: 5, category: 'Realistic', density: 1 },
+            { storyId: 25, shots: 10, chars: 4, category: 'Realistic', density: 1 },  { storyId: 26, shots: 21, chars: 6, category: 'Unrealistic', density: 1 },
+            { storyId: 27, shots: 15, chars: 2, category: 'Realistic', density: 1 },  { storyId: 28, shots: 5, chars: 3, category: 'Unrealistic', density: 3 },
+            { storyId: 29, shots: 14, chars: 8, category: 'Unrealistic', density: 1 },{ storyId: 30, shots: 25, chars: 3, category: 'Realistic', density: 1 },
+            { storyId: 31, shots: 15, chars: 3, category: 'Unrealistic', density: 2 },{ storyId: 32, shots: 10, chars: 3, category: 'Unrealistic', density: 2 },
+            { storyId: 33, shots: 8, chars: 3, category: 'Unrealistic', density: 1 }, { storyId: 34, shots: 27, chars: 3, category: 'Unrealistic', density: 1 },
+            { storyId: 35, shots: 24, chars: 4, category: 'Realistic', density: 1 },  { storyId: 36, shots: 19, chars: 5, category: 'Realistic', density: 2 },
+            { storyId: 37, shots: 15, chars: 5, category: 'Unrealistic', density: 1 },{ storyId: 38, shots: 12, chars: 3, category: 'Unrealistic', density: 1 },
+            { storyId: 39, shots: 23, chars: 4, category: 'Realistic', density: 1 },  { storyId: 40, shots: 9, chars: 5, category: 'Unrealistic', density: 1 },
+            { storyId: 41, shots: 22, chars: 2, category: 'Realistic', density: 1 },  { storyId: 42, shots: 25, chars: 2, category: 'Realistic', density: 1 },
+            { storyId: 43, shots: 19, chars: 5, category: 'Unrealistic', density: 1 },{ storyId: 44, shots: 22, chars: 4, category: 'Unrealistic', density: 1 },
+            { storyId: 45, shots: 18, chars: 3, category: 'Unrealistic', density: 1 },{ storyId: 46, shots: 27, chars: 5, category: 'Unrealistic', density: 1 },
+            { storyId: 47, shots: 21, chars: 3, category: 'Unrealistic', density: 2 },{ storyId: 48, shots: 24, chars: 3, category: 'Unrealistic', density: 1 },
+            { storyId: 49, shots: 6, chars: 5, category: 'Realistic', density: 1 },   { storyId: 50, shots: 22, chars: 5, category: 'Unrealistic', density: 1 },
+            { storyId: 51, shots: 13, chars: 5, category: 'Realistic', density: 1 },  { storyId: 52, shots: 19, chars: 5, category: 'Realistic', density: 2 },
+            { storyId: 53, shots: 16, chars: 5, category: 'Realistic', density: 3 },  { storyId: 54, shots: 8, chars: 1, category: 'Realistic', density: 1 },
+            { storyId: 55, shots: 17, chars: 5, category: 'Realistic', density: 2 },  { storyId: 56, shots: 15, chars: 2, category: 'Unrealistic', density: 1 },
+            { storyId: 57, shots: 4, chars: 3, category: 'Unrealistic', density: 1 }, { storyId: 58, shots: 14, chars: 5, category: 'Unrealistic', density: 1 },
+            { storyId: 59, shots: 21, chars: 6, category: 'Realistic', density: 1 },  { storyId: 60, shots: 8, chars: 3, category: 'Realistic', density: 1 },
+            { storyId: 61, shots: 12, chars: 4, category: 'Unrealistic', density: 1 },{ storyId: 62, shots: 21, chars: 5, category: 'Unrealistic', density: 1 },
+            { storyId: 63, shots: 23, chars: 2, category: 'Unrealistic', density: 2 },{ storyId: 64, shots: 5, chars: 4, category: 'Realistic', density: 1 },
+            { storyId: 65, shots: 19, chars: 7, category: 'Realistic', density: 1 },  { storyId: 66, shots: 30, chars: 5, category: 'Realistic', density: 1 },
+            { storyId: 67, shots: 18, chars: 7, category: 'Realistic', density: 1 },  { storyId: 68, shots: 5, chars: 2, category: 'Unrealistic', density: 2 },
+            { storyId: 69, shots: 5, chars: 3, category: 'Unrealistic', density: 3 }, { storyId: 70, shots: 22, chars: 5, category: 'Realistic', density: 1 },
+            { storyId: 71, shots: 21, chars: 8, category: 'Realistic', density: 1 },  { storyId: 72, shots: 9, chars: 5, category: 'Realistic', density: 2 },
+            { storyId: 73, shots: 16, chars: 5, category: 'Realistic', density: 3 },  { storyId: 74, shots: 27, chars: 4, category: 'Realistic', density: 1 },
+            { storyId: 75, shots: 21, chars: 5, category: 'Realistic', density: 1 },  { storyId: 76, shots: 5, chars: 2, category: 'Unrealistic', density: 2 },
+            { storyId: 77, shots: 13, chars: 2, category: 'Unrealistic', density: 1 },{ storyId: 78, shots: 10, chars: 3, category: 'Unrealistic', density: 2 },
+            { storyId: 79, shots: 14, chars: 5, category: 'Realistic', density: 1 },  { storyId: 80, shots: 10, chars: 2, category: 'Unrealistic', density: 2 }
+          ];
+
+          const baseRadius = 3; // Base radius for points with density 1
+          const processScatterData = (data, categoryFilter) => {
+            return data
+              .filter(d => categoryFilter === 'All' || d.category === categoryFilter)
+              .map(d => ({ x: d.shots, y: d.chars, r: d.density * baseRadius }));
+          };
+
+          const realisticScatterData = processScatterData(scatterDataFull, 'Realistic');
+          const unrealisticScatterData = processScatterData(scatterDataFull, 'Unrealistic');
+          const allScatterData = processScatterData(scatterDataFull, 'All');
+          
+          document.addEventListener('DOMContentLoaded', () => {
+            const darkMode = document.documentElement.classList.contains('dark');
+            const tickColor = darkMode ? '#cbd5e1' : '#475569';
+            const gridColor = darkMode ? 'rgba(203, 213, 225, 0.1)' : 'rgba(0,0,0,0.1)';
+            const legendColor = darkMode ? '#cbd5e1' : '#475569';
+            const titleColor = darkMode ? '#e2e8f0' : '#334155';
+
+            const commonScatterOptions = {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  title: { display: true, text: 'Number of Shots', color: titleColor },
+                  ticks: { color: tickColor },
+                  grid: { color: gridColor }
+                },
+                y: {
+                  title: { display: true, text: 'Number of Unique Characters', color: titleColor },
+                  ticks: { color: tickColor },
+                  grid: { color: gridColor }
+                }
+              },
+              plugins: {
+                legend: {
+                  labels: { color: legendColor }
+                }
+              }
+            };
+
+            const ctxRealistic = document.getElementById('scatterRealistic');
+            if (ctxRealistic) {
+              new Chart(ctxRealistic.getContext('2d'), { 
+                type: 'bubble', 
+                data: { 
+                  datasets: [{ 
+                    label: 'Realistic Stories',
+                    data: realisticScatterData, 
+                    backgroundColor: 'rgba(225, 29, 72, 0.7)',
+                    borderColor: 'rgba(225, 29, 72, 1)',
+                    borderWidth: 1
+                  }] 
+                }, 
+                options: commonScatterOptions 
+              });
+            } else { console.error('scatterRealistic canvas element not found'); }
+
+            const ctxUnrealistic = document.getElementById('scatterUnrealistic');
+            if (ctxUnrealistic) {
+              new Chart(ctxUnrealistic.getContext('2d'), { 
+                type: 'bubble', 
+                data: { 
+                  datasets: [{ 
+                    label: 'Unrealistic Stories', 
+                    data: unrealisticScatterData, 
+                    backgroundColor: 'rgba(6, 182, 212, 0.7)', 
+                    borderColor: 'rgba(6, 182, 212, 1)',
+                    borderWidth: 1
+                  }] 
+                }, 
+                options: commonScatterOptions 
+              });
+            } else { console.error('scatterUnrealistic canvas element not found'); }
+
+            const ctxAll = document.getElementById('scatterAll');
+            if (ctxAll) {
+              new Chart(ctxAll.getContext('2d'), { 
+                type: 'bubble', 
+                data: { 
+                  datasets: [{ 
+                    label: 'All Stories', 
+                    data: allScatterData, 
+                    backgroundColor: 'rgba(101, 163, 13, 0.7)',
+                    borderColor: 'rgba(101, 163, 13, 1)',
+                    borderWidth: 1
+                  }] 
+                }, 
+                options: commonScatterOptions 
+              });
+            } else { console.error('scatterAll canvas element not found'); }
+          });
+        </script>
+      </div>
+        </section>
+
+    <!-- Data Structure Section -->
+    <section class="py-16 sm:py-20 px-4 bg-slate-100 dark:bg-slate-800">
+      <div class="container mx-auto">
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">Detailed Data Structure</h2>
+        <div class="max-w-4xl mx-auto bg-white dark:bg-slate-700 p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-600">
+          <p class="text-slate-600 dark:text-slate-300 mb-4">The dataset is organized in a JSON-like structure. Below is a representation of the <code>stories_data</code> object, which holds all narrative and character information:</p>
+          <pre class="bg-slate-900 dark:bg-gray-950 p-4 sm:p-6 rounded-md overflow-x-auto text-sm text-slate-100 shadow-inner ring-1 ring-slate-700"><code class="language-json">{`
+stories_data = {
+    "story_id (e.g., 01)": {
+    "type": "[e.g., WildStory_en]", // Source or version identifier (e.g., dataset_language)
+        "shots": [
+            {
+        "shot_id": "00", // Unique identifier for the shot within the story
+        "index": 1,      // Sequential order of the shot
+        // --- Storyboard Information ---
+        "Setting Description": "[Detailed description of the scene's environment and atmosphere]",
+        "Plot Correspondence": "[The segment from the original story narrative that this shot visualizes]",
+        "Onstage Characters": ["[Character Name A]", "[Character Name B]", ...], // List of characters appearing in this shot
+        "Static Shot Description": "[A comprehensive description of the visual elements: character poses, expressions, object placements, etc.]",
+        "Shot Perspective Design": "[Specifies camera work: e.g., 'Medium shot, eye level', 'High-angle wide shot']",
+      },
+      // ... additional shots for this story
+        ],
+        "characters": {
+      "character_key (e.g., Little_Brown_Rabbit)": {
+        "name": "Little Brown Rabbit",         // Canonical name of the character
+        // "name_en": "Little Brown Rabbit",  // Example: English name (if localization is used)
+        // "name_zh": "小棕兔",             // Example: Chinese name (if localization is used)
+        "key": "Little_Brown_Rabbit",     // Unique key for the character, often matching the name
+        "prompt": "[A detailed textual description of the character's appearance, attire, and defining features]",
+        "tag": "[e.g., 'protagonist', 'animal', 'child', 'elderly']", // Descriptive tags for categorization
+        "num_of_appearance": 16,         // Total number of shots this character appears in within this story
+        "ref_images": [                  // Array of filenames for reference images
+          "ref_image_01.jpg",
+          "ref_image_02.png",
+          // These filenames are relative to a path like: /data/datasets/{dataset_type}/{story_id}/image/{character_key}/
+        ]
+      },
+      // ... additional characters in this story
+    }
+  },
+  // ... additional stories in the dataset
+}
+            `}</code></pre>
+          <div class="mt-6 p-4 bg-sky-50 dark:bg-sky-700/30 rounded-md border border-sky-200 dark:border-sky-600/50">
+            <h4 class="font-semibold text-sky-700 dark:text-sky-300 mb-2">Key Points about Structure:</h4>
+            <ul class="list-disc list-inside text-sm text-slate-600 dark:text-slate-300 space-y-1">
+              <li>Each story is an entry in <code>stories_data</code> keyed by its <code>story_id</code>.</li>
+              <li><code>shots</code> array contains ordered shot descriptions, directly mapping to the paper's defined storyboard elements.</li>
+              <li><code>characters</code> object contains details for each character, including descriptive prompts and paths to reference images.</li>
+              <li>Reference image paths are typically relative and resolved based on the story and character ID.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+        </section>
+
+    <!-- Data Examples Section -->
+    <section class="py-16 sm:py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">Illustrative Data Examples</h2>
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-2xl font-semibold text-sky-700 dark:text-sky-400 mb-4">Example: Storyboard Shot</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-3">(Story 01, Shot 00 - Little Brown Rabbit)</p>
+                    <div class="space-y-3 text-slate-700 dark:text-slate-300">
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">Setting Description:</strong> Nighttime, bedroom, cozy atmosphere, soft moonlight filtering through a window.</p>
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">Plot Correspondence:</strong> It's time for the little rabbit to go to bed, but he tightly holds onto the big rabbit's very long ears, wanting to ensure Big Brown Rabbit is listening.</p>
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">On-stage Characters:</strong> Little Brown Rabbit, Big Brown Rabbit.</p>
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">Static Shot Description:</strong> The Little Brown Rabbit, looking sleepy but mischievous, is sitting on a patchwork quilt bed. He has a firm grasp on Big Brown Rabbit's ears. Big Brown Rabbit looks down with a patient, loving expression.</p>
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">Shot Perspective Design:</strong> Medium shot, eye level with Little Brown Rabbit, capturing the interaction and expressions of both characters.</p>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-2xl font-semibold text-purple-700 dark:text-purple-400 mb-4">Example: Character Profile</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-3">(Little Brown Rabbit from Story 01)</p>
+                    <div class="space-y-3 text-slate-700 dark:text-slate-300">
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">Name:</strong> Little Brown Rabbit</p>
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">Key:</strong> Little_Brown_Rabbit</p>
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">Prompt:</strong> "An adorable small rabbit with soft, chestnut-brown fur, large expressive hazel eyes, and a twitchy pink nose. Wears tiny blue pajamas. Appears curious and a little cheeky."</p>
+                        <p><strong class="font-medium text-slate-800 dark:text-slate-100">Number of Appearances:</strong> 16</p>
+                        <div>
+                            <strong class="font-medium text-slate-800 dark:text-slate-100">Reference Images:</strong>
+                            <div class="mt-2 flex flex-wrap gap-3">
+                               <img src="https://bmk.blenet.top/data/outputs/datasets/WildStory/01/image/Big Brown Rabbit/01.jpg?x-oss-process=image/resize,p_25" alt="Ref 1 for Little Brown Rabbit" class="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-lg shadow-md border-2 border-purple-300 dark:border-purple-600 hover:scale-105 transition-transform">
+                               <img src="https://bmk.blenet.top/data/outputs/datasets/WildStory/01/image/Little Brown Rabbit/00.jpg?x-oss-process=image/resize,p_25" alt="Ref 2 for Little Brown Rabbit" class="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-lg shadow-md border-2 border-purple-300 dark:border-purple-600 hover:scale-105 transition-transform">
+                                <div class="w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-lg border-2 border-dashed border-purple-300 dark:border-purple-600">
+                                    <p class="text-xs text-center text-slate-500 dark:text-slate-400 p-2">More refs...</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 italic">(Actual reference images for the character would be shown here)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action / Resources -->
+    
+       
+        </section>
+    </main>
+</BaseLayout> 
+
+<style>
+  .chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  /* Additional global styles or component-specific styles can be added here */
+</style> 

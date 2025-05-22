@@ -1,0 +1,848 @@
+{
+    "stories": [
+        {
+            "id": "01",
+            "dataset_base": "WildStory",
+            "name": "WildStory 01",
+            "story_type_en": "Children's Picture Books",
+            "story_type_ch": "儿童绘本",
+            "cover_image_path": "data/datasets/WildStory/01/image/Little Brown Rabbit/00.jpg"
+        },
+        {
+            "id": "02",
+            "dataset_base": "WildStory",
+            "name": "WildStory 02",
+            "story_type_en": "Children's Picture Books",
+            "story_type_ch": "儿童绘本",
+            "cover_image_path": "data/datasets/WildStory/02/image/David/00.jpg"
+        },
+        {
+            "id": "03",
+            "dataset_base": "WildStory",
+            "name": "WildStory 03",
+            "story_type_en": "Chinese Ancient Court",
+            "story_type_ch": "中国古代宫廷",
+            "cover_image_path": "data/datasets/WildStory/03/image/Zhen Huan/00.jpg"
+        },
+        {
+            "id": "04",
+            "dataset_base": "WildStory",
+            "name": "WildStory 04",
+            "story_type_en": "Chinese Ancient Wuxia",
+            "story_type_ch": "中国古代武侠",
+            "cover_image_path": "data/datasets/WildStory/04/image/Guo Jing/00.jpg"
+        },
+        {
+            "id": "05",
+            "dataset_base": "WildStory",
+            "name": "WildStory 05",
+            "story_type_en": "Chinese Ancient Wuxia",
+            "story_type_ch": "中国古代武侠",
+            "cover_image_path": "data/datasets/WildStory/05/image/Li Xunhuan/00.jpg"
+        },
+        {
+            "id": "06",
+            "dataset_base": "WildStory",
+            "name": "WildStory 06",
+            "story_type_en": "Chinese Ancient Male Channel Novel",
+            "story_type_ch": "中国古代男频小说",
+            "cover_image_path": "data/datasets/WildStory/06/image/Fan Xian/00.jpg"
+        },
+        {
+            "id": "07",
+            "dataset_base": "WildStory",
+            "name": "WildStory 07",
+            "story_type_en": "Chinese Ancient Romance",
+            "story_type_ch": "中国古代言情",
+            "cover_image_path": "data/datasets/WildStory/07/image/Lin Shangrong/00.jpg"
+        },
+        {
+            "id": "08",
+            "dataset_base": "WildStory",
+            "name": "WildStory 08",
+            "story_type_en": "Chinese Ancient Romance",
+            "story_type_ch": "中国古代言情",
+            "cover_image_path": "data/datasets/WildStory/08/image/Consort Jiang/00.jpg"
+        },
+        {
+            "id": "09",
+            "dataset_base": "WildStory",
+            "name": "WildStory 09",
+            "story_type_en": "German Fairy Tales",
+            "story_type_ch": "德国童话故事",
+            "cover_image_path": "data/datasets/WildStory/09/image/Snow White/00.jpg"
+        },
+        {
+            "id": "10",
+            "dataset_base": "WildStory",
+            "name": "WildStory 10",
+            "story_type_en": "Strange Tales",
+            "story_type_ch": "怪谈",
+            "cover_image_path": "data/datasets/WildStory/10/image/Mr. Qin/00.jpg"
+        },
+        {
+            "id": "11",
+            "dataset_base": "WildStory",
+            "name": "WildStory 11",
+            "story_type_en": "Korean Folktales",
+            "story_type_ch": "朝鲜民间故事",
+            "cover_image_path": "data/datasets/WildStory/11/image/Lee Mongryong/00.jpg"
+        },
+        {
+            "id": "12",
+            "dataset_base": "WildStory",
+            "name": "WildStory 12",
+            "story_type_en": "Crime",
+            "story_type_ch": "犯罪",
+            "cover_image_path": "data/datasets/WildStory/12/image/Huang Yao/00.jpg"
+        },
+        {
+            "id": "13",
+            "dataset_base": "WildStory",
+            "name": "WildStory 13",
+            "story_type_en": "Esports",
+            "story_type_ch": "电竞",
+            "cover_image_path": "data/datasets/WildStory/13/image/Ye Xiu/00.jpg"
+        },
+        {
+            "id": "14",
+            "dataset_base": "WildStory",
+            "name": "WildStory 14",
+            "story_type_en": "Urban Novel",
+            "story_type_ch": "都市小说",
+            "cover_image_path": "data/datasets/WildStory/14/image/Qi Xiaomu/00.jpg"
+        },
+        {
+            "id": "15",
+            "dataset_base": "WildStory",
+            "name": "WildStory 15",
+            "story_type_en": "Urban Novel",
+            "story_type_ch": "都市小说",
+            "cover_image_path": "data/datasets/WildStory/15/image/Zhao Qingqing/00.jpg"
+        },
+        {
+            "id": "16",
+            "dataset_base": "WildStory",
+            "name": "WildStory 16",
+            "story_type_en": "Urban Novel",
+            "story_type_ch": "都市小说",
+            "cover_image_path": "data/datasets/WildStory/16/image/Chen Sihan/00.jpg"
+        },
+        {
+            "id": "17",
+            "dataset_base": "WildStory",
+            "name": "WildStory 17",
+            "story_type_en": "Arabian Folktales",
+            "story_type_ch": "阿拉伯民间故事",
+            "cover_image_path": "data/datasets/WildStory/17/image/Aladdin/00.jpg"
+        },
+        {
+            "id": "18",
+            "dataset_base": "WildStory",
+            "name": "WildStory 18",
+            "story_type_en": "African Folktales",
+            "story_type_ch": "非洲民间故事",
+            "cover_image_path": "data/datasets/WildStory/18/image/Anansi/00.jpg"
+        },
+        {
+            "id": "19",
+            "dataset_base": "WildStory",
+            "name": "WildStory 19",
+            "story_type_en": "African Picture Book Stories",
+            "story_type_ch": "非洲绘本故事",
+            "cover_image_path": "data/datasets/WildStory/19/image/Magwe/00.jpg"
+        },
+        {
+            "id": "20",
+            "dataset_base": "WildStory",
+            "name": "WildStory 20",
+            "story_type_en": "Military",
+            "story_type_ch": "军事",
+            "cover_image_path": "data/datasets/WildStory/20/image/Xu Sanduo/00.jpg"
+        },
+        {
+            "id": "21",
+            "dataset_base": "WildStory",
+            "name": "WildStory 21",
+            "story_type_en": "Biographies of Celebrities",
+            "story_type_ch": "名人传记",
+            "cover_image_path": "data/datasets/WildStory/21/image/Steve Jobs/00.jpg"
+        },
+        {
+            "id": "22",
+            "dataset_base": "WildStory",
+            "name": "WildStory 22",
+            "story_type_en": "Fantasy",
+            "story_type_ch": "奇幻",
+            "cover_image_path": "data/datasets/WildStory/22/image/Tang San/00.jpg"
+        },
+        {
+            "id": "23",
+            "dataset_base": "WildStory",
+            "name": "WildStory 23",
+            "story_type_en": "Fantasy",
+            "story_type_ch": "奇幻",
+            "cover_image_path": "data/datasets/WildStory/23/image/Nalan Yanran/00.jpg"
+        },
+        {
+            "id": "24",
+            "dataset_base": "WildStory",
+            "name": "WildStory 24",
+            "story_type_en": "Classics for Women",
+            "story_type_ch": "女性经典",
+            "cover_image_path": "data/datasets/WildStory/24/image/Meg/00.jpg"
+        },
+        {
+            "id": "25",
+            "dataset_base": "WildStory",
+            "name": "WildStory 25",
+            "story_type_en": "Bureaucracy",
+            "story_type_ch": "官场",
+            "cover_image_path": "data/datasets/WildStory/25/image/Hou Liangping/00.jpg"
+        },
+        {
+            "id": "26",
+            "dataset_base": "WildStory",
+            "name": "WildStory 26",
+            "story_type_en": "Horror",
+            "story_type_ch": "恐怖",
+            "cover_image_path": "data/datasets/WildStory/26/image/My Uncle/00.jpg"
+        },
+        {
+            "id": "27",
+            "dataset_base": "WildStory",
+            "name": "WildStory 27",
+            "story_type_en": "Horror",
+            "story_type_ch": "恐怖",
+            "cover_image_path": "data/datasets/WildStory/27/image/Li Shiqing/00.jpg"
+        },
+        {
+            "id": "28",
+            "dataset_base": "WildStory",
+            "name": "WildStory 28",
+            "story_type_en": "Japanese Children's Literature",
+            "story_type_ch": "日本儿童文学",
+            "cover_image_path": "data/datasets/WildStory/28/image/Totto-chan/00.jpg"
+        },
+        {
+            "id": "29",
+            "dataset_base": "WildStory",
+            "name": "WildStory 29",
+            "story_type_en": "Ancient Japanese Legends",
+            "story_type_ch": "日本古代传说",
+            "cover_image_path": "data/datasets/WildStory/29/image/Princess Kaguya/00.jpg"
+        },
+        {
+            "id": "30",
+            "dataset_base": "WildStory",
+            "name": "WildStory 30",
+            "story_type_en": "Modern Japanese Novels",
+            "story_type_ch": "日本现代小说",
+            "cover_image_path": "data/datasets/WildStory/30/image/Me (Watanabe)/00.jpg"
+        },
+        {
+            "id": "31",
+            "dataset_base": "WildStory",
+            "name": "WildStory 31",
+            "story_type_en": "Japanese Fantasy Light Novels",
+            "story_type_ch": "日系幻想轻小说",
+            "cover_image_path": "data/datasets/WildStory/31/image/Kirito/00.jpg"
+        },
+        {
+            "id": "32",
+            "dataset_base": "WildStory",
+            "name": "WildStory 32",
+            "story_type_en": "Japanese Fantasy Light Novels",
+            "story_type_ch": "日式幻想轻小说",
+            "cover_image_path": "data/datasets/WildStory/32/image/Natsuki Subaru/00.jpg"
+        },
+        {
+            "id": "33",
+            "dataset_base": "WildStory",
+            "name": "WildStory 33",
+            "story_type_en": "Doomsday ",
+            "story_type_ch": "末日",
+            "cover_image_path": "data/datasets/WildStory/33/image/Xixi/00.jpg"
+        },
+        {
+            "id": "34",
+            "dataset_base": "WildStory",
+            "name": "WildStory 34",
+            "story_type_en": "Doomsday Novel",
+            "story_type_ch": "末日小说",
+            "cover_image_path": "data/datasets/WildStory/34/image/Yuan Yan/00.jpg"
+        },
+        {
+            "id": "35",
+            "dataset_base": "WildStory",
+            "name": "WildStory 35",
+            "story_type_en": "Science Fiction",
+            "story_type_ch": "科幻",
+            "cover_image_path": "data/datasets/WildStory/35/image/Gregory Powell/00.jpg"
+        },
+        {
+            "id": "36",
+            "dataset_base": "WildStory",
+            "name": "WildStory 36",
+            "story_type_en": "Science Fiction",
+            "story_type_ch": "科幻",
+            "cover_image_path": "data/datasets/WildStory/36/image/Passepartout/00.jpg"
+        },
+        {
+            "id": "37",
+            "dataset_base": "WildStory",
+            "name": "WildStory 37",
+            "story_type_en": "Science Fiction",
+            "story_type_ch": "科幻",
+            "cover_image_path": "data/datasets/WildStory/37/image/Lao Dao/00.jpg"
+        },
+        {
+            "id": "38",
+            "dataset_base": "WildStory",
+            "name": "WildStory 38",
+            "story_type_en": "Science Fiction",
+            "story_type_ch": "科幻",
+            "cover_image_path": "data/datasets/WildStory/38/image/Luo Ji/00.jpg"
+        },
+        {
+            "id": "39",
+            "dataset_base": "WildStory",
+            "name": "WildStory 39",
+            "story_type_en": "Modern and Contemporary Romance",
+            "story_type_ch": "近现代言情",
+            "cover_image_path": "data/datasets/WildStory/39/image/Weilong Ge/00.jpg"
+        },
+        {
+            "id": "40",
+            "dataset_base": "WildStory",
+            "name": "WildStory 40",
+            "story_type_en": "Fan Fiction",
+            "story_type_ch": "同人文",
+            "cover_image_path": "data/datasets/WildStory/40/image/Xia Chuan Yu/00.jpg"
+        },
+        {
+            "id": "41",
+            "dataset_base": "WildStory",
+            "name": "WildStory 41",
+            "story_type_en": "American Novels",
+            "story_type_ch": "美国小说",
+            "cover_image_path": "data/datasets/WildStory/41/image/Ennis Del Mar/00.jpg"
+        },
+        {
+            "id": "42",
+            "dataset_base": "WildStory",
+            "name": "WildStory 42",
+            "story_type_en": "Romance",
+            "story_type_ch": "言情",
+            "cover_image_path": "data/datasets/WildStory/42/image/Edward/00.jpg"
+        },
+        {
+            "id": "43",
+            "dataset_base": "WildStory",
+            "name": "WildStory 43",
+            "story_type_en": "Japanese School Light Novels",
+            "story_type_ch": "日系校园轻小说",
+            "cover_image_path": "data/datasets/WildStory/43/image/Suzune Horikita/00.jpg"
+        },
+        {
+            "id": "44",
+            "dataset_base": "WildStory",
+            "name": "WildStory 44",
+            "story_type_en": "Fairy Tales",
+            "story_type_ch": "童话",
+            "cover_image_path": "data/datasets/WildStory/44/image/Alice/00.jpg"
+        },
+        {
+            "id": "45",
+            "dataset_base": "WildStory",
+            "name": "WildStory 45",
+            "story_type_en": "Fairy Tales",
+            "story_type_ch": "童话",
+            "cover_image_path": "data/datasets/WildStory/45/image/Ugly Duckling/00.jpg"
+        },
+        {
+            "id": "46",
+            "dataset_base": "WildStory",
+            "name": "WildStory 46",
+            "story_type_en": "Fairy Tales",
+            "story_type_ch": "童话",
+            "cover_image_path": "data/datasets/WildStory/46/image/Little Prince/00.jpg"
+        },
+        {
+            "id": "47",
+            "dataset_base": "WildStory",
+            "name": "WildStory 47",
+            "story_type_en": "Fairy Tales",
+            "story_type_ch": "童话故事",
+            "cover_image_path": "data/datasets/WildStory/47/image/Dorothy/00.jpg"
+        },
+        {
+            "id": "48",
+            "dataset_base": "WildStory",
+            "name": "WildStory 48",
+            "story_type_en": "Legends",
+            "story_type_ch": "西方传说故事",
+            "cover_image_path": "data/datasets/WildStory/48/image/God/00.jpg"
+        },
+        {
+            "id": "49",
+            "dataset_base": "WildStory",
+            "name": "WildStory 49",
+            "story_type_en": "Middle Ages Novels",
+            "story_type_ch": "中世纪小说",
+            "cover_image_path": "data/datasets/WildStory/49/image/Oliver/00.jpg"
+        },
+        {
+            "id": "50",
+            "dataset_base": "WildStory",
+            "name": "WildStory 50",
+            "story_type_en": "Fantasy Stories",
+            "story_type_ch": "西方奇幻故事",
+            "cover_image_path": "data/datasets/WildStory/50/image/Anna/00.jpg"
+        },
+        {
+            "id": "51",
+            "dataset_base": "WildStory",
+            "name": "WildStory 51",
+            "story_type_en": "Bureaucracy",
+            "story_type_ch": "西方官场",
+            "cover_image_path": "data/datasets/WildStory/51/image/Charles Collingridge/00.jpg"
+        },
+        {
+            "id": "52",
+            "dataset_base": "WildStory",
+            "name": "WildStory 52",
+            "story_type_en": "Fantasy",
+            "story_type_ch": "西方幻想",
+            "cover_image_path": "data/datasets/WildStory/52/image/Daenerys/00.jpg"
+        },
+        {
+            "id": "53",
+            "dataset_base": "WildStory",
+            "name": "WildStory 53",
+            "story_type_en": "Fantasy",
+            "story_type_ch": "幻想",
+            "cover_image_path": "data/datasets/WildStory/53/image/Harry Potter/00.jpg"
+        },
+        {
+            "id": "54",
+            "dataset_base": "WildStory",
+            "name": "WildStory 54",
+            "story_type_en": "Well-known Stories",
+            "story_type_ch": "著名故事",
+            "cover_image_path": "data/datasets/WildStory/54/image/Santiago/00.jpg"
+        },
+        {
+            "id": "55",
+            "dataset_base": "WildStory",
+            "name": "WildStory 55",
+            "story_type_en": "Science Fiction",
+            "story_type_ch": "科幻",
+            "cover_image_path": "data/datasets/WildStory/55/image/Professor Aronnax/00.jpg"
+        },
+        {
+            "id": "56",
+            "dataset_base": "WildStory",
+            "name": "WildStory 56",
+            "story_type_en": "Fairy Tales",
+            "story_type_ch": "童话",
+            "cover_image_path": "data/datasets/WildStory/56/image/Hans/00.jpg"
+        },
+        {
+            "id": "57",
+            "dataset_base": "WildStory",
+            "name": "WildStory 57",
+            "story_type_en": "Fairy Tales",
+            "story_type_ch": "童话",
+            "cover_image_path": "data/datasets/WildStory/57/image/Wild Donkey/00.jpg"
+        },
+        {
+            "id": "58",
+            "dataset_base": "WildStory",
+            "name": "WildStory 58",
+            "story_type_en": "Fairy Tales",
+            "story_type_ch": "童话",
+            "cover_image_path": "data/datasets/WildStory/58/image/Tom/00.jpg"
+        },
+        {
+            "id": "59",
+            "dataset_base": "WildStory",
+            "name": "WildStory 59",
+            "story_type_en": "Romance",
+            "story_type_ch": "言情",
+            "cover_image_path": "data/datasets/WildStory/59/image/Bryce/00.jpg"
+        },
+        {
+            "id": "60",
+            "dataset_base": "WildStory",
+            "name": "WildStory 60",
+            "story_type_en": "Ancient Chinese Novels",
+            "story_type_ch": "中国古代小说",
+            "cover_image_path": "data/datasets/WildStory/60/image/Liu Bei/00.jpg"
+        },
+        {
+            "id": "61",
+            "dataset_base": "WildStory",
+            "name": "WildStory 61",
+            "story_type_en": "Ancient Chinese Legends",
+            "story_type_ch": "中国古代传说",
+            "cover_image_path": "data/datasets/WildStory/61/image/Niulang (Cowherd)/00.jpg"
+        },
+        {
+            "id": "62",
+            "dataset_base": "WildStory",
+            "name": "WildStory 62",
+            "story_type_en": "Ancient Chinese Legends",
+            "story_type_ch": "中国古代传说",
+            "cover_image_path": "data/datasets/WildStory/62/image/Zhu Yingtai (female attire)/00.jpg"
+        },
+        {
+            "id": "63",
+            "dataset_base": "WildStory",
+            "name": "WildStory 63",
+            "story_type_en": "Chinese Folktales",
+            "story_type_ch": "中国民间故事",
+            "cover_image_path": "data/datasets/WildStory/63/image/Afanti/00.jpg"
+        },
+        {
+            "id": "64",
+            "dataset_base": "WildStory",
+            "name": "WildStory 64",
+            "story_type_en": "Modern and Contemporary China Novels",
+            "story_type_ch": "中国近现代小说",
+            "cover_image_path": "data/datasets/WildStory/64/image/Ah Q/00.jpg"
+        },
+        {
+            "id": "65",
+            "dataset_base": "WildStory",
+            "name": "WildStory 65",
+            "story_type_en": "Modern and Contemporary Chinese Story about Opera",
+            "story_type_ch": "中国近现代戏曲故事",
+            "cover_image_path": "data/datasets/WildStory/65/image/Juxian/00.jpg"
+        },
+        {
+            "id": "66",
+            "dataset_base": "WildStory",
+            "name": "WildStory 66",
+            "story_type_en": "Middle-Aged Romance",
+            "story_type_ch": "中年言情",
+            "cover_image_path": "data/datasets/WildStory/66/image/Mo Sheng/00.jpg"
+        },
+        {
+            "id": "67",
+            "dataset_base": "WildStory",
+            "name": "WildStory 67",
+            "story_type_en": "Medicine",
+            "story_type_ch": "医学",
+            "cover_image_path": "data/datasets/WildStory/67/image/Director Lin/00.jpg"
+        },
+        {
+            "id": "68",
+            "dataset_base": "WildStory",
+            "name": "WildStory 68",
+            "story_type_en": "Greek Mythology",
+            "story_type_ch": "希腊神话",
+            "cover_image_path": "data/datasets/WildStory/68/image/Daedalus/00.jpg"
+        },
+        {
+            "id": "69",
+            "dataset_base": "WildStory",
+            "name": "WildStory 69",
+            "story_type_en": "Greek Mythology Story",
+            "story_type_ch": "希腊神话故事",
+            "cover_image_path": "data/datasets/WildStory/69/image/Prometheus/00.jpg"
+        },
+        {
+            "id": "70",
+            "dataset_base": "WildStory",
+            "name": "WildStory 70",
+            "story_type_en": "Original Film and TV Scripts",
+            "story_type_ch": "影视原文",
+            "cover_image_path": "data/datasets/WildStory/70/image/Forrest Gump/00.jpg"
+        },
+        {
+            "id": "71",
+            "dataset_base": "WildStory",
+            "name": "WildStory 71",
+            "story_type_en": "Suspense",
+            "story_type_ch": "悬疑",
+            "cover_image_path": "data/datasets/WildStory/71/image/Me/00.jpg"
+        },
+        {
+            "id": "72",
+            "dataset_base": "WildStory",
+            "name": "WildStory 72",
+            "story_type_en": "Suspense",
+            "story_type_ch": "悬疑",
+            "cover_image_path": "data/datasets/WildStory/72/image/Fang Fang/00.jpg"
+        },
+        {
+            "id": "73",
+            "dataset_base": "WildStory",
+            "name": "WildStory 73",
+            "story_type_en": "Suspense",
+            "story_type_ch": "悬疑",
+            "cover_image_path": "data/datasets/WildStory/73/image/Officer Feng/00.jpg"
+        },
+        {
+            "id": "74",
+            "dataset_base": "WildStory",
+            "name": "WildStory 74",
+            "story_type_en": "Suspense",
+            "story_type_ch": "悬疑",
+            "cover_image_path": "data/datasets/WildStory/74/image/Naoko/00.jpg"
+        },
+        {
+            "id": "75",
+            "dataset_base": "WildStory",
+            "name": "WildStory 75",
+            "story_type_en": "War",
+            "story_type_ch": "战争",
+            "cover_image_path": "data/datasets/WildStory/75/image/Tushin/00.jpg"
+        },
+        {
+            "id": "76",
+            "dataset_base": "WildStory",
+            "name": "WildStory 76",
+            "story_type_en": "New Zealand Legends",
+            "story_type_ch": "新西兰传说故事",
+            "cover_image_path": "data/datasets/WildStory/76/image/Maui/00.jpg"
+        },
+        {
+            "id": "77",
+            "dataset_base": "WildStory",
+            "name": "WildStory 77",
+            "story_type_en": "Interstellar",
+            "story_type_ch": "星际",
+            "cover_image_path": "data/datasets/WildStory/77/image/Ye Xiaobai/00.jpg"
+        },
+        {
+            "id": "78",
+            "dataset_base": "WildStory",
+            "name": "WildStory 78",
+            "story_type_en": "Jewish Folktales",
+            "story_type_ch": "犹太民间故事",
+            "cover_image_path": "data/datasets/WildStory/78/image/King Solomon/00.jpg"
+        },
+        {
+            "id": "79",
+            "dataset_base": "WildStory",
+            "name": "WildStory 79",
+            "story_type_en": "Modern Romance",
+            "story_type_ch": "现代言情",
+            "cover_image_path": "data/datasets/WildStory/79/image/Jing Lan/00.jpg"
+        },
+        {
+            "id": "80",
+            "dataset_base": "WildStory",
+            "name": "WildStory 80",
+            "story_type_en": "Children's Picture Books",
+            "story_type_ch": "儿童绘本",
+            "cover_image_path": "data/datasets/WildStory/80/image/Caterpillar/00.jpg"
+        }
+    ],
+    "outputs": {
+        "moki": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "storydiffusion": {
+            "Photomaker": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            },
+            "original": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "uno": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "shenbimaliang": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "animdirector": {
+            "sd3": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "bairimeng_ai": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "movieagent": {
+            "SD-3": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "storygen": {
+            "auto-regressive": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            },
+            "mix": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            },
+            "multi-image-condition": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "xunfeihuiying": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "seedstory": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "vlogger": {
+            "text_only": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            },
+            "img_ref": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "storyadapter": {
+            "text_only_results_xl5": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            },
+            "img_ref_results_xl5": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            },
+            "text_only_results_xl": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            },
+            "img_ref_results_xl": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "morphic_studio": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "mmstoryagent": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "theatergen": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "naive_baseline": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        },
+        "doubao": {
+            "base": {
+                "ViStory": {
+                    "en": {
+                        "shots": []
+                    }
+                }
+            }
+        }
+    }
+}

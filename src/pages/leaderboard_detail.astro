@@ -1,0 +1,876 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = "Detailed Leaderboard"; // Translations will apply to this via data-lang-key in Header
+const currentNav = "leaderboard_detail";
+
+// Data provided by user - TSV format
+const fullDatasetTSV = `
+Method	model	mode	Cross CSD Score (Ref-Gen)	Self CSD Score (Gen-Gen)	Cross Cref Score (Ref-Gen)	Self Cref Score (Gen-Gen)	Aesthetics Score	Inception Score	Prompt Align (Scene)	Prompt Align (Camera)	Prompt Align (Character Existence|Number)	Prompt Align (Global Character Action|Script)	Prompt Align (Local/Single Character Action|Script)	Prompt Align Avg
+Story image method	Storydiffusion	Text only	0.2862	0.6349	0.3045	0.6482	5.763	15.713	3.111	2.941	0.853	1.835	1.67	59.724	
+Story image method	Storydiffusion	(Img ref) (photomaker)	0.3511	0.5536	0.3379	0.6634	5.125	10.057	1.878	3.266	0.868	2.411	2.23	61.151	
+Story image method	Storyadapter	(Text only) (scale0)	0.2904	0.4613	0.2959	0.5997	5.175	16.341	2.05	3.298	0.857	2.517	2.171	62.722	
+Story image method	Storyadapter	(Text only) (scale5)	0.3264	0.7348	0.27526	0.6353	4.903	13.133	1.832	3.127	0.858	2.451	1.944	58.465	
+Story image method	Storyadapter	(Img ref)(scale0)	0.4619	0.5537	0.3533	0.6653	4.995	12.978	1.953	3.263	0.857	2.489	2.25	62.218	
+Story image method	Storyadapter	(Img ref)(scale5)	0.3333	0.7372	0.2769	0.6316	4.886	13.725	1.84	3.174	0.849	2.36	2.048	58.892	
+Story image method	Storygen	Auto-regressive	0.3798	0.5337	0.3597	0.6407	4.022	8.724	1.043	2.128	0.858	1.24	1.371	36.141	
+Story image method	Storygen	Multi-image-condition	0.3711	0.5256	0.3518	0.6399	4.022	8.889	1.123	2.125	0.862	1.304	1.387	37.117	
+Story image method	Storygen	Mix	0.2875	0.5836	0.3414	0.6672	3.836	7.309	0.902	2.116	0.862	1.241	1.484	35.887	
+Story image method	UNO (many2many version)	base	0.408	0.6103	0.3938	0.6711	5.232	12.398	3.47	3.062	0.898	2.617	2.121	70.43	
+Story image method	Theatergen	base	0.1989	0.4037	0.2708	0.6045	4.897	14.882	2.673	1.645	0.844	0.874	0.875	37.923	
+Story image method	Seedstory(AR) 	base	0.2334	0.7486	0.2174	0.5286	3.836	6.325	1.931	1.638	0.859	0.592	0.559	29.499	
+Story video method	Vlogger	text only	0.2141	0.4073	0.2686	0.5662	4.334	10.482	1.576	2.854	0.845	2.191	1.982	53.769	
+Story video method	Vlogger	img ref	0.2708	0.4525	0.2861	0.5988	4.344	10.03	1.597	2.946	0.845	2.204	2.067	55.081	
+Story video method	Movieagent	ROICtrl version	0.2002	0.4933	0.273	0.6135	4.651	11.631	1.209	2.308	0.867	1.217	1.109	36.519	
+Story video method	Movieagent	SD-3 version	0.3089	0.4826	0.3163	0.607	5.33	15.021	3.456	2.985	0.875	3.233	2.496	76.061	
+Story video method	Animdirector	base	0.2983	0.507	0.3388	0.6534	5.599	12.037	3.607	2.887	0.884	3.239	2.435	76.049	
+Story video method	MM-StoryAgent	base	0.2528	0.6677	0.3132	0.6459	5.883	9.093	2.832	2.459	0.852	1.688	1.358	52.106	
+Naive baseline	base	base	0.7279	0.7154	0.9406	0.9866	4.477	6.719	0.486	2.06	0.997	0.655	0.99	26.197	
+`.trim();
+
+const liteDatasetTSV = `
+Method	model	mode	Cross CSD Score (Ref-Gen)	Self CSD Score (Gen-Gen)	Cross Cref Score (Ref-Gen)	Self Cref Score (Gen-Gen)	Aesthetics Score	Inception Score	Prompt Align (Scene)	Prompt Align (Camera)	Prompt Align (Character Existence|Number) OCCM	Prompt Align (Global Character Action|Script)	Prompt Align (Local/Single Character Action|Script)	Prompt Align Avg（Alignment score）
+Story image method	Storydiffusion	Text only	0.315	0.687	0.307	0.578	5.828	12.992	3.154	2.801	0.819	1.742	1.793	59.308	
+Story image method	Storydiffusion	(Img ref) (photomaker)	0.423	0.618	0.331	0.61	5.207	8.178	1.763	3.209	0.832	2.333	2.407	60.696	
+Story image method	Storyadapter	(Text only) (scale0)	0.359	0.515	0.314	0.542	5.12	12.724	1.884	3.236	0.827	2.523	2.294	62.107	
+Story image method	Storyadapter	(Text only) (scale5)	0.364	0.754	0.296	0.593	4.852	10.593	1.787	2.998	0.826	2.391	1.861	56.479	
+Story image method	Storyadapter	(Img ref)(scale0)	0.527	0.616	0.345	0.597	4.892	11.485	1.804	3.141	0.845	2.393	2.329	60.414	
+Story image method	Storyadapter	(Img ref)(scale5)	0.382	0.759	0.295	0.55	4.803	12.025	1.695	3.004	0.815	2.222	2.048	56.056	
+Story image method	Storygen	(Auto-regressive)	0.407	0.558	0.376	0.588	4.091	7.152	0.974	2.165	0.836	1.21	1.299	35.302	
+Story image method	Storygen	(Multi-image-condition)	0.399	0.549	0.37	0.642	4.089	7.667	1.091	2.043	0.831	1.352	1.419	36.902	
+Story image method	Storygen	(Mix)	0.315	0.609	0.364	0.688	3.862	6.246	0.75	2.154	0.833	1.231	1.598	35.823	
+Story image method	UNO (many2many version)	base	0.446	0.656	0.423	0.692	5.134	10.497	3.479	2.927	0.891	2.817	2.321	72.147	
+Story image method	Theatergen	base	0.237	0.421	0.265	0.546	4.943	13.604	2.752	1.729	0.813	0.953	1.037	40.446	
+Story image method	Seedstory(AR) 	base	0.264	0.762	0.219	0.486	3.823	4.927	1.932	1.776	0.831	0.478	0.473	29.118	
+MLLM model	GPT4o	base	0.487	0.685	0.532	0.731	5.519	9.019	3.868	3.568	0.934	3.755	3.099	89.315	
+MLLM model	Gemini	base	0.381	0.586	0.315	0.537	4.906	10.117	3.482	3.081	0.869	3.045	2.565	76.083	
+Story video method	Vlogger	text only	0.257	0.462	0.287	0.554	4.302	8.443	1.629	2.82	0.834	2.352	2.127	55.799	
+Story video method	Vlogger	img ref	0.315	0.498	0.3	0.54	4.297	9.053	1.655	2.909	0.82	2.259	2.176	56.242	
+Story video method	Movieagent	ROICtrl version	0.248	0.557	0.277	0.577	4.704	10.07	1.183	2.344	0.843	1.368	1.298	38.707	
+Story video method	Movieagent	SD-3 version	0.361	0.543	0.357	0.605	5.332	12.049	3.365	2.905	0.869	3.282	2.648	76.257	
+Story video method	Animdirector	base	0.321	0.555	0.384	0.655	5.612	9.996	3.634	2.734	0.877	3.35	2.546	76.651	
+Story video method	MM-StoryAgent	base	0.28	0.662	0.321	0.566	5.91	8.088	2.888	2.295	0.822	1.493	1.39	50.419	
+Business platform	moki	base	0.229	0.7	0.292	0.626	5.813	10.358	2.81	1.668	0.82	0.888	0.848	38.841	
+Business platform	morphic_studio	base	0.59	0.638	0.5	0.664	4.956	9.004	3.278	2.934	0.829	2.475	2.106	67.46	
+Business platform	bairimeng_ai	base	0.426	0.73	0.559	0.762	5.731	9.552	3.447	2.789	0.894	2.361	1.83	65.172	
+Business platform	shenbimaliang	base	0.292	0.582	0.347	0.611	5.07	11.599	3.742	2.66	0.856	3.37	2.358	75.809	
+Business platform	xunfeihuiying	base	0.342	0.652	0.392	0.546	5.321	11.156	2.773	2.708	0.841	2.424	2.081	62.421	
+Business platform	doubao	base	0.386	0.698	0.394	0.714	5.615	9.878	3.96	2.995	0.875	3.721	2.788	84.155	
+Naive baseline	base	base	0.736	0.773	0.932	0.996	4.396	5.474	0.532	2.021	1	0.671	1.097	27.003	
+`.trim();
+
+/**
+ * @typedef {Object.<string, string>} DataRow
+ * Represents a single row of data where keys are column headers.
+ */
+
+/**
+ * @typedef {{headers: string[], data: DataRow[]}} ParsedTSVData
+ * Represents the parsed TSV data, including headers and an array of data rows.
+ */
+
+// Define interfaces for better type checking in Astro's TypeScript environment
+interface DataRow {
+    [key: string]: string;
+}
+
+interface ParsedTSVData {
+    headers: string[];
+    data: DataRow[];
+}
+
+/**
+ * Parses a TSV string into an object containing headers and data rows.
+ * @param {string} tsvString The TSV string to parse.
+ * @returns {ParsedTSVData}
+ */
+function parseTSV(tsvString: string): ParsedTSVData {
+    const lines = tsvString.trim().split('\n');
+    const headers = lines[0].split('\t').map((h: string) => h.trim().replace(/^"|"$/g, '').replace(/\r$/, ''));
+    const data = lines.slice(1).map((line: string) => {
+        const values = line.split('\t');
+        const row: DataRow = {};
+        headers.forEach((header: string, index: number) => {
+            // Ensure we don't try to access out-of-bounds values if a data row has fewer columns than headers
+            row[header] = values[index] ? values[index].trim().replace(/^"|"$/g, '').replace(/\r$/, '') : '';
+        });
+        return row;
+    });
+    return { headers, data };
+}
+
+const fullResults = parseTSV(fullDatasetTSV);
+const liteResults = parseTSV(liteDatasetTSV);
+
+// Store other JSON data for potential future use (filters, charts)
+const benchmarkClassData = { /* Paste benchmarkClassData JSON here if needed by client script */ };
+const bestOfModeData = {
+    "Storyadapter":"(Img ref)(scale0)",
+    "Storydiffusion":"(Img ref) (photomaker)",
+    "Storygen":"Multi-image-condition",
+    "Movieagent":"SD-3 version",
+    "Vlogger":"text only"
+};
+
+---
+<BaseLayout title={pageTitle} activeNav={currentNav}>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="container mx-auto px-4 py-8">
+        <section id="charts-section" class="mb-8 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                <h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200" data-lang-key="charts_title">Method Comparison Radar Charts</h2>
+                <div class="flex items-center space-x-4">
+                    <div id="radar-mode-toggle-buttons" class="flex space-x-2 mr-4">
+                        <button id="radar-lite-mode-btn" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500" data-lang-key="button_lite_mode">Lite Mode</button>
+                        <button id="radar-full-mode-btn" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500" data-lang-key="button_full_mode">Full Mode</button>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="best-of-method-checkbox" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 dark:border-slate-600 dark:focus:ring-indigo-500 dark:checked:bg-indigo-500">
+                        <label for="best-of-method-checkbox" class="ml-2 block text-sm text-gray-900 dark:text-slate-300" data-lang-key="best_of_method_toggle">Best of Method Mode</label>
+                    </div>
+                </div>
+            </div>
+            <div id="radar-charts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                {/* Radar charts will be dynamically added here */}
+            </div>
+        </section>
+
+        <section id="detailed-leaderboard-section" class="p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+                <h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200" data-lang-key="leaderboard_detail_results">Results</h2>
+                <div id="mode-toggle-buttons" class="flex space-x-2">
+                    <button id="lite-mode-btn" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500" data-lang-key="button_lite_mode">Lite Mode</button>
+                    <button id="full-mode-btn" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500" data-lang-key="button_full_mode">Full Mode</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="detailed-leaderboard-table" class="min-w-full bg-white dark:bg-slate-800">
+                    <thead id="leaderboard-thead" class="bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-300 uppercase text-sm leading-normal">
+                        {/* Headers will be rendered by script */}
+                    </thead>
+                    <tbody id="leaderboard-tbody" class="text-gray-700 dark:text-slate-300 text-sm font-light">
+                        {/* Rows will be rendered by script */}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</BaseLayout>
+
+<script define:vars={{ fullResultsData: fullResults, liteResultsData: liteResults, bestOfModeData: bestOfModeData }}>
+    let currentView = 'lite'; // 'lite' or 'full'
+    /** @type {DataRow[]} */
+    let activeDataset = liteResultsData.data;
+    /** @type {string[]} */
+    let activeHeaders = liteResultsData.headers;
+
+    const liteModeBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById('lite-mode-btn'));
+    const fullModeBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById('full-mode-btn'));
+    const tableThead = /** @type {HTMLTableSectionElement | null} */ (document.getElementById('leaderboard-thead'));
+    const tableTbody = /** @type {HTMLTableSectionElement | null} */ (document.getElementById('leaderboard-tbody'));
+    const leaderboardTable = /** @type {HTMLTableElement | null} */ (document.getElementById('detailed-leaderboard-table'));
+
+    let columnStats = {}; // To store min/max for numeric columns for color gradient
+    let isBestOfMethodMode = false;
+    const bestOfMethodCheckbox = /** @type {HTMLInputElement | null} */ (document.getElementById('best-of-method-checkbox'));
+
+    let currentSystemTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+
+    /**
+     * Determines the column type based on header name and a sample value.
+     * @param {string} header The header text.
+     * @param {string} sampleValue A sample value from the column.
+     * @returns {'number' | 'text'}
+     */
+    function getColumnType(header, sampleValue) {
+        const numericHeaderKeywords = [
+            'Score', 'Avg', 'OCCM', // General keywords for numeric data
+            'CRef', 'SRef', 'Adh', 'Quality', 'Overall' // From original static table, if column names are similar
+        ];
+        const specificNumericHeaders = [
+            "Cross CSD Score (Ref-Gen)", "Self CSD Score (Gen-Gen)",
+            "Cross Cref Score (Ref-Gen)", "Self Cref Score (Gen-Gen)",
+            "Aesthetics Score", "Inception Score",
+            "Prompt Align (Scene)", "Prompt Align (Camera)",
+            "Prompt Align (Character Existence|Number)", "Prompt Align (Global Character Action|Script)",
+            "Prompt Align (Local/Single Character Action|Script)",
+            "Prompt Align Avg", // For full data, as per user edit
+            "Prompt Align Avg（Alignment score）", // For lite data, as per user edit
+            "Prompt Align (Character Existence|Number) OCCM"
+        ];
+
+        if (specificNumericHeaders.includes(header)) {
+            if (sampleValue && !isNaN(parseFloat(sampleValue)) && isFinite(Number(sampleValue))) {
+                return 'number';
+            }
+        }
+        // Fallback check using keywords if specific header not matched
+        if (numericHeaderKeywords.some(keyword => header.includes(keyword))) {
+             if (sampleValue && !isNaN(parseFloat(sampleValue)) && isFinite(Number(sampleValue))) {
+                return 'number';
+            }
+        }
+        // Default to text if not clearly numeric by header or value
+        return 'text';
+    }
+
+    function calculateColumnStats() {
+        columnStats = {};
+        activeHeaders.forEach(header => {
+            const sampleValue = activeDataset.length > 0 && activeDataset[0] ? activeDataset[0][header] : "";
+            const type = getColumnType(header, sampleValue);
+            if (type === 'number') {
+                let min = Infinity;
+                let max = -Infinity;
+                activeDataset.forEach(row => {
+                    const value = parseFloat(row[header]);
+                    if (!isNaN(value)) {
+                        if (value < min) min = value;
+                        if (value > max) max = value;
+                    }
+                });
+                if (min !== Infinity && max !== -Infinity) {
+                    columnStats[header] = { min, max };
+                }
+            }
+        });
+    }
+
+    function renderTable() {
+        if (!tableThead || !tableTbody) return;
+        tableThead.innerHTML = '';
+        tableTbody.innerHTML = '';
+
+        calculateColumnStats(); // Calculate min/max for color gradients
+
+        const headerRow = document.createElement('tr');
+        activeHeaders.forEach((headerText, index) => {
+            const th = document.createElement('th');
+            th.className = "py-3 px-6 text-left cursor-pointer hover:bg-gray-300 dark:hover:bg-slate-600 whitespace-nowrap text-gray-600 dark:text-slate-300"; // px-6 for more padding, dark mode text and hover
+            
+            const displayHeaderText = headerText.replace('\n', ' '); 
+            th.textContent = displayHeaderText;
+
+            const sampleValue = activeDataset.length > 0 && activeDataset[0] ? activeDataset[0][headerText] : "";
+            const columnType = getColumnType(headerText, sampleValue);
+            th.dataset.sortable = columnType;
+            th.dataset.columnIndex = String(index);
+            
+            const arrowSpan = document.createElement('span');
+            arrowSpan.className = 'sort-arrow ml-1';
+            th.appendChild(arrowSpan);
+
+            th.addEventListener('click', () => sortTable(index, columnType));
+            headerRow.appendChild(th);
+        });
+        tableThead.appendChild(headerRow);
+        if (leaderboardTable) updateSortIndicators(leaderboardTable, -1, 'asc'); 
+
+        activeDataset.forEach((rowData, rowIndex) => {
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700/50"; // dark mode border and hover
+            
+            activeHeaders.forEach(header => {
+                let shouldRenderCell = true;
+                let calculatedRowspan = 1;
+
+                if (header === 'Method') {
+                    if (rowIndex > 0 && rowData['Method'] === activeDataset[rowIndex - 1]['Method']) {
+                        shouldRenderCell = false;
+                    } else {
+                        for (let i = rowIndex + 1; i < activeDataset.length; i++) {
+                            if (activeDataset[i]['Method'] === rowData['Method']) {
+                                calculatedRowspan++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                } else if (header === 'model') {
+                    if (rowIndex > 0 && 
+                        rowData['Method'] === activeDataset[rowIndex - 1]['Method'] &&
+                        rowData['model'] === activeDataset[rowIndex - 1]['model']) {
+                        shouldRenderCell = false;
+                    } else {
+                        for (let i = rowIndex + 1; i < activeDataset.length; i++) {
+                            if (activeDataset[i]['Method'] !== rowData['Method']) break; // Stop if method group changes
+                            if (activeDataset[i]['model'] === rowData['model']) {
+                                calculatedRowspan++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (shouldRenderCell) {
+                    const td = document.createElement('td');
+                    td.className = "py-3 px-6 text-left align-top whitespace-nowrap text-gray-700 dark:text-slate-200"; // Changed dark:text-slate-300 to dark:text-slate-200
+                    if (calculatedRowspan > 1) {
+                        td.rowSpan = calculatedRowspan;
+                    }
+
+                    let cellValue = rowData[header] !== undefined ? String(rowData[header]) : '';
+                    const columnType = getColumnType(header, cellValue);
+
+                    if (columnType === 'number') {
+                        const numericValue = parseFloat(cellValue);
+                        if (!isNaN(numericValue)) {
+                            const stats = columnStats[header];
+                            let normalizedValue = 0.5; // Default for single value or all same values
+                            if (stats && stats.max !== stats.min) {
+                                normalizedValue = (numericValue - stats.min) / (stats.max - stats.min);
+                            }
+                            normalizedValue = Math.max(0, Math.min(1, normalizedValue)); // Clamp between 0 and 1
+                            
+                            const hue = (1 - normalizedValue) * 120; // 0 (red) to 120 (green). Low value = red, High value = green.
+                            // To make high values green and low values red, we want normalized 1 -> hue 120, normalized 0 -> hue 0.
+                            // So, hue = normalizedValue * 120; is correct for (0=red, 1=green)
+                            const finalHue = normalizedValue * 120;
+
+                            // td.style.backgroundColor = `hsl(${finalHue}, 70%, 85%)`; // Light mode HSL
+                            // For dark mode, we want darker shades. Let's adjust lightness. L in HSL (e.g., 25-35% for dark backgrounds)
+                            // Or use a completely different color palette for dark mode if HSL becomes too complex to manage
+                            const isDarkMode = document.documentElement.classList.contains('dark');
+                            if (isDarkMode) {
+                                // Darker shades for dark mode, e.g., using a lower lightness
+                                // Red (0) to Green (120). For dark mode, Red could be dark red, Green dark green.
+                                // Let's try a simpler approach: pre-defined dark-mode color scale or adjust lightness significantly.
+                                // For example, very low saturation and lightness for reds, slightly higher for greens.
+                                // Hue: 0 (red) to 120 (green)
+                                // Saturation: ~50-70%
+                                // Lightness: ~20-30% for reds, ~30-40% for greens
+                                let darkSat = 60;
+                                let darkLight = normalizedValue * 20 + 20; // maps 0 to 20%, 1 to 40%
+                                td.style.backgroundColor = `hsl(${finalHue}, ${darkSat}%, ${darkLight}%)`;
+                            } else {
+                                td.style.backgroundColor = `hsl(${finalHue}, 70%, 85%)`; // Original light mode
+                            }
+                            td.textContent = numericValue.toFixed(3);
+                            td.classList.add('text-center');
+                        } else {
+                            td.textContent = cellValue; // Display as is if not a valid number (e.g. empty string, text)
+                        }
+                    } else {
+                        td.textContent = cellValue.replace('\n', ' ');
+                    }
+                    tr.appendChild(td);
+                }
+            });
+            tableTbody.appendChild(tr);
+        });
+    }
+
+    function updateButtonStyles() {
+        if (!liteModeBtn || !fullModeBtn) return;
+
+        const activeClasses = ['bg-blue-600', 'text-white', 'shadow-md'];
+        // These are the light-mode specific classes for an inactive button which are part of its base HTML style
+        const inactiveLightModeBaseClasses = ['bg-gray-200', 'text-gray-700', 'hover:bg-gray-300'];
+
+        // Function to set a button to active state
+        function setActive(button) {
+            button.classList.remove(...inactiveLightModeBaseClasses); // Remove light-mode inactive classes
+            // Ensure dark mode inactive classes are also not present if they were somehow added by mistake elsewhere
+            button.classList.remove('dark:bg-slate-600', 'dark:text-slate-300', 'dark:hover:bg-slate-500');
+            button.classList.add(...activeClasses);
+        }
+
+        // Function to set a button to inactive state
+        function setInactive(button) {
+            button.classList.remove(...activeClasses); // Remove active classes
+            button.classList.add(...inactiveLightModeBaseClasses); // Add light-mode inactive classes
+            // Dark mode inactive classes should be part of the button's base HTML class attribute
+            // and will apply automatically via Tailwind's dark: selector if not overridden
+        }
+
+        if (currentView === 'lite') { // Lite is active
+            setActive(liteModeBtn);
+            setInactive(fullModeBtn);
+        } else { // Full is active
+            setActive(fullModeBtn);
+            setInactive(liteModeBtn);
+        }
+    }
+
+    /** @type {Object.<string, Chart>} */
+    let radarChartInstances = {}; 
+    const radarChartsContainer = document.getElementById('radar-charts-container');
+    
+    /** @type {Object.<string, {min: number, max: number}>} */
+    let radarMetricsStats = {}; // To store min/max for each radar metric globally
+
+    // getDynamicRadarMetrics remains the same
+    function getDynamicRadarMetrics() {
+        const excludedMetrics = ['ID', 'RowNumber']; 
+        const metrics = activeHeaders.filter(header => {
+            const sampleValue = activeDataset.length > 0 && activeDataset[0] ? activeDataset[0][header] : "";
+            return getColumnType(header, sampleValue) === 'number' && !excludedMetrics.includes(header);
+        });
+        return metrics.sort(); 
+    }
+
+    /** Calculates min/max for each metric across the entire activeDataset */
+    function calculateAllRadarMetricsStats(metrics) {
+        radarMetricsStats = {}; // Reset
+        metrics.forEach(metric => {
+            let minVal = Infinity;
+            let maxVal = -Infinity;
+            let count = 0;
+            activeDataset.forEach(row => {
+                const value = parseFloat(row[metric]);
+                if (!isNaN(value)) {
+                    if (value < minVal) minVal = value;
+                    if (value > maxVal) maxVal = value;
+                    count++;
+                }
+            });
+            if (count > 0) {
+                 if (minVal === maxVal) { // All values for this metric are the same
+                    radarMetricsStats[metric] = { min: minVal - 0.5, max: maxVal + 0.5 }; 
+                    if (minVal === 0) radarMetricsStats[metric] = {min: -0.5, max: 0.5}; // avoid 0/0 if all are 0
+                } else {
+                    radarMetricsStats[metric] = { min: minVal, max: maxVal };
+                }
+            } else {
+                 radarMetricsStats[metric] = {min: 0, max: 1}; // Default if no data for a metric
+            }
+        });
+    }
+
+    /**
+     * @param {string} methodName
+     * @param {DataRow[]} modelRowsDataForMethod - All rows for the current method
+     * @param {string[]} radarMetricsForChart
+     */
+    function prepareSingleRadarData(methodName, modelRowsDataForMethod, radarMetricsForChart) {
+        const datasets = [];
+        let modelsToProcess = modelRowsDataForMethod;
+
+        if (isBestOfMethodMode) {
+            const filteredModelRows = [];
+            const processedModels = new Set(); // To ensure each model is added once for its best mode
+
+            modelRowsDataForMethod.forEach(row => {
+                const modelName = row.model;
+                if (processedModels.has(modelName)) return; // Already processed the best mode for this model
+
+                if (bestOfModeData[modelName]) { // If this model has a "best mode" defined
+                    if (row.mode === bestOfModeData[modelName]) {
+                        filteredModelRows.push(row);
+                        processedModels.add(modelName);
+                    }
+                } else { // If no best mode defined for this model, include all its modes
+                    // This logic might need refinement: if we want ALL modes of unlisted models,
+                    // or just the first one we encounter after best-of-method filtering.
+                    // For now, let's assume unlisted models should pass through all their modes when BoM is on.
+                    // This actually means we should iterate over unique models first.
+                }
+            });
+            
+            // Revised logic for Best of Method:
+            // 1. Get unique models within this method.
+            // 2. For each unique model, find its best mode if defined, or take all its modes.
+            const uniqueModelNamesInMethod = [...new Set(modelRowsDataForMethod.map(r => r.model))];
+            const finalRowsForChart = [];
+
+            uniqueModelNamesInMethod.forEach(modelName => {
+                const bestModeForThisModel = bestOfModeData[modelName];
+                if (bestModeForThisModel) {
+                    const bestRow = modelRowsDataForMethod.find(r => r.model === modelName && r.mode === bestModeForThisModel);
+                    if (bestRow) finalRowsForChart.push(bestRow);
+                    // If bestRow not found (e.g. data inconsistency), it won't be added.
+                } else {
+                    // If model not in bestOfModeData, include all its modes for this method
+                    const allModesForThisModel = modelRowsDataForMethod.filter(r => r.model === modelName);
+                    finalRowsForChart.push(...allModesForThisModel);
+                }
+            });
+            modelsToProcess = finalRowsForChart;
+        }
+
+        modelsToProcess.forEach((modelRow, index) => {
+            const modelName = modelRow.model;
+            const modeName = modelRow.mode;
+            const label = `${modelName} (${modeName})`;
+            const originalValues = {}; 
+
+            const normalizedDataValues = radarMetricsForChart.map(metric => {
+                const rawValue = parseFloat(modelRow[metric]);
+                originalValues[metric] = !isNaN(rawValue) ? rawValue : "N/A";
+                
+                const stats = radarMetricsStats[metric];
+                if (isNaN(rawValue) || !stats) return 0; 
+                if (stats.max === stats.min) return 0.5; 
+                
+                const normalized = (rawValue - stats.min) / (stats.max - stats.min);
+                return Math.max(0, Math.min(1, normalized)); 
+            });
+
+            const colorIndex = index % 10; 
+            const backgroundColor = [
+                'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 
+                'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)',
+                'rgba(199, 199, 199, 0.2)', 'rgba(83, 102, 255, 0.2)', 'rgba(40, 159, 64, 0.2)', 'rgba(210, 99, 132, 0.2)'
+            ][colorIndex];
+            const borderColor = [
+                'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 
+                'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)',
+                'rgba(199, 199, 199, 1)', 'rgba(83, 102, 255, 1)', 'rgba(40, 159, 64, 1)', 'rgba(210, 99, 132, 1)'
+            ][colorIndex];
+
+            datasets.push({
+                label: label,
+                data: normalizedDataValues,
+                _originalValues: originalValues, 
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: 1.5,
+                pointBackgroundColor: borderColor,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: borderColor
+            });
+        });
+
+        return {
+            labels: radarMetricsForChart.map(m => m.replace(" (Ref-Gen)", "").replace(" (Gen-Gen)", "").replace(" Score", "").replace("Prompt Align ", "PA: ").substring(0, 15)),
+            datasets: datasets
+        };
+    }
+
+    function renderOrUpdateAllRadarCharts() {
+        if (!radarChartsContainer) return;
+        radarChartsContainer.innerHTML = ''; 
+        Object.values(radarChartInstances).forEach(instance => instance.destroy());
+        radarChartInstances = {};
+
+        const radarMetricsForChart = getDynamicRadarMetrics();
+        if (radarMetricsForChart.length === 0) {
+            radarChartsContainer.textContent = 'No numeric data available for radar charts.';
+            return;
+        }
+        
+        calculateAllRadarMetricsStats(radarMetricsForChart); // Calculate min/max for EACH metric globally
+
+        const methods = [...new Set(activeDataset.map(row => row.Method))]
+            .filter(method => method !== 'Naive baseline');
+
+        if (methods.length === 0) {
+            radarChartsContainer.textContent = 'No methods available to display radar charts (excluding Naive baseline).';
+            return;
+        }
+
+        methods.forEach((methodName, chartIndex) => {
+            const methodDataRows = activeDataset.filter(row => row.Method === methodName);
+            if (methodDataRows.length === 0) return;
+
+            const chartId = `radarChart-${methodName.replace(/\s+/g, '-').toLowerCase()}-${chartIndex}`;
+            const canvasContainer = document.createElement('div');
+            canvasContainer.className = 'relative h-96 md:h-[44rem] p-2 border dark:border-slate-700 rounded-md bg-white dark:bg-slate-800'; // Dark mode for canvas container
+            
+            const title = document.createElement('h3');
+            title.className = 'text-md font-semibold text-center mb-2 text-gray-700 dark:text-slate-200'; // Dark mode for title
+            title.textContent = methodName;
+            canvasContainer.appendChild(title);
+
+            const canvas = document.createElement('canvas');
+            canvas.id = chartId;
+            canvasContainer.appendChild(canvas);
+            radarChartsContainer.appendChild(canvasContainer);
+
+            const chartData = prepareSingleRadarData(methodName, methodDataRows, radarMetricsForChart);
+            const ctx = canvas.getContext('2d');
+
+            if (ctx) {
+                // 为每个指标创建带有范围的标签
+                const formattedLabels = radarMetricsForChart.map((metric, i) => {
+                    const stats = radarMetricsStats[metric];
+                    const shortName = metric.replace(" (Ref-Gen)", "").replace(" (Gen-Gen)", "").replace(" Score", "").replace("Prompt Align ", "PA: ").substring(0, 15);
+                    return {
+                        text: shortName,
+                        min: stats ? stats.min.toFixed(2) : "N/A",
+                        max: stats ? stats.max.toFixed(2) : "N/A"
+                    };
+                });
+
+                radarChartInstances[methodName] = new Chart(ctx, {
+                    type: 'radar',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        elements: { line: { tension: 0.05 } },
+                        layout: {
+                            padding: {
+                                top: 0,
+                                bottom: 30 // 减少底部内边距，让图例上移
+                            }
+                        },
+                        scales: {
+                            r: {
+                                angleLines: { display: true },
+                                suggestedMin: 0,       // R-axis now 0 to 1 for normalized data
+                                suggestedMax: 1,
+                                pointLabels: { 
+                                    font: { 
+                                        size: 12, 
+                                        family: "'PingFang SC', 'Helvetica Neue', Arial, sans-serif",
+                                        weight: 500 
+                                    },
+                                    color: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333333', // Changed to slate-200 for dark
+                                    callback: function(label, index) {
+                                        const formattedLabel = formattedLabels[index];
+                                        return [
+                                            formattedLabel.text,
+                                            `[${formattedLabel.min} - ${formattedLabel.max}]`
+                                        ];
+                                    }
+                                }, 
+                                ticks: { 
+                                    backdropColor: 'transparent', 
+                                    stepSize: 0.2,
+                                    font: {
+                                        size:15,
+                                        family: "'PingFang SC', 'Helvetica Neue', Arial, sans-serif"
+                                    },
+                                    color: document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#666666'  // Changed to slate-300 for dark
+                                } 
+                            }
+                        },
+                        plugins: {
+                            legend: { 
+                                display: true, 
+                                position: 'bottom', 
+                                labels: {
+                                    boxWidth: 12, 
+                                    font: {
+                                        size: 12,
+                                        family: "'PingFang SC', 'Helvetica Neue', Arial, sans-serif",
+                                        weight: 500
+                                    },
+                                    color: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333333', // Changed to slate-200 for dark
+                                    padding: 10
+                                }
+                            },
+                            tooltip: {
+                                titleFont: {
+                                    size: 20,
+                                    family: "'PingFang SC', 'Helvetica Neue', Arial, sans-serif",
+                                },
+                                bodyFont: {
+                                    size: 20,
+                                    family: "'PingFang SC', 'Helvetica Neue', Arial, sans-serif",
+                                },
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333', // Changed to slate-200 for dark
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333', // Changed to slate-200 for dark
+                                backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(30, 41, 59, 0.9)' : 'rgba(0,0,0,0.8)', // slate-800 based for dark
+                                borderColor: document.documentElement.classList.contains('dark') ? 'rgba(71, 85, 105, 0.9)' : 'rgba(0,0,0,0.8)', // slate-600 based for dark
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        const metricName = radarMetricsForChart[context.dataIndex];
+                                        
+                                        // Access original values stored in the dataset
+                                        const originalValue = context.dataset._originalValues[metricName]; 
+                                        
+                                        if (originalValue !== undefined && originalValue !== "N/A") {
+                                            label += `${Number(originalValue).toFixed(3)} (归一化: ${context.parsed.r.toFixed(2)})`;
+                                        } else if (originalValue === "N/A") {
+                                            label += `N/A (归一化: ${context.parsed.r.toFixed(2)})`;
+                                        } else {
+                                            label += context.parsed.r.toFixed(2); // Fallback to normalized if original not found
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function renderAll() {
+        calculateColumnStats(); 
+        renderTable();
+        renderOrUpdateAllRadarCharts(); 
+    }
+
+    bestOfMethodCheckbox?.addEventListener('change', (event) => {
+        isBestOfMethodMode = event.target.checked;
+        renderOrUpdateAllRadarCharts(); // Re-render only charts as table data doesn't change
+    });
+
+    const radarLiteModeBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById('radar-lite-mode-btn'));
+    const radarFullModeBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById('radar-full-mode-btn'));
+
+    function updateRadarButtonStyles() {
+        if (!radarLiteModeBtn || !radarFullModeBtn) return;
+
+        const activeClasses = ['bg-blue-600', 'text-white', 'shadow-md'];
+        const inactiveLightModeBaseClasses = ['bg-gray-200', 'text-gray-700', 'hover:bg-gray-300'];
+
+        function setActive(button) {
+            button.classList.remove(...inactiveLightModeBaseClasses);
+            button.classList.remove('dark:bg-slate-600', 'dark:text-slate-300', 'dark:hover:bg-slate-500');
+            button.classList.add(...activeClasses);
+        }
+
+        function setInactive(button) {
+            button.classList.remove(...activeClasses);
+            button.classList.add(...inactiveLightModeBaseClasses);
+        }
+
+        if (currentView === 'lite') {
+            setActive(radarLiteModeBtn);
+            setInactive(radarFullModeBtn);
+        } else {
+            setActive(radarFullModeBtn);
+            setInactive(radarLiteModeBtn);
+        }
+    }
+
+    function updateAllButtonStyles() {
+        updateButtonStyles();
+        updateRadarButtonStyles();
+    }
+
+    radarLiteModeBtn?.addEventListener('click', () => {
+        if (currentView === 'lite') return;
+        currentView = 'lite';
+        activeDataset = liteResultsData.data;
+        activeHeaders = liteResultsData.headers;
+        updateAllButtonStyles();
+        renderAll();
+    });
+
+    radarFullModeBtn?.addEventListener('click', () => {
+        if (currentView === 'full') return;
+        currentView = 'full';
+        activeDataset = fullResultsData.data;
+        activeHeaders = fullResultsData.headers;
+        updateAllButtonStyles();
+        renderAll();
+    });
+
+    liteModeBtn?.addEventListener('click', () => {
+        if (currentView === 'lite') return;
+        currentView = 'lite';
+        activeDataset = liteResultsData.data;
+        activeHeaders = liteResultsData.headers;
+        updateAllButtonStyles();
+        renderAll();
+    });
+
+    fullModeBtn?.addEventListener('click', () => {
+        if (currentView === 'full') return;
+        currentView = 'full';
+        activeDataset = fullResultsData.data;
+        activeHeaders = fullResultsData.headers;
+        updateAllButtonStyles();
+        renderAll();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (bestOfMethodCheckbox) {
+            isBestOfMethodMode = bestOfMethodCheckbox.checked; // Initialize from checkbox state if needed
+        }
+        updateAllButtonStyles();
+        renderAll(); // Initial render
+
+        // Observe theme changes to re-render components
+        const observer = new MutationObserver((mutationsList, observer) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    const newTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                    if (newTheme !== currentSystemTheme) {
+                        currentSystemTheme = newTheme;
+                        // Theme has changed, re-render all dynamic parts
+                        renderAll(); 
+                    }
+                }
+            }
+        });
+
+        observer.observe(document.documentElement, { attributes: true });
+    });
+
+    /** @type {Object.<number, 'asc' | 'desc'>} */
+    let sortDirection = {}; 
+
+    /**
+     * Sorts the table by a given column index and type.
+     * @param {number} columnIndex The index of the column to sort by.
+     * @param {'number' | 'text'} type The data type of the column.
+     */
+    function sortTable(columnIndex, type) {
+        if (!leaderboardTable || !tableTbody) return;
+        
+        // The current sorting sorts DOM elements. This means rowspans and styles will move with rows.
+        // We need to ensure values extracted for sorting are correct.
+        let rows = Array.from(tableTbody.querySelectorAll('tr'));
+
+        const currentSortDir = sortDirection[columnIndex] === 'asc' ? 'desc' : 'asc';
+        sortDirection = { [columnIndex]: currentSortDir }; 
+
+        rows.sort((a, b) => {
+            // Get the correct cell for comparison, accounting for potential rowspans.
+            // This is tricky if sorting is done on already-rendered, rowspan-affected table.
+            // For simplicity, the current sort extracts from the first cell available at that index.
+            // A more robust sort would sort `activeDataset` then re-render.
+            // However, let's try to make current DOM sort work better:
+            
+            const headerKey = activeHeaders[columnIndex]; // Get header name for the column
+            // Find the actual row data for 'a' and 'b' based on a unique attribute if possible, or rely on order.
+            // This is complex. For now, assume a.cells[columnIndex] and b.cells[columnIndex] give *some* cell.
+            // The value for sorting should come directly from `activeDataset` if we map rows back to data items.
+            // This is a limitation of sorting the DOM directly with rowspans from other columns.
+
+            // Simplified: The current sortTable sorts based on visible cell content.
+            // This might be non-ideal for merged cells but is the current mechanism.
+            const cellA = /** @type {HTMLTableCellElement | null} */ (a.cells[columnIndex]);
+            const cellB = /** @type {HTMLTableCellElement | null} */ (b.cells[columnIndex]);
+            
+            let valA, valB;
+
+            if (type === 'number') {
+                valA = parseFloat(cellA?.textContent?.trim() || 'NaN');
+                valB = parseFloat(cellB?.textContent?.trim() || 'NaN');
+                if (isNaN(valA)) valA = currentSortDir === 'asc' ? Infinity : -Infinity; // Push NaNs to bottom/top
+                if (isNaN(valB)) valB = currentSortDir === 'asc' ? Infinity : -Infinity;
+            } else { 
+                valA = cellA?.textContent?.trim().toLowerCase() || '';
+                valB = cellB?.textContent?.trim().toLowerCase() || '';
+            }
+
+            if (valA < valB) return currentSortDir === 'asc' ? -1 : 1;
+            if (valA > valB) return currentSortDir === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        rows.forEach(row => tableTbody.appendChild(row)); // Re-append sorted rows
+        if (leaderboardTable) updateSortIndicators(leaderboardTable, columnIndex, currentSortDir);
+    }
+    /**
+     * Updates the sort indicators in the table headers.
+     * @param {HTMLTableElement} table The table element.
+     * @param {number} activeColumnIndex The index of the currently sorted column.
+     * @param {'asc' | 'desc'} direction The sort direction.
+     */
+    function updateSortIndicators(table, activeColumnIndex, direction) {
+        if (!table) return;
+        table.querySelectorAll('thead th[data-sortable]').forEach(thElement => {
+            const th = /** @type {HTMLTableCellElement} */ (thElement);
+            const arrow = th.querySelector('.sort-arrow');
+            if (!arrow) return;
+            if (th.dataset.columnIndex && parseInt(th.dataset.columnIndex) === activeColumnIndex) {
+                arrow.textContent = direction === 'asc' ? ' ▲' : ' ▼';
+            } else {
+                arrow.textContent = '';
+            }
+        });
+    }
+</script> 

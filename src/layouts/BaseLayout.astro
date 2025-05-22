@@ -1,0 +1,63 @@
+---
+// src/layouts/BaseLayout.astro
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css'; // 我们稍后会创建这个文件，或者直接使用 Tailwind 的 base/components/utilities
+
+export interface Props {
+	title?: string; // Passed to Header
+    activeNav?: string; // Passed to Header to highlight the current page
+    // Add other props that all pages might need from the layout
+}
+
+const { 
+    title, // This will be the specific page title from the page frontmatter
+    activeNav 
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL; 
+// Ensure no double slashes if base ends with / and path starts with /
+// Though for public assets, paths like "/js/main.js" are usually resolved correctly by Astro by prepending base.
+// This explicit construction is a fallback if auto-resolution isn't working as expected in preview.
+const mainJsPathWithBase = `${base.replace(/\/$/, '')}/js/main.js`.replace(/\/\//g, '/'); 
+const faviconPathWithBase = `${base.replace(/\/$/, '')}/favicon.svg`.replace(/\/\//g, '/');
+---
+<!DOCTYPE html>
+<html lang="en"> {/* The lang attribute will be dynamically set by main.js */}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href={faviconPathWithBase} />
+    <meta name="generator" content={Astro.generator} />
+    {/* The document title is now primarily set by the Header component via its prop or default */}
+    {/* We can still have a fallback here or let the Header handle it exclusively */}
+    <title>{title || 'Storytelling Benchmark'}</title> 
+</head>
+<body class="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-200 font-sans flex flex-col min-h-screen transition-colors duration-300 ease-in-out">
+    <Header title={title} activeNav={activeNav} />
+    <main class="flex-grow">
+        <slot /> {/* Page content will be injected here */}
+    </main>
+    <Footer />
+    <script src={mainJsPathWithBase} type="module"></script> 
+</body>
+</html>
+
+<style is:global>
+  /* 你可以在这里添加一些Tailwind无法覆盖或者特殊的全局样式 */
+  /* 例如，如果你想从旧的 style.css 中迁移一些基础样式 */
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  /* 示例：从旧 style.css 迁移过来的 body 基础样式 (如果 Tailwind 默认不满足) */
+  /* body {
+      font-family: sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+      color: #333;
+      line-height: 1.6;
+  } */
+
+  /* 我们将在这里逐步用Tailwind类替换掉旧的 style.css */
+</style> 

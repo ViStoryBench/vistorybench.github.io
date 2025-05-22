@@ -1,0 +1,1419 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { translations } from '../../public/js/translations.js'; // Assuming translations.js exports this
+
+const pageSpecificTitle = "Result Explorer"; // Will be dynamically updated by JS
+const currentNav = "story_detail";
+
+// Placeholder for initial title until JS updates it, using a common key
+const initialTitleLangKey = "story_detail_title"; 
+// Assuming 'en' is a safe default if Astro cannot determine lang at build time for this.
+// The client-side JS will handle actual language-based title updates.
+const initialTitleText = translations['en']?.[initialTitleLangKey]?.replace('[Story ID]', '') || "Result Explorer";
+const baseUrlForClient = import.meta.env.BASE_URL;
+---
+<BaseLayout title={initialTitleText} activeNav={currentNav}>
+  <div class="container mx-auto px-4 py-8 bg-gray-50 dark:bg-slate-900">
+    <!-- Mode Toggle Section -->
+    <section id="mode-toggle-section" class="mb-6 p-4 flex justify-center items-center">
+      <div class="flex space-x-1 bg-slate-200 dark:bg-slate-700 p-1 rounded-xl shadow-md">
+        <button id="lite-mode-btn" 
+                class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-200 dark:focus:ring-offset-slate-700 bg-sky-600 dark:bg-sky-500 text-white shadow-lg ring-2 ring-sky-500 ring-offset-2 ring-offset-slate-100 dark:ring-offset-slate-800" 
+                data-lang-key="button_lite_mode">Lite</button>
+        <button id="full-mode-btn" 
+                class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-200 dark:focus:ring-offset-slate-700 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 shadow" 
+                data-lang-key="button_full_mode">Full</button>
+      </div>
+    </section>
+
+    <!-- Story Selector Section -->
+    <section id="story-selector-section" class="mb-8 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-gray-200 dark:border-slate-700">
+      <h3 class="text-2xl font-semibold text-gray-800 dark:text-slate-100 mb-6" data-lang-key="select_story_title">Select Story:</h3>
+      <div id="story-wall-container" class="flex flex-wrap gap-5 justify-center p-4 min-h-72 bg-gray-50 dark:bg-slate-700 rounded-lg border border-gray-100 dark:border-slate-650">
+        <!-- JS will populate this with story cards -->
+        <p class="text-gray-500 dark:text-slate-400">Loading stories...</p>
+      </div>
+      <div id="story-pagination-controls" class="flex justify-center items-center mt-6 gap-3">
+        <button id="prev-page-btn" data-lang-key="prev_page" class="py-2.5 px-6 cursor-pointer bg-sky-600 hover:bg-sky-700 dark:bg-sky-700 dark:hover:bg-sky-600 focus:ring-4 focus:ring-sky-300 dark:focus:ring-sky-500 focus:outline-none text-white border-none rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-sky-400/70 dark:disabled:bg-sky-800/70 disabled:shadow-none font-medium text-sm">Previous</button>
+        <span id="page-info" class="text-sm font-medium text-gray-600 dark:text-slate-300 px-3">Page X of Y</span>
+        <button id="next-page-btn" data-lang-key="next_page" class="py-2.5 px-6 cursor-pointer bg-sky-600 hover:bg-sky-700 dark:bg-sky-700 dark:hover:bg-sky-600 focus:ring-4 focus:ring-sky-300 dark:focus:ring-sky-500 focus:outline-none text-white border-none rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-sky-400/70 dark:disabled:bg-sky-800/70 disabled:shadow-none font-medium text-sm">Next</button>
+      </div>
+    </section>
+
+    <!-- Shot Details & Controls Card -->
+    <section id="shot-details-card" class="mb-8 bg-white dark:bg-slate-800 shadow-xl rounded-2xl p-6 border border-gray-200 dark:border-slate-700 space-y-6">
+      <!-- Input Information (Script and Character Ref) -->
+      <div class="input-info-container grid md:grid-cols-2 gap-x-8 gap-y-6">
+      <!-- Input Script Card -->
+        <div class="bg-white dark:bg-slate-700 shadow-xl rounded-2xl p-6 border border-gray-100 dark:border-slate-650 hover:shadow-sky-100/50 dark:hover:shadow-sky-800/50 transition-all duration-300 ease-in-out">
+          <h3 class="text-2xl font-semibold text-sky-700 dark:text-sky-400 mb-6" data-lang-key="input_script">Input Script</h3>
+        <div id="script-details-area" class="space-y-4">
+            <div class="p-4 bg-sky-50/70 dark:bg-slate-700 dark:border-sky-700/60 rounded-xl border border-sky-200/80 transition-all hover:shadow-md hover:border-sky-300 dark:hover:border-sky-600">
+              <h4 class="font-semibold text-sky-600 dark:text-sky-300 text-base mb-2" data-lang-key="script_plot">Plot Correspondence</h4>
+              <p id="script-plot-display" class="text-sm text-gray-700 dark:text-slate-300 leading-relaxed min-h-[3em]">[Select a story to load script]</p>
+          </div>
+            <div class="p-4 bg-sky-50/70 dark:bg-slate-700 dark:border-sky-700/60 rounded-xl border border-sky-200/80 transition-all hover:shadow-md hover:border-sky-300 dark:hover:border-sky-600">
+              <h4 class="font-semibold text-sky-600 dark:text-sky-300 text-base mb-2" data-lang-key="script_setting">Setting Description</h4>
+              <p id="script-setting-display" class="text-sm text-gray-700 dark:text-slate-300 leading-relaxed min-h-[3em]">-</p>
+          </div>
+            <div class="p-4 bg-sky-50/70 dark:bg-slate-700 dark:border-sky-700/60 rounded-xl border border-sky-200/80 transition-all hover:shadow-md hover:border-sky-300 dark:hover:border-sky-600">
+              <h4 class="font-semibold text-sky-600 dark:text-sky-300 text-base mb-2" data-lang-key="script_perspective">Shot Perspective Design</h4>
+              <p id="script-perspective-display" class="text-sm text-gray-700 dark:text-slate-300 leading-relaxed min-h-[3em]">-</p>
+          </div>
+            <div class="p-4 bg-sky-50/70 dark:bg-slate-700 dark:border-sky-700/60 rounded-xl border border-sky-200/80 transition-all hover:shadow-md hover:border-sky-300 dark:hover:border-sky-600">
+              <h4 class="font-semibold text-sky-600 dark:text-sky-300 text-base mb-2" data-lang-key="script_static_desc">Static Shot Description</h4>
+              <p id="script-static-desc-display" class="text-sm text-gray-700 dark:text-slate-300 leading-relaxed min-h-[3em]">-</p>
+          </div>
+        </div>
+        <p class="mt-6 text-right">
+              <strong id="shot-indicator-text" data-lang-key="shot_current_of_total" class="px-4 py-2 bg-sky-600 dark:bg-sky-600 text-white text-xs font-bold rounded-full shadow-md hover:bg-sky-700 dark:hover:bg-sky-500 transition-colors">Shot [?] of [?]</strong>
+        </p>
+      </div>
+      <!-- Character Reference Card -->
+        <div class="bg-white dark:bg-slate-700 shadow-xl rounded-2xl p-6 border border-gray-100 dark:border-slate-650 hover:shadow-purple-100/50 dark:hover:shadow-purple-800/50 transition-all duration-300 ease-in-out">
+          <h3 class="text-2xl font-semibold text-purple-700 dark:text-purple-400 mb-6" data-lang-key="character_ref">Character Reference</h3>
+        <div class="character-refs space-y-5" id="character-reference-area">
+          <!-- JS will populate this -->
+            <p class="text-gray-500 dark:text-slate-300 p-4 bg-purple-50/70 dark:bg-purple-800/60 dark:border-purple-700/60 rounded-xl border border-purple-200/80">Select a story to load characters.</p>
+        </div>
+      </div>
+      </div>
+
+      <!-- Global Controls (Shot Navigation) -->
+      <div class="global-controls-container flex justify-between items-center gap-x-4 md:gap-x-6">
+      <button id="prev-shot-btn" data-lang-key="prev_shot" disabled 
+                class="py-2.5 px-5 md:py-3 md:px-6 cursor-pointer bg-sky-600 hover:bg-sky-700 dark:bg-sky-700 dark:hover:bg-sky-600 focus:ring-4 focus:ring-sky-300 dark:focus:ring-sky-500 focus:outline-none text-white border-none rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-sky-400/70 dark:disabled:bg-sky-800/70 disabled:shadow-none font-medium text-sm md:text-base">
+        Previous Shot
+      </button>
+        <div class="carousel-timer w-3/5 md:w-2/3 h-3.5 bg-slate-200 dark:bg-slate-600 rounded-full overflow-hidden shadow-inner border border-slate-300/70 dark:border-slate-500/70">
+          <div class="carousel-progress h-full bg-sky-500 dark:bg-sky-500 transition-all duration-100 ease-linear rounded-full" id="carousel-progress-bar" style="width: 0%;"></div>
+      </div>
+      <button id="next-shot-btn" data-lang-key="next_shot" disabled 
+                class="py-2.5 px-5 md:py-3 md:px-6 cursor-pointer bg-sky-600 hover:bg-sky-700 dark:bg-sky-700 dark:hover:bg-sky-600 focus:ring-4 focus:ring-sky-300 dark:focus:ring-sky-500 focus:outline-none text-white border-none rounded-lg transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-sky-400/70 dark:disabled:bg-sky-800/70 disabled:shadow-none font-medium text-sm md:text-base">
+        Next Shot
+      </button>
+      </div>
+    </section>
+
+    <!-- Model Display Card -->
+    <section id="model-display-card" class="mb-8 bg-white dark:bg-slate-800 shadow-xl rounded-2xl p-6 border border-gray-200 dark:border-slate-700 space-y-6">
+    <!-- Model Visibility Selector Section -->
+      <section id="model-visibility-selector-section" class="p-4 flex items-center gap-x-4 bg-gradient-to-br from-slate-50 to-sky-50/30 dark:from-slate-700 dark:to-sky-800/30 shadow-xl rounded-2xl border border-gray-200 dark:border-slate-600">
+      <!-- JS will populate this -->
+    </section> 
+
+    <!-- Vertically Stacked Model Sequences -->
+    <section id="model-results-area" class="space-y-8">
+      <!-- JS will populate this area based on selected story and models -->
+        <p class="text-gray-500 dark:text-slate-400 p-6 bg-white dark:bg-slate-750 shadow-lg rounded-lg">Select a story to view results.</p>
+      <!-- Example Structure (Generated by JS, Tailwind classes will be applied by JS) -->
+      
+      <!-- <div class="model-sequence-container" data-model-key="storygen">
+        <h4>StoryGen</h4>
+        <div class="model-config">
+          ...
+        </div>
+        <div class="image-sequence-scroll-container">
+          <p>Loading images...</p>
+        </div>
+      </div> -->
+     
+    </section>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<script define:vars={{ initialTranslations: translations, clientSideBaseUrl: baseUrlForClient }}>
+// --- Result Explorer Specific JS ---
+
+
+// --- Configuration & State ---
+const astroBaseUrl = clientSideBaseUrl.replace(/\/$/, ''); // Ensure no trailing slash for clean joining
+const IMAGE_OUTPUT_BASE_URL = 'https://bmk.blenet.top/data/outputs/outputs';
+
+let currentDisplayMode = 'lite'; // 'lite' or 'full'
+const storyIdMap = {
+  lite: ["01", "08", "09", "15", "17", "19", "24", "27", "28", "29", "32", "41", "52", "53", "55", "57", "60", "64", "68", "79"],
+  full: Array.from({ length: 80 }, (_, i) => (i + 1).toString().padStart(2, '0'))
+};
+const modelKeyMap = {
+  lite: ['storydiffusion', 'storyadapter', 'storygen', 'uno', 'theatergen', 'seedstory', 'vlogger', 'movieagent', 'animdirector', 'mmstoryagent', 'moki', 'morphic_studio', 'bairimeng_ai', 'shenbimaliang', 'xunfeihuiying', 'doubao'],
+  full: ['storydiffusion', 'storyadapter', 'storygen', 'uno', 'theatergen', 'seedstory', 'vlogger', 'movieagent', 'animdirector', 'mmstoryagent']
+};
+
+let allAvailableStories = []; // To store all stories from manifest initially
+
+let currentStoryData = null;
+let currentStoryId = null;
+let currentDataset = null;
+let availableStories = [];
+let detailedManifest = null;
+let currentShotIndex = 0;
+let totalShots = 0;
+let autoPlayTimer = null;
+const autoPlayInterval = 5000;
+let progressInterval = null;
+
+// Pagination State
+let currentPage = 1;
+const storiesPerPage = 14; // Adjusted for potentially wider cards with Tailwind
+let totalStoryPages = 0;
+
+// Model Visibility State
+let selectedModels = new Set(); // ADDED: To store keys of models to display
+
+// --- DOM References ---
+const storyWallContainer = document.getElementById('story-wall-container');
+const prevPageBtn = document.getElementById('prev-page-btn');
+const nextPageBtn = document.getElementById('next-page-btn');
+const pageInfoDisplay = document.getElementById('page-info');
+
+const liteModeBtn = document.getElementById('lite-mode-btn');
+const fullModeBtn = document.getElementById('full-mode-btn');
+
+// storyTitleElement is part of BaseLayout, might need different handling or ensure BaseLayout exposes it or a method to update.
+// For now, let's assume direct manipulation if ID is consistent, or pass via props if BaseLayout allows.
+// We will use the 'astro.props.title' for initial, and JS will update document.title and a specific H1 if needed.
+// The H1 for story detail title is not in the provided BaseLayout snippet, let's assume it's this one:
+const storyTitleElement = document.querySelector('h1#story-detail-main-title') || document.querySelector('h1'); // Fallback, ideally specific
+const shotIndicatorText = document.getElementById('shot-indicator-text');
+const progressBar = document.getElementById('carousel-progress-bar');
+const characterReferenceArea = document.getElementById('character-reference-area');
+const modelResultsArea = document.getElementById('model-results-area');
+const prevShotBtn = document.getElementById('prev-shot-btn');
+const nextShotBtn = document.getElementById('next-shot-btn');
+const modelVisibilitySelectorSection = document.getElementById('model-visibility-selector-section'); // ADDED
+
+
+// --- Data Fetching ---
+async function fetchStoryData(storyId) {
+  if (!detailedManifest || !detailedManifest.stories) {
+    console.error("Detailed manifest not loaded yet.");
+    return null;
+  }
+  const storyInfo = detailedManifest.stories.find(s => s.id === storyId);
+  if (!storyInfo) {
+    console.error(`Story info not found for ID: ${storyId}`);
+    return null;
+  }
+  currentDataset = storyInfo.dataset_base;
+  const storyJsonPath = `https://bmk.blenet.top/data/outputs/datasets/${currentDataset}/${storyInfo.id}/story.json`;
+
+  console.log(`Fetching story data from: ${storyJsonPath}`);
+  try {
+    const response = await fetch(storyJsonPath);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching story data:", error);
+    const lang = document.documentElement.lang || 'en';
+    const errorCharMsg = initialTranslations[lang]?.['error_loading_character'] || initialTranslations.en?.['error_loading_character'] || "Error loading character data.";
+    const errorResultsMsg = initialTranslations[lang]?.['error_loading_results'] || initialTranslations.en?.['error_loading_results'] || "Error loading results.";
+    if(characterReferenceArea) characterReferenceArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${errorCharMsg}</p>`;
+    if(modelResultsArea) modelResultsArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${errorResultsMsg}</p>`;
+    return null;
+  }
+}
+
+// --- UI Update Functions ---
+function populateStorySelector() {
+  if (!storyWallContainer) return;
+  storyWallContainer.innerHTML = ''; 
+
+  // Filter stories based on currentDisplayMode
+  const storyIdsForCurrentMode = storyIdMap[currentDisplayMode];
+  availableStories = allAvailableStories.filter(story => storyIdsForCurrentMode.includes(story.id));
+
+  if (!availableStories || availableStories.length === 0) {
+    const currentLang = document.documentElement.lang || 'en';
+    const noStoriesMsg = initialTranslations[currentLang]?.['no_stories_found'] || initialTranslations.en?.['no_stories_found'] || "No stories found in manifest.";
+    storyWallContainer.innerHTML = `<p class="text-gray-500 dark:text-slate-400">${noStoriesMsg}</p>`;
+    const paginationControls = document.getElementById('story-pagination-controls');
+    if (paginationControls) paginationControls.style.display = 'none';
+    return;
+  }
+  const paginationControls = document.getElementById('story-pagination-controls');
+  if (paginationControls) paginationControls.style.display = 'flex';
+
+  totalStoryPages = Math.ceil(availableStories.length / storiesPerPage);
+  const startIndex = (currentPage - 1) * storiesPerPage;
+  const endIndex = startIndex + storiesPerPage;
+  const storiesToDisplay = availableStories.slice(startIndex, endIndex);
+
+  if (storiesToDisplay.length === 0 && currentPage > 1) {
+    currentPage--;
+    populateStorySelector();
+    return;
+  }
+
+  storiesToDisplay.forEach(story => {
+    const card = document.createElement('div');
+    const baseCardClassName = 'group w-[150px] md:w-[180px] border rounded-xl p-3 text-center cursor-pointer transition-all duration-300 ease-in-out flex flex-col items-center shadow-md hover:-translate-y-1.5 focus-within:ring-2 focus-within:ring-sky-500 focus-within:ring-offset-2 bg-white border-gray-200 hover:shadow-sky-200/50 hover:border-sky-400 dark:bg-slate-700 dark:border-slate-600 dark:hover:shadow-sky-700/50 dark:hover:border-sky-500';
+    card.className = baseCardClassName;
+    
+    const img = document.createElement('img');
+    img.className = 'w-full h-[180px] md:h-[220px] object-cover rounded-lg mb-3 bg-gray-100 dark:bg-slate-700 shadow-inner group-hover:shadow-md transition-shadow duration-300';
+    
+    const name = document.createElement('p');
+    name.className = 'text-sm font-semibold text-gray-700 dark:text-slate-200 group-hover:text-sky-700 dark:group-hover:text-sky-400 mt-auto line-clamp-2 h-[2.5em] transition-colors duration-300';
+
+    if (story.id === currentStoryId) {
+        const classesToRemoveFromBase = [
+            'border-gray-200', 'dark:border-slate-600', 'bg-white', 'dark:bg-slate-750', 'shadow-md',
+            'hover:shadow-sky-200/50', 'dark:hover:shadow-sky-700/50', 'hover:border-sky-400', 'dark:hover:border-sky-500', 'hover:-translate-y-1.5'
+        ];
+        const classesToAddForSelected = [
+            'border-sky-500', 'dark:border-sky-500',
+            'shadow-lg', 'dark:shadow-sky-600/40',
+            'shadow-sky-500/30', 
+            'bg-sky-50/50', 'dark:bg-sky-800/50',
+            'ring-1', 
+            'ring-sky-500/50', 'dark:ring-sky-600/50',
+            'ring-offset-1',
+            'transform', 'scale-102'
+        ];
+        card.classList.remove(...classesToRemoveFromBase);
+        card.classList.add(...classesToAddForSelected);
+    }
+
+    card.setAttribute('data-story-id', story.id);
+    card.onclick = () => loadStory(story.id);
+
+    img.src = story.cover_image_path 
+        ? `${astroBaseUrl}/${story.cover_image_path.replace(/^\/?public\//, '').replace(/^\//, '')}` 
+        : `${astroBaseUrl}/img/placeholder_story_cover.png`;
+    img.alt = story.name;
+    img.onerror = () => { img.src = `${astroBaseUrl}/img/placeholder_story_cover.png`; };
+    img.loading = "lazy";
+    
+    const currentUiLang = document.documentElement.lang || 'en';
+    let storyType = '';
+    
+    if (story.Story_type) {
+      storyType = currentUiLang === 'zh' ? 
+                 (story.Story_type.ch || story.Story_type.zh || story.Story_type.cn || story.Story_type.en || '') :
+                 (story.Story_type.en || '');
+    } else {
+      storyType = currentUiLang === 'zh' ? 
+                 (story.story_type_ch || story.story_type_zh || story.story_type_cn || story.story_type || story.story_type_en || '') : 
+                 (story.story_type_en || story.story_type || '');
+    }
+    
+    name.textContent = `${storyType} (${story.name})`.trim();
+
+    card.appendChild(img);
+    card.appendChild(name);
+    storyWallContainer.appendChild(card);
+  });
+
+  updatePaginationControls();
+}
+
+function updatePaginationControls() {
+  if (!pageInfoDisplay || !prevPageBtn || !nextPageBtn) return;
+  const paginationControls = document.getElementById('story-pagination-controls');
+
+  if (totalStoryPages <= 0) {
+    if(paginationControls) paginationControls.style.display = 'none';
+    return;
+  }
+  if(paginationControls) paginationControls.style.display = 'flex';
+  
+  pageInfoDisplay.textContent = `Page ${currentPage} of ${totalStoryPages}`;
+  prevPageBtn.disabled = currentPage === 1;
+  nextPageBtn.disabled = currentPage === totalStoryPages || totalStoryPages === 0;
+}
+
+function changeStoryPage(direction) {
+  currentPage += direction;
+  if (currentPage < 1) currentPage = 1;
+  if (currentPage > totalStoryPages) currentPage = totalStoryPages;
+  populateStorySelector();
+}
+
+function updateCharacterReferences() {
+  if (!characterReferenceArea) return;
+  characterReferenceArea.innerHTML = '';
+  if (!currentStoryData || !currentStoryData.Characters) {
+    const lang = document.documentElement.lang || 'en';
+    const noDataMsg = initialTranslations[lang]?.['no_character_data'] || initialTranslations.en?.['no_character_data'] || "No character data found.";
+    characterReferenceArea.innerHTML = `<p class="text-gray-500 dark:text-slate-400 p-4 bg-purple-50/70 dark:bg-purple-900/60 dark:border-purple-700/80 rounded-xl border border-purple-200/80">${noDataMsg}</p>`; 
+    return;
+  }
+  const currentLang = document.documentElement.lang || 'en';
+
+  Object.entries(currentStoryData.Characters).forEach(([charKey, charData]) => {
+    const charDiv = document.createElement('div');
+    charDiv.className = 'p-4 bg-white dark:bg-slate-600 rounded-lg shadow-md flex flex-col items-center space-y-2 text-slate-700 dark:text-slate-100';
+
+    let charName;
+    if (currentLang === 'zh') {
+      charName = charData.name_ch || charData.name_zh || charData.name_cn || charData.name_en || charKey;
+    } else {
+      charName = charData[`name_${currentLang}`] || charData.name_en || charKey;
+    }
+    charDiv.setAttribute('data-char-key', charKey);
+    
+    const nameEl = document.createElement('strong');
+    nameEl.className = 'block text-base font-semibold text-purple-800 dark:text-purple-300 mb-2';
+    nameEl.textContent = charName;
+    charDiv.appendChild(nameEl);
+
+    const imageBasePath = `https://bmk.blenet.top/data/outputs/datasets/${currentDataset}/${currentStoryId}/image/${charKey}/`;
+
+    const imagesContainer = document.createElement('div');
+    imagesContainer.className = 'flex flex-wrap gap-3 items-center';
+
+    if (charData.ref_images && Array.isArray(charData.ref_images) && charData.ref_images.length > 0) {
+      charData.ref_images.forEach((imageFilename, index) => {
+        const imgSrc = `${imageBasePath}${imageFilename}?x-oss-process=image/resize,p_25`;
+        const img = document.createElement('img');
+        img.className = 'h-28 w-28 md:h-32 md:w-32 object-cover rounded-lg shadow-md border-2 border-purple-200/60 dark:border-purple-700/60 hover:border-purple-400 dark:hover:border-purple-500 transition-all duration-200 ease-in-out cursor-pointer hover:scale-105 hover:shadow-purple-300/50 dark:hover:shadow-purple-800/50';
+        img.src = imgSrc;
+        img.alt = `${charName} Ref ${index + 1}`;
+        img.setAttribute('data-char-key', charKey);
+        img.onerror = () => { 
+          img.style.display = 'none'; 
+        };
+        img.loading = "lazy";
+        imagesContainer.appendChild(img);
+      });
+      charDiv.appendChild(imagesContainer);
+    } else {
+      const noRefText = document.createElement('p');
+      noRefText.className = 'text-sm text-purple-600 dark:text-purple-400 italic';
+      const noRefImagesMsg = initialTranslations[currentLang]?.['no_ref_images'] || initialTranslations.en?.['no_ref_images'] || "[No reference images listed]";
+      noRefText.textContent = noRefImagesMsg;
+      charDiv.appendChild(noRefText);
+    }
+
+    if (imagesContainer.children.length > 0 && imagesContainer.querySelectorAll('img[style*="display: none"]').length === imagesContainer.children.length) {
+      imagesContainer.innerHTML = ''; 
+      const loadFailText = document.createElement('p');
+      loadFailText.className = 'text-sm text-red-500 dark:text-red-400 italic mt-1';
+      const imagesFailedLoadMsg = initialTranslations[currentLang]?.['images_failed_to_load'] || initialTranslations.en?.['images_failed_to_load'] || "[All reference images failed to load]";
+      loadFailText.textContent = imagesFailedLoadMsg;
+      charDiv.appendChild(loadFailText);
+    }
+    characterReferenceArea.appendChild(charDiv);
+  });
+}
+
+function createModelVisibilitySelector() {
+  if (!modelVisibilitySelectorSection) {
+    console.error("Model visibility selector section not found in DOM.");
+    return;
+  }
+  modelVisibilitySelectorSection.innerHTML = ''; 
+
+  if (!detailedManifest || !detailedManifest.outputs || Object.keys(detailedManifest.outputs).length === 0) {
+    console.warn("Cannot create model visibility selector: manifest missing, invalid, or no outputs defined.");
+    const currentUiLang = document.documentElement.lang || 'en';
+    modelVisibilitySelectorSection.innerHTML = `<div class="p-4 bg-white/50 dark:bg-slate-700/50 rounded-lg shadow border border-gray-200/70 dark:border-slate-600/70"><p class="text-sm text-gray-600 dark:text-slate-300 text-center">${initialTranslations[currentUiLang]?.['no_models_to_filter'] || "No models available to filter."}</p></div>`;
+    return;
+  }
+
+  const currentUiLang = document.documentElement.lang || 'en';
+  const modelKeysForCurrentMode = modelKeyMap[currentDisplayMode];
+  const modelsToDisplay = Object.keys(detailedManifest.outputs).filter(key => modelKeysForCurrentMode.includes(key));
+
+  if (modelsToDisplay.length === 0) {
+      const noModelsMsg = initialTranslations[currentUiLang]?.['no_models_for_mode'] || initialTranslations.en?.['no_models_for_mode'] || `No models configured for ${currentDisplayMode} mode.`;
+      modelVisibilitySelectorSection.innerHTML = `<div class="p-4 bg-white/50 dark:bg-slate-700/50 rounded-lg shadow border border-gray-200/70 dark:border-slate-600/70"><p class="text-sm text-gray-600 dark:text-slate-300 text-center">${noModelsMsg.replace('[Mode]', currentDisplayMode)}</p></div>`;
+      return;
+  }
+
+  const titleEl = document.createElement('h3');
+  titleEl.className = 'text-xl font-semibold text-sky-800 dark:text-sky-300';
+  const selectorTitleKey = 'filter_models_title';
+  titleEl.textContent = initialTranslations[currentUiLang]?.[selectorTitleKey] || initialTranslations.en?.[selectorTitleKey] || "Filter Models:";
+  titleEl.setAttribute('data-lang-key', selectorTitleKey); 
+  modelVisibilitySelectorSection.appendChild(titleEl);
+
+  const buttonContainer = document.createElement('div');
+  buttonContainer.className = 'flex flex-wrap gap-3';
+
+  modelsToDisplay.forEach(modelKey => {
+    if (!selectedModels.has(modelKey)) { 
+        selectedModels.add(modelKey); 
+    }
+
+    const button = document.createElement('button');
+    const modelNameKey = `model_${modelKey}`;
+    const modelName = initialTranslations[currentUiLang]?.[modelNameKey] || initialTranslations.en?.[modelNameKey] || modelKey;
+    
+    button.textContent = modelName;
+    button.setAttribute('data-model-key', modelKey);
+    button.setAttribute('data-lang-model-name-key', modelNameKey); 
+    
+    // Updated button styling
+    if (selectedModels.has(modelKey)) {
+        button.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-sky-600 text-white border-sky-700 hover:bg-sky-700 dark:bg-sky-500 dark:border-sky-600 dark:hover:bg-sky-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800'; 
+    } else {
+        button.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-500 dark:hover:bg-slate-600 shadow focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800';
+    }
+    
+    button.addEventListener('click', () => handleModelVisibilityToggle(modelKey, button));
+    buttonContainer.appendChild(button);
+  });
+  modelVisibilitySelectorSection.appendChild(buttonContainer);
+}
+
+function handleModelVisibilityToggle(modelKey, buttonElement) {
+  if (selectedModels.has(modelKey)) {
+    selectedModels.delete(modelKey);
+    buttonElement.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-500 dark:hover:bg-slate-600 shadow focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800';
+  } else {
+    selectedModels.add(modelKey);
+    buttonElement.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-sky-600 text-white border-sky-700 hover:bg-sky-700 dark:bg-sky-500 dark:border-sky-600 dark:hover:bg-sky-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800';
+  }
+  updateVisibleModels();
+}
+
+function updateVisibleModels() {
+  if (!modelResultsArea) {
+    console.warn("updateVisibleModels: modelResultsArea not found.");
+    return;
+  }
+  const modelContainers = modelResultsArea.querySelectorAll('.model-sequence-container');
+  let visibleModelsExist = false;
+  
+  modelContainers.forEach(container => {
+    const modelKey = container.getAttribute('data-model-key');
+    if (selectedModels.has(modelKey)) {
+      container.style.display = '';
+      visibleModelsExist = true;
+    } else {
+      container.style.display = 'none';
+    }
+  });
+
+  const existingPlaceholder = modelResultsArea.querySelector('#no-visible-models-placeholder');
+  if (!visibleModelsExist && modelContainers.length > 0 && currentStoryId) {
+    if (!existingPlaceholder) {
+        const currentUiLang = document.documentElement.lang || 'en';
+        const noModelsSelectedMsg = initialTranslations[currentUiLang]?.['no_models_selected_msg'] || initialTranslations.en?.['no_models_selected_msg'] || "No models are selected to be displayed. Use the filter above.";
+        const placeholderP = document.createElement('p');
+        placeholderP.id = 'no-visible-models-placeholder';
+        placeholderP.className = 'text-gray-500 dark:text-slate-300 p-6 bg-white dark:bg-slate-700 shadow-lg rounded-lg';
+        placeholderP.textContent = noModelsSelectedMsg;
+        let canShowModelsMessage = true;
+        if(modelResultsArea.children.length === 1 && modelResultsArea.firstChild.classList && (modelResultsArea.firstChild.classList.contains('text-red-500') || modelResultsArea.firstChild.textContent.includes("Loading"))) {
+            canShowModelsMessage = false; 
+        }
+        if(canShowModelsMessage) {
+            modelResultsArea.innerHTML = ''; 
+            modelResultsArea.appendChild(placeholderP);
+        }
+    }
+  } else if (existingPlaceholder) {
+    existingPlaceholder.remove();
+  }
+
+  if (currentStoryData && currentStoryData.Shots && currentStoryData.Shots.length > 0 && currentShotIndex >= 0 && currentShotIndex < totalShots) {
+      updateExplorerView(currentShotIndex); 
+  }
+}
+
+async function populateModelContainers() {
+  if (!modelResultsArea) return;
+  modelResultsArea.innerHTML = ''; 
+  const currentLang = document.documentElement.lang || 'en';
+
+  if (!currentStoryData || !detailedManifest || !detailedManifest.outputs || !currentStoryId) {
+    const errorMsg = initialTranslations[currentLang]?.['error_loading_results'] || initialTranslations.en?.['error_loading_results'] || "Cannot display models: Story data or manifest missing/invalid.";
+    modelResultsArea.innerHTML = `<div class="bg-white dark:bg-slate-700 shadow-xl rounded-2xl border border-gray-200/70 dark:border-slate-600 overflow-hidden p-6"><p class="text-red-600 dark:text-red-400 text-center">${errorMsg}</p></div>`;
+    return;
+  }
+
+  const storyInfo = detailedManifest.stories.find(s => s.id === currentStoryId);
+  if (!storyInfo) {
+    const errorMsg = initialTranslations[currentLang]?.['error_loading_results'] || initialTranslations.en?.['error_loading_results'] || `Internal error: Could not find story info for ID '${currentStoryId}' in manifest.`;
+    modelResultsArea.innerHTML = `<div class="bg-white dark:bg-slate-700 shadow-xl rounded-2xl border border-gray-200/70 dark:border-slate-600 overflow-hidden p-6"><p class="text-red-600 dark:text-red-400 text-center">${errorMsg.replace('[Story ID]', currentStoryId)}</p></div>`;
+    return;
+  }
+
+  let hasModelsToDisplay = false;
+  const modelKeysForCurrentMode = modelKeyMap[currentDisplayMode];
+  const modelsToIterate = Object.keys(detailedManifest.outputs).filter(key => modelKeysForCurrentMode.includes(key));
+
+  if (modelsToIterate.length > 0) {
+      hasModelsToDisplay = true;
+  }
+
+  if (!hasModelsToDisplay) {
+    const noModelsMsg = initialTranslations[currentLang]?.['no_models_configured_for_mode'] || initialTranslations.en?.['no_models_configured_for_mode'] || `No models configured for ${currentDisplayMode} mode in the manifest.`;
+    modelResultsArea.innerHTML = `<div class="bg-white dark:bg-slate-700 shadow-xl rounded-2xl border border-gray-200/70 dark:border-slate-600 overflow-hidden p-6"><p class="text-gray-600 dark:text-slate-300 text-center">${noModelsMsg.replace('[Mode]', currentDisplayMode)}</p></div>`;
+    updateVisibleModels(); 
+    return;
+  }
+
+  modelsToIterate.forEach(modelKey => {
+    const modelData = detailedManifest.outputs[modelKey];
+    const modelContainer = document.createElement('div');
+    modelContainer.className = 'model-sequence-container group bg-white dark:bg-slate-700 shadow-xl rounded-2xl border border-gray-200/70 dark:border-slate-600 overflow-hidden transition-all duration-300 ease-in-out hover:shadow-sky-100/60 dark:hover:shadow-sky-800/60'; 
+    modelContainer.setAttribute('data-model-key', modelKey);
+
+    const titleSection = document.createElement('div');
+    titleSection.className = 'px-6 py-3 bg-sky-50/70 dark:bg-slate-800 border-b border-sky-200/80 dark:border-b dark:border-slate-500';
+    
+    const title = document.createElement('h4');
+    title.className = 'text-xl md:text-2xl font-semibold text-sky-700 dark:text-sky-300 text-center group-hover:text-sky-800 dark:group-hover:text-sky-200 transition-colors mb-2';
+    const modelNameKey = `model_${modelKey}`;
+    const modelName = initialTranslations[currentLang]?.[modelNameKey] || initialTranslations.en?.[modelNameKey] || modelKey;
+    title.textContent = modelName;
+    titleSection.appendChild(title);
+    modelContainer.appendChild(titleSection);
+
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'p-5 md:p-6 space-y-5 md:space-y-6';
+
+    const configDiv = document.createElement('div');
+    configDiv.className = 'flex flex-wrap justify-start items-center gap-x-6 gap-y-3 p-4 bg-slate-50/70 dark:bg-slate-600 rounded-xl border border-slate-200/80 dark:border-slate-500 shadow-sm';
+
+    const modes = Object.keys(modelData);
+    const modeSelectContainer = createDropdown(modelKey, 'mode', 'Mode', modes);
+    configDiv.appendChild(modeSelectContainer);
+    
+    let outputDatasetIdentifier = '';
+    let initialLangs = [];
+    let initialTimestamps = [];
+
+    if (modes.length > 0) {
+      const firstMode = modes[0];
+      const modelOutputsForFirstMode = modelData[firstMode];
+      if (modelOutputsForFirstMode && typeof modelOutputsForFirstMode === 'object') {
+        const outputDatasetKeys = Object.keys(modelOutputsForFirstMode);
+        if (outputDatasetKeys.length > 0) {
+          outputDatasetIdentifier = outputDatasetKeys[0]; // e.g., "ViStory"
+          const langDataForOutputDataset = modelOutputsForFirstMode[outputDatasetIdentifier];
+          if (langDataForOutputDataset && typeof langDataForOutputDataset === 'object') {
+            initialLangs = Object.keys(langDataForOutputDataset);
+            if (initialLangs.length > 0) {
+              const firstLang = initialLangs[0];
+              // Ensure .shots exists and is an array before trying to access it
+              initialTimestamps = Array.isArray(langDataForOutputDataset[firstLang]?.shots) ? langDataForOutputDataset[firstLang].shots : [];
+            }
+          }
+        }
+      }
+    }
+    
+    const langSelectContainer = createDropdown(modelKey, 'lang', 'Language', initialLangs);
+    configDiv.appendChild(langSelectContainer);
+    
+    const tsSelectContainer = createDropdown(modelKey, 'ts', 'Timestamp', initialTimestamps);
+    configDiv.appendChild(tsSelectContainer);
+
+    contentWrapper.appendChild(configDiv);
+
+    const scrollContainer = document.createElement('div');
+    scrollContainer.className = 'image-sequence-scroll-container flex overflow-x-auto overflow-y-visible gap-x-4 items-center min-h-[260px] bg-gradient-to-b from-slate-100 to-slate-200/60 dark:from-slate-600 dark:to-slate-700/80 border border-slate-200/90 dark:border-slate-500 rounded-xl p-4 relative shadow-inner';
+    scrollContainer.innerHTML = '<p class="text-gray-500/90 dark:text-slate-400/90 mx-auto text-sm px-4 py-2 bg-white/60 dark:bg-slate-500/60 rounded-lg shadow-sm border border-gray-200/70 dark:border-slate-400/70">Select configuration to load images.</p>';
+    contentWrapper.appendChild(scrollContainer);
+
+    modelContainer.appendChild(contentWrapper);
+    modelResultsArea.appendChild(modelContainer);
+    updateDependentDropdowns(modelKey); 
+  });
+  
+  updateVisibleModels(); 
+}
+
+function createDropdown(modelKey, type, labelTextKey, options) {
+  const currentUiLang = document.documentElement.lang || 'en';
+  let labelText = initialTranslations[currentUiLang]?.[labelTextKey] || labelTextKey;
+  if (!labelText) labelText = type.charAt(0).toUpperCase() + type.slice(1);
+
+  const div = document.createElement('div');
+  div.className = 'flex items-center';
+
+  const label = document.createElement('label');
+  label.className = 'font-medium text-sm text-gray-700 dark:text-slate-200 mr-2';
+  label.setAttribute('for', `${type}-select-${modelKey}`);
+  label.textContent = `${labelText}:`;
+
+  const select = document.createElement('select');
+  select.id = `${type}-select-${modelKey}`;
+  select.className = 'py-2 px-3 text-sm bg-white dark:bg-slate-600 text-gray-800 dark:text-slate-100 border border-gray-300 dark:border-slate-500 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none';
+  select.setAttribute('data-model-key', modelKey);
+  select.onchange = () => handleConfigChange(modelKey, type);
+
+  options.forEach(optionValue => {
+    const option = document.createElement('option');
+    option.value = optionValue;
+    option.textContent = optionValue;
+    select.appendChild(option);
+  });
+
+  div.appendChild(label);
+  div.appendChild(select);
+  return div;
+}
+
+function handleConfigChange(modelKey, changedType) {
+  console.log(`Config changed for ${modelKey}: ${changedType}`);
+  updateDependentDropdowns(modelKey);
+}
+
+function updateDependentDropdowns(modelKey) {
+  const modelContainer = modelResultsArea.querySelector(`.model-sequence-container[data-model-key="${modelKey}"]`);
+  if (!modelContainer || !detailedManifest) return;
+
+  const modeSelect = modelContainer.querySelector(`#mode-select-${modelKey}`);
+  const langSelect = modelContainer.querySelector(`#lang-select-${modelKey}`);
+  const tsSelect = modelContainer.querySelector(`#ts-select-${modelKey}`);
+  const storyInfo = detailedManifest.stories.find(s => s.id === currentStoryId);
+
+  if (!modeSelect || !langSelect || !tsSelect || !storyInfo) return;
+
+  const selectedMode = modeSelect.value;
+  let outputDatasetIdentifier = '';
+  const modelOutputsForSelectedMode = detailedManifest.outputs[modelKey]?.[selectedMode];
+  if (modelOutputsForSelectedMode && typeof modelOutputsForSelectedMode === 'object') {
+    const outputDatasetKeys = Object.keys(modelOutputsForSelectedMode);
+    if (outputDatasetKeys.length > 0) {
+      outputDatasetIdentifier = outputDatasetKeys[0]; // e.g., "ViStory"
+    }
+  }
+
+  const availableLangs = outputDatasetIdentifier && modelOutputsForSelectedMode[outputDatasetIdentifier]
+    ? Object.keys(modelOutputsForSelectedMode[outputDatasetIdentifier])
+    : [];
+
+  const currentLangVal = langSelect.value;
+  langSelect.innerHTML = '';
+  availableLangs.forEach(lang => {
+    if (outputDatasetIdentifier && modelOutputsForSelectedMode[outputDatasetIdentifier]?.[lang]!=undefined) {
+      const option = document.createElement('option');
+      option.value = lang;
+      option.textContent = lang;
+      langSelect.appendChild(option);
+    }
+  });
+  if (availableLangs.includes(currentLangVal) && langSelect.querySelector(`option[value="${currentLangVal}"]`)) {
+    langSelect.value = currentLangVal;
+  } else if (langSelect.options.length > 0) {
+    langSelect.selectedIndex = 0;
+  }
+
+  updateTimestampDropdown(modelKey);
+}
+
+function updateTimestampDropdown(modelKey) {
+  const modelContainer = modelResultsArea.querySelector(`.model-sequence-container[data-model-key="${modelKey}"]`);
+  if (!modelContainer || !detailedManifest) return;
+
+  const modeSelect = modelContainer.querySelector(`#mode-select-${modelKey}`);
+  const langSelect = modelContainer.querySelector(`#lang-select-${modelKey}`);
+  const tsSelect = modelContainer.querySelector(`#ts-select-${modelKey}`);
+  const storyInfoForTSDropdown = detailedManifest.stories.find(s => s.id === currentStoryId);
+
+  if (!modeSelect || !langSelect || !tsSelect || !storyInfoForTSDropdown || !langSelect.value) {
+     if(tsSelect) tsSelect.innerHTML = '';
+     loadModelSequence(modelKey); // Will show "Incomplete configuration" if tsSelect is empty
+     return;
+  }
+
+  const selectedMode = modeSelect.value;
+  const selectedLang = langSelect.value;
+  
+  let outputDatasetIdentifier = '';
+  const modelOutputsForSelectedMode = detailedManifest.outputs[modelKey]?.[selectedMode];
+  if (modelOutputsForSelectedMode && typeof modelOutputsForSelectedMode === 'object') {
+    const outputDatasetKeys = Object.keys(modelOutputsForSelectedMode);
+    if (outputDatasetKeys.length > 0) {
+      outputDatasetIdentifier = outputDatasetKeys[0]; 
+    }
+  }
+
+  const langDataForTimestamps = modelOutputsForSelectedMode?.[outputDatasetIdentifier]?.[selectedLang];
+  const availableTimestamps = (outputDatasetIdentifier && selectedLang && langDataForTimestamps && typeof langDataForTimestamps === 'object' && !Array.isArray(langDataForTimestamps))
+    ? Object.keys(langDataForTimestamps)
+    : [];
+
+  const currentTsVal = tsSelect.value;
+  tsSelect.innerHTML = ''; // Clear previous options
+  availableTimestamps.forEach(ts => {
+    const option = document.createElement('option');
+    option.value = ts;
+    option.textContent = ts;
+    tsSelect.appendChild(option);
+  });
+
+  if (availableTimestamps.includes(currentTsVal)) {
+    tsSelect.value = currentTsVal;
+  } else if (tsSelect.options.length > 0) {
+    tsSelect.selectedIndex = 0;
+  }
+  
+  loadModelSequence(modelKey);
+}
+
+function loadModelSequence(modelKey) {
+  const modelContainer = modelResultsArea.querySelector(`.model-sequence-container[data-model-key="${modelKey}"]`);
+  if(!modelContainer) return;
+  const modeSelect = modelContainer.querySelector(`#mode-select-${modelKey}`);
+  const langSelect = modelContainer.querySelector(`#lang-select-${modelKey}`);
+  const tsSelect = modelContainer.querySelector(`#ts-select-${modelKey}`);
+  const scrollContainer = modelContainer.querySelector('.image-sequence-scroll-container'); 
+  const storyInfo = detailedManifest.stories.find(s => s.id === currentStoryId);
+  const currentUiLang = document.documentElement.lang || 'en'; 
+
+  if (!modeSelect || !langSelect || !tsSelect || !scrollContainer || !storyInfo || !modeSelect.value || !langSelect.value || !tsSelect.value) {
+    const incompleteCfgMsg = initialTranslations[currentUiLang]?.['incomplete_config'] || initialTranslations.en?.['incomplete_config'] || "Incomplete configuration.";
+    if(scrollContainer) scrollContainer.innerHTML = `<p class="text-gray-500 dark:text-slate-400 p-2">${incompleteCfgMsg}</p>`;
+    return;
+  }
+
+  const loadingImagesMsg = initialTranslations[currentUiLang]?.['loading_images'] || initialTranslations.en?.['loading_images'] || "Loading images...";
+  scrollContainer.innerHTML = `<p class="text-gray-500 dark:text-slate-400 p-2">${loadingImagesMsg}</p>`;
+
+  const selectedMode = modeSelect.value;
+  const selectedLang = langSelect.value;
+  const selectedTimestamp = tsSelect.value;
+  let outputDatasetIdentifier = '';
+  const modelOutputsForSelectedMode = detailedManifest.outputs[modelKey]?.[selectedMode];
+  if (modelOutputsForSelectedMode && typeof modelOutputsForSelectedMode === 'object') {
+    const outputDatasetKeys = Object.keys(modelOutputsForSelectedMode);
+    if (outputDatasetKeys.length > 0) {
+      outputDatasetIdentifier = outputDatasetKeys[0]; // e.g., "ViStory"
+    }
+  }
+
+  if (!outputDatasetIdentifier) {
+    const errorMsg = initialTranslations[currentUiLang]?.['error_determining_output_dataset'] || initialTranslations.en?.['error_determining_output_dataset'] || "Error: Could not determine output dataset identifier.";
+    if(scrollContainer) scrollContainer.innerHTML = `<p class="text-red-500 dark:text-red-400 p-2">${errorMsg}</p>`;
+    return;
+  }
+
+  if (!currentStoryData.Shots || currentStoryData.Shots.length === 0) {
+    const noShotsMsg = initialTranslations[currentUiLang]?.['no_shots_defined'] || initialTranslations.en?.['no_shots_defined'] || "No shots defined for this story.";
+    scrollContainer.innerHTML = `<p class="text-gray-500 dark:text-slate-400 p-2">${noShotsMsg}</p>`;
+    return;
+  }
+
+  scrollContainer.innerHTML = '';
+
+  const modelNameKey = `model_${modelKey}`;
+  const modelName = initialTranslations[currentUiLang]?.[modelNameKey] || initialTranslations.en?.[modelNameKey] || modelKey;
+
+
+  currentStoryData.Shots.forEach((shot, index) => {
+    const img = document.createElement('img');
+    const shotIndexStr = shot.index.toString().padStart(2, '0');
+    const imagePath = `${IMAGE_OUTPUT_BASE_URL}/${modelKey}/${selectedMode}/${outputDatasetIdentifier}/${selectedLang}/${currentStoryId}/${selectedTimestamp}/shot_${shotIndexStr}.png?x-oss-process=image/resize,p_25`;
+
+    img.className = 'h-44 md:h-48 w-auto inline-block border-2 border-transparent cursor-pointer transition-all duration-300 rounded-md shadow-sm hover:shadow-md hover:scale-110 object-contain';
+    img.src = imagePath;
+    img.alt = `Model ${modelName} - Shot ${shot.index}`;
+    img.classList.add('sequence-image');
+    img.setAttribute('data-shot-index', index);
+    img.setAttribute('data-shot-id', shot.index);
+    img.addEventListener('click', handleImageClick);
+    img.onerror = () => {
+      console.warn("Error loading image:", imagePath);
+      img.alt = `Error loading ${modelName} - Shot ${shot.index}`;
+      img.src = `${astroBaseUrl}/img/placeholder_error.png`; 
+      img.classList.add('border-red-300', 'dark:border-red-400');
+    };
+    img.loading = "lazy";
+    scrollContainer.appendChild(img);
+  });
+  updateFocusInContainer(modelContainer, currentShotIndex);
+}
+
+function updateFocusInContainer(container, shotIndex) {
+  if (!container) return;
+  let foundFocused = false;
+  
+  const positionActiveImage = (img, isActive) => {
+    if (isActive) {
+      if (!img._originalPosition) {
+        const rect = img.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        img._originalPosition = {
+          top: img.style.top,
+          left: img.style.left,
+          position: img.style.position
+        };
+      }
+      img.style.position = 'relative';
+      img.style.zIndex = '50';
+    } else if (img._originalPosition) {
+      img.style.position = img._originalPosition.position;
+      img.style.top = img._originalPosition.top;
+      img.style.left = img._originalPosition.left;
+      img.style.zIndex = '';
+    }
+  };
+  
+  container.querySelectorAll('.sequence-image').forEach(img => {
+    if (!img.classList.contains('transition-all')) {
+      img.classList.add('transition-all', 'duration-300', 'ease-in-out');
+    }
+    
+    const isCurrentShot = parseInt(img.dataset.shotIndex) === shotIndex;
+    
+    // Reset classes first for all images before applying active ones
+    img.classList.remove(
+      'border-sky-600', 'dark:border-sky-400',
+      'border-2', 
+      'transform', 
+      'scale-[1.15]', 
+      'shadow-2xl', 
+      'shadow-sky-600/50', 'dark:shadow-sky-700/50',
+      'contrast-125',
+      'brightness-105',
+      'rounded-md',
+      'blur-[1px]', 'opacity-80' // also remove blur/opacity which are for non-active
+    );
+    // Add back default non-active styling, active styling will override these if applicable
+    img.classList.add('border-transparent', 'shadow-sm');
+    positionActiveImage(img, false); // reset position for all first
+    
+    if (isCurrentShot) {
+      img.classList.add(
+        'border-sky-600', 'dark:border-sky-400', 
+        'border-2', 
+        'transform', 
+        'scale-[1.15]', 
+        'shadow-2xl', 
+        'shadow-sky-600/50', 'dark:shadow-sky-700/50',
+        'rounded-md',
+        'contrast-125',
+        'brightness-105'
+      );
+      // Remove non-active specific styling if it was added by default
+      img.classList.remove('blur-[1px]', 'opacity-80', 'border-transparent', 'shadow-sm');
+      positionActiveImage(img, true);
+      
+      requestAnimationFrame(() => {
+        const scrollContainer = container.querySelector('.image-sequence-scroll-container');
+        if (scrollContainer && img) {
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const imgRect = img.getBoundingClientRect();
+            const desiredImgLeftInContainer = (containerRect.width - imgRect.width) / 2;
+            const currentImgLeftInContainer = imgRect.left - containerRect.left;
+            const scrollAmount = currentImgLeftInContainer - desiredImgLeftInContainer;
+            scrollContainer.scrollTo({
+                left: scrollContainer.scrollLeft + scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+      });
+      foundFocused = true;
+    } else {
+      // Ensure non-active images have blur and opacity
+      img.classList.add('blur-[1px]', 'opacity-80');
+    }
+  });
+   
+   if (!foundFocused || shotIndex === -1) { 
+     const scrollContainer = container.querySelector('.image-sequence-scroll-container');
+     
+     if (!foundFocused && currentStoryData?.Shots?.length > 0 && shotIndex !== -1) {
+       console.warn(`Focused image for shot index ${shotIndex} not found in model ${container.dataset.modelKey}`);
+     }
+   }
+}
+
+        function updateExplorerView(shotIndex) {
+  console.log(`DEBUG: updateExplorerView called with shotIndex: ${shotIndex}. Current story ID: ${currentStoryId}, totalShots: ${totalShots}`);
+  if (!currentStoryData || !currentStoryData.Shots || currentStoryData.Shots.length === 0) {
+    console.warn("DEBUG: updateExplorerView: Aborting - No currentStoryData or currentStoryData.Shots is empty.", currentStoryData);
+    return;
+  }
+  if (shotIndex < 0 || shotIndex >= totalShots) {
+    console.warn(`DEBUG: updateExplorerView: Aborting - Invalid shotIndex: ${shotIndex}. totalShots: ${totalShots}`);
+    return;
+  }
+
+  currentShotIndex = shotIndex;
+  console.log(`DEBUG: updateExplorerView: currentShotIndex is now ${currentShotIndex}`);
+  const shot = currentStoryData.Shots[currentShotIndex];
+  const currentUiLang = document.documentElement.lang || 'en';
+  
+  document.querySelectorAll('h4[data-lang-key]').forEach(headerEl => {
+    const key = headerEl.getAttribute('data-lang-key');
+    if (key && initialTranslations[currentUiLang]?.[key]) {
+      headerEl.textContent = initialTranslations[currentUiLang][key];
+    }
+  });
+
+  const plotDisplay = document.getElementById('script-plot-display');
+  const settingDisplay = document.getElementById('script-setting-display');
+  const perspectiveDisplay = document.getElementById('script-perspective-display');
+  const staticDescDisplay = document.getElementById('script-static-desc-display');
+
+  const getLocalizedContent = (shotData, fieldName) => {
+    if (!shotData[fieldName]) return "-";
+    
+    const lang = document.documentElement.lang || 'en';
+    
+    if (lang === 'zh') {
+      return shotData[fieldName]?.['ch'] || shotData[fieldName]?.['zh'] || shotData[fieldName]?.['cn'] || shotData[fieldName]?.['en'] || "-";
+    } else {
+      return shotData[fieldName]?.[lang] || shotData[fieldName]?.['en'] || "-";
+    }
+  };
+
+  if(plotDisplay) plotDisplay.textContent = getLocalizedContent(shot, 'Plot Correspondence');
+  if(settingDisplay) settingDisplay.textContent = getLocalizedContent(shot, 'Setting Description');
+  if(perspectiveDisplay) perspectiveDisplay.textContent = getLocalizedContent(shot, 'Shot Perspective Design');
+  if(staticDescDisplay) staticDescDisplay.textContent = getLocalizedContent(shot, 'Static Shot Description');
+
+            const indicatorTextKey = 'shot_current_of_total';
+  let indicatorText = initialTranslations[currentUiLang]?.[indicatorTextKey] || initialTranslations.en[indicatorTextKey];
+  indicatorText = indicatorText.replace('[Current Shot]', shot.index.toString()).replace('[Total Shots]', totalShots.toString());
+            if(shotIndicatorText) shotIndicatorText.textContent = indicatorText;
+
+            if(characterReferenceArea) {
+                // Reset styles for all character images first
+                characterReferenceArea.querySelectorAll('img').forEach(img => {
+                    img.classList.remove(
+                        'border-sky-600', 'dark:border-sky-400',
+                        'transform', 'scale-[1.2]',
+                        'shadow-2xl', 'shadow-sky-600/50', 'dark:shadow-sky-700/50',
+                        'contrast-125', 'brightness-105'
+                    );
+                    // Ensure default border and shadow are present if not highlighted
+                    // These might have been removed if they were part of highlight before
+                    // The base classes already include border-2 and rounded-lg
+                    img.classList.add('border-purple-200/60', 'dark:border-purple-700/60', 'shadow-md');
+                });
+                
+                let charactersInShot = [];
+                const lang = document.documentElement.lang || 'en';
+                
+                if (lang === 'zh') {
+                  charactersInShot = shot['Characters Appearing']?.['ch'] || shot['Characters Appearing']?.['zh'] || shot['Characters Appearing']?.['cn'] || shot['Characters Appearing']?.['en'] || [];
+                } else {
+                  charactersInShot = shot['Characters Appearing']?.[lang] || shot['Characters Appearing']?.['en'] || [];
+                }
+
+    if (charactersInShot.length > 0) {
+                    const charKeyMap = {};
+                    Object.entries(currentStoryData.Characters).forEach(([key, charData]) => {
+        if (charData.name_en) charKeyMap[charData.name_en] = key;
+        if (charData.name_zh) charKeyMap[charData.name_zh] = key;
+        if (charData.name_cn) charKeyMap[charData.name_cn] = key;
+        if (charData.name_ch) charKeyMap[charData.name_ch] = key;
+        Object.entries(charData).forEach(([langKey, value]) => {
+          if (langKey.startsWith('name_') && value) {
+            charKeyMap[value] = key;
+          }
+        });
+      });
+      charactersInShot.forEach(charName => {
+        const charKey = charKeyMap[charName];
+                        if (charKey) {
+                            characterReferenceArea.querySelectorAll(`img[data-char-key="${charKey}"]`).forEach(img => {
+            if (img.offsetParent !== null) { // Check if visible
+              // Remove default styles that will be replaced by highlight
+              img.classList.remove('border-purple-200/60', 'dark:border-purple-700/60', 'shadow-md');
+              // Add highlight styles (similar to model result active images)
+              img.classList.add(
+                'border-sky-600', 'dark:border-sky-400',
+                'transform', // Ensure transform class is present
+                'scale-[1.2]',
+                'shadow-2xl', 'shadow-sky-600/50', 'dark:shadow-sky-700/50',
+                'contrast-125', 'brightness-105'
+              );
+                                }
+                            });
+                        } else {
+          console.warn(`Could not find key for character name: ${charName}`);
+        }
+                    });
+                }
+            }
+            
+                modelResultsArea.querySelectorAll('.model-sequence-container').forEach(container => {
+                    if (container.style.display !== 'none') { 
+      updateFocusInContainer(container, currentShotIndex);
+    }
+  });
+
+  resetAutoPlayTimer();
+  if(prevShotBtn) prevShotBtn.disabled = false;
+  if(nextShotBtn) nextShotBtn.disabled = false;
+}
+
+async function loadStory(storyId) {
+  console.log(`Loading story: ${storyId}`);
+  currentStoryId = storyId;
+
+  if (storyWallContainer && availableStories && availableStories.length > 0) {
+    populateStorySelector();
+  }
+
+  const currentLang = document.documentElement.lang || 'en';
+  const loadingCharsMsg = initialTranslations[currentLang]?.['loading_characters'] || initialTranslations.en?.['loading_characters'];
+  const loadingResultsMsg = initialTranslations[currentLang]?.['loading_results'] || initialTranslations.en?.['loading_results'];
+
+  if(characterReferenceArea) characterReferenceArea.innerHTML = `<p class="text-gray-500 dark:text-slate-400">${loadingCharsMsg}</p>`;
+  if(modelResultsArea) modelResultsArea.innerHTML = `<p class="text-gray-500 dark:text-slate-400 p-6 bg-white dark:bg-slate-750 shadow-lg rounded-lg">${loadingResultsMsg}</p>`;
+  if(shotIndicatorText) shotIndicatorText.textContent = 'Shot [?] of [?]';
+  if(prevShotBtn) prevShotBtn.disabled = true;
+  if(nextShotBtn) nextShotBtn.disabled = true;
+
+  const currentUiLang = document.documentElement.lang || 'en';
+  const titleKey = 'story_detail_title';
+  let titleText = initialTranslations[currentUiLang]?.[titleKey] || initialTranslations.en[titleKey] || "Result Explorer";
+
+  const storyInfoForTitle = availableStories.find(s => s.id === storyId);
+  titleText = titleText.replace('[Story ID]', storyInfoForTitle ? storyInfoForTitle.name : storyId);
+  
+  document.title = titleText;
+  const mainPageTitleElement = document.getElementById('story-detail-main-title');
+  if (mainPageTitleElement) {
+    mainPageTitleElement.textContent = titleText;
+  } else if (storyTitleElement && storyTitleElement.tagName === 'H1') {
+    storyTitleElement.textContent = titleText;
+  }
+
+  currentStoryData = await fetchStoryData(storyId);
+
+  if (currentStoryData && currentStoryData.Shots) {
+    totalShots = currentStoryData.Shots.length;
+    currentShotIndex = 0;
+    await populateModelContainers(); 
+  } else {
+    totalShots = 0;
+    currentShotIndex = 0;
+    if(shotIndicatorText) shotIndicatorText.textContent = 'Shot [0] of [0]';
+    const errorLoadStoryMsg = initialTranslations[currentLang]?.['error_loading_results'] || initialTranslations.en?.['error_loading_results'] || "Failed to load story data or story has no shots.";
+    if(modelResultsArea) modelResultsArea.innerHTML = `<p class="text-red-500 dark:text-red-400 p-6 bg-white dark:bg-slate-750 shadow-lg rounded-lg">${errorLoadStoryMsg}</p>`;
+  }
+  
+  if (currentStoryData) {
+      const storyInfo = availableStories.find(s => s.id === currentStoryId);
+      const titleKey = 'story_detail_title';
+      const lang = document.documentElement.lang || 'en';
+      let newTitleText = initialTranslations[lang]?.[titleKey] || initialTranslations.en[titleKey];
+      newTitleText = newTitleText.replace('[Story ID]', storyInfo ? storyInfo.name : currentStoryId);
+      if (storyTitleElement) storyTitleElement.textContent = newTitleText;
+      document.title = newTitleText;
+
+      updateCharacterReferences();
+      if (totalShots > 0 && currentShotIndex >=0 && currentShotIndex < totalShots) {
+           updateExplorerView(currentShotIndex);
+      } else if (totalShots === 0) {
+      }
+  }
+        }
+
+        function changeShot(direction) {
+  console.log(`DEBUG: changeShot called with direction: ${direction}. Current index: ${currentShotIndex}, total shots: ${totalShots}`);
+  if (totalShots <= 0) {
+    console.warn('DEBUG: changeShot: totalShots is 0 or less, aborting.');
+    return;
+  }
+  let newIndex = currentShotIndex + direction;
+  if (newIndex < 0) newIndex = totalShots - 1;
+  else if (newIndex >= totalShots) newIndex = 0;
+  
+  console.log(`DEBUG: changeShot: newIndex will be ${newIndex}`);
+  updateExplorerView(newIndex);
+}
+
+function handleImageClick(event) {
+            if (event.target.classList.contains('sequence-image')) { 
+                  const clickedShotIndex = parseInt(event.target.dataset.shotIndex);
+                  if (!isNaN(clickedShotIndex) && clickedShotIndex !== currentShotIndex) {
+                      updateExplorerView(clickedShotIndex);
+                 }
+            }
+        }
+
+        function startProgressBar() {
+            let progress = 0;
+            clearInterval(progressInterval);
+  if(progressBar) progressBar.style.width = '0%';
+
+            if (totalShots > 0 && progressBar) {
+                progressInterval = setInterval(() => {
+      progress += 100 / (autoPlayInterval / 100);
+                    if (progress <= 100) {
+                        progressBar.style.width = progress + '%';
+                    } else {
+                        clearInterval(progressInterval); 
+                    }
+    }, 100);
+            }
+        }
+
+        function resetAutoPlayTimer() {
+            clearTimeout(autoPlayTimer);
+            clearInterval(progressInterval); 
+            if(progressBar) progressBar.style.width = '0%'; 
+
+            if (totalShots > 0) {
+                startProgressBar(); 
+                autoPlayTimer = setTimeout(() => {
+                    let newIndex = currentShotIndex + 1;
+                    if (newIndex >= totalShots) newIndex = 0;
+                    updateExplorerView(newIndex);
+                }, autoPlayInterval);
+            }
+        }
+        
+if (window.changeLanguage) {
+    const originalGlobalChangeLanguage = window.changeLanguage;
+    window.changeLanguage = function(lang) {
+        originalGlobalChangeLanguage(lang);
+
+        if (currentStoryData && availableStories.length > 0 && currentStoryId) {
+            const storyInfo = availableStories.find(s => s.id === currentStoryId);
+            const titleKey = 'story_detail_title';
+            const currentUiLang = document.documentElement.lang || 'en';
+            let newTitleText = initialTranslations[currentUiLang]?.[titleKey] || initialTranslations.en?.[titleKey] || "Result Explorer";
+            newTitleText = newTitleText.replace('[Story ID]', storyInfo ? storyInfo.name : currentStoryId);
+            
+            document.title = newTitleText;
+            const mainPageTitleElement = document.getElementById('story-detail-main-title');
+             if (mainPageTitleElement) {
+                mainPageTitleElement.textContent = newTitleText;
+             } else if (storyTitleElement && storyTitleElement.tagName === 'H1') {
+                storyTitleElement.textContent = newTitleText;
+             }
+
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (key && initialTranslations[currentUiLang]?.[key]) {
+                    element.textContent = initialTranslations[currentUiLang][key];
+                }
+            });
+            
+            populateStorySelector();
+            
+            updateCharacterReferences(); 
+            
+            modelResultsArea.querySelectorAll('.model-sequence-container').forEach(modelContainer => {
+                const modelKey = modelContainer.dataset.modelKey;
+                const titleEl = modelContainer.querySelector('h4');
+                if(titleEl) {
+                    const modelNameKey = `model_${modelKey}`;
+                    titleEl.textContent = initialTranslations[currentUiLang]?.[modelNameKey] || initialTranslations.en?.[modelNameKey] || modelKey;
+                }
+                ['mode', 'lang', 'ts'].forEach(type => {
+                    const labelEl = modelContainer.querySelector(`label[for="${type}-select-${modelKey}"]`);
+                    if(labelEl) {
+                        let labelTextContent = initialTranslations[currentUiLang]?.[type.charAt(0).toUpperCase() + type.slice(1)] || type.charAt(0).toUpperCase() + type.slice(1);
+                        labelEl.textContent = `${labelTextContent}:`;
+                    }
+                });
+            });
+            
+            if (totalShots > 0 && currentShotIndex >=0 && currentShotIndex < totalShots) {
+                updateExplorerView(currentShotIndex);
+            }
+        } else {
+            const titleKey = 'story_detail_title_no_story';
+            const currentUiLang = document.documentElement.lang || 'en';
+            let genericTitle = initialTranslations[currentUiLang]?.[titleKey] || initialTranslations.en?.[titleKey] || "Result Explorer";
+            document.title = genericTitle;
+            const mainPageTitleElement = document.getElementById('story-detail-main-title');
+             if (mainPageTitleElement) {
+                mainPageTitleElement.textContent = genericTitle;
+             } else if (storyTitleElement && storyTitleElement.tagName === 'H1') {
+                storyTitleElement.textContent = genericTitle;
+             }
+        }
+    };
+}
+
+
+async function initializeExplorer() {
+  console.log("DEBUG: Initializing Result Explorer...");
+  selectedModels.clear(); 
+  
+  const currentUiLang = document.documentElement.lang || 'en';
+  document.querySelectorAll('[data-lang-key]').forEach(element => {
+    const key = element.getAttribute('data-lang-key');
+    if (key && initialTranslations[currentUiLang]?.[key]) {
+      element.textContent = initialTranslations[currentUiLang][key];
+    }
+  });
+
+  if(prevPageBtn) prevPageBtn.addEventListener('click', () => changeStoryPage(-1));
+  if(nextPageBtn) nextPageBtn.addEventListener('click', () => changeStoryPage(1));
+  if (prevShotBtn) {
+    prevShotBtn.addEventListener('click', () => changeShot(-1));
+  } else {
+    console.error("DEBUG: prevShotBtn not found during initialization.");
+  }
+  if (nextShotBtn) {
+    nextShotBtn.addEventListener('click', () => changeShot(1));
+  } else {
+    console.error("DEBUG: nextShotBtn not found during initialization.");
+  }
+
+  if (liteModeBtn && fullModeBtn) {
+    liteModeBtn.addEventListener('click', () => {
+        console.log("Lite mode button explicitly clicked."); 
+        switchDisplayMode('lite');
+    });
+    fullModeBtn.addEventListener('click', () => {
+        console.log("Full mode button explicitly clicked."); 
+        switchDisplayMode('full');
+    });
+  } else {
+    console.error("DEBUG: Mode toggle buttons not found during initialization.");
+  }
+
+  try {
+    const response = await fetch(`${astroBaseUrl}/detailed_manifest.json`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status} - Check if detailed_manifest.json exists.`);
+    detailedManifest = await response.json();
+    allAvailableStories = detailedManifest.stories || []; // Store all stories first
+    
+    // Filter stories based on the initial display mode (e.g., 'lite')
+    const storyIdsForInitialMode = storyIdMap[currentDisplayMode];
+    availableStories = allAvailableStories.filter(story => storyIdsForInitialMode.includes(story.id));
+    
+    if (detailedManifest && detailedManifest.outputs) {
+        const modelKeysForInitialMode = modelKeyMap[currentDisplayMode];
+        Object.keys(detailedManifest.outputs)
+              .filter(key => modelKeysForInitialMode.includes(key))
+              .forEach(modelKey => selectedModels.add(modelKey));
+    } else {
+        console.warn("initializeExplorer: detailedManifest.outputs is missing or invalid. selectedModels will be empty or based on filtered keys.");
+    }
+    
+    updateModeButtonStyles(); // Set initial button styles based on currentDisplayMode
+    createModelVisibilitySelector(); 
+
+    populateStorySelector(); 
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const storyIdFromUrl = urlParams.get('story');
+    let storyToLoad = null;
+
+    if (storyIdFromUrl && availableStories.some(s => s.id === storyIdFromUrl)) {
+      storyToLoad = storyIdFromUrl;
+      const storyIndex = availableStories.findIndex(s => s.id === storyIdFromUrl);
+      if (storyIndex !== -1) currentPage = Math.floor(storyIndex / storiesPerPage) + 1;
+      populateStorySelector(); 
+      await loadStory(storyToLoad);
+    } else if (availableStories.length > 0) {
+      storyToLoad = availableStories[0].id;
+      currentPage = 1;
+      await loadStory(storyToLoad);
+    } else {
+      if(storyWallContainer) storyWallContainer.innerHTML = '<p class="text-gray-500 dark:text-slate-400">No stories found in manifest.</p>';
+      const paginationControls = document.getElementById('story-pagination-controls');
+      if(paginationControls) paginationControls.style.display = 'none';
+      if(modelResultsArea) modelResultsArea.innerHTML = '<p class="text-gray-500 dark:text-slate-400 p-6 bg-white dark:bg-slate-750 shadow-lg rounded-lg">No stories available.</p>';
+      updateExplorerView(-1); 
+      console.error("No stories available to load from manifest.");
+    }
+  } catch (error) {
+    console.error("Error fetching or parsing detailed_manifest.json:", error);
+    if(storyWallContainer) storyWallContainer.innerHTML = `<p class="text-red-500 dark:text-red-400">Error loading story list: ${error.message}</p>`;
+    if(modelResultsArea) modelResultsArea.innerHTML = '<p class="text-red-500 dark:text-red-400 p-6 bg-white dark:bg-slate-750 shadow-lg rounded-lg">Error loading configuration.</p>';
+    if(modelVisibilitySelectorSection) modelVisibilitySelectorSection.innerHTML = `<p class="text-red-500 dark:text-red-400">Error loading model filters: ${error.message}</p>`;
+    updateExplorerView(-1);
+  }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeExplorer);
+} else {
+    initializeExplorer(); 
+}
+
+function updateModeButtonStyles() {
+    if (!liteModeBtn || !fullModeBtn) return;
+    // Updated active and inactive classes for a more modern feel
+    const activeClasses = ['bg-sky-600', 'dark:bg-sky-500', 'text-white', 'shadow-lg', 'ring-2', 'ring-sky-500', 'ring-offset-2', 'ring-offset-slate-100', 'dark:ring-offset-slate-800'];
+    const inactiveClasses = ['bg-slate-200', 'dark:bg-slate-700', 'text-slate-700', 'dark:text-slate-300', 'hover:bg-slate-300', 'dark:hover:bg-slate-600', 'shadow'];
+
+    if (currentDisplayMode === 'lite') {
+        liteModeBtn.classList.remove(...inactiveClasses, 'bg-white', 'dark:bg-slate-800', 'text-sky-600', 'dark:text-sky-400', 'shadow-sm'); // Remove old active and base inactive
+        liteModeBtn.classList.add(...activeClasses);
+        
+        fullModeBtn.classList.remove(...activeClasses, 'bg-white', 'dark:bg-slate-800', 'text-sky-600', 'dark:text-sky-400', 'shadow-sm'); // Remove new active and old active
+        fullModeBtn.classList.add(...inactiveClasses);
+    } else { // full mode
+        fullModeBtn.classList.remove(...inactiveClasses, 'bg-white', 'dark:bg-slate-800', 'text-sky-600', 'dark:text-sky-400', 'shadow-sm');
+        fullModeBtn.classList.add(...activeClasses);
+
+        liteModeBtn.classList.remove(...activeClasses, 'bg-white', 'dark:bg-slate-800', 'text-sky-600', 'dark:text-sky-400', 'shadow-sm');
+        liteModeBtn.classList.add(...inactiveClasses);
+    }
+}
+
+async function switchDisplayMode(newMode) {
+    if (currentDisplayMode === newMode) return;
+    console.log(`Switching display mode from ${currentDisplayMode} to: ${newMode}`);
+    currentDisplayMode = newMode;
+    currentPage = 1; // Reset to first page of stories for the new mode
+    selectedModels.clear(); // Clear selected models as available models might change
+
+    // Re-filter available stories for the new mode
+    const storyIdsForNewMode = storyIdMap[currentDisplayMode];
+    availableStories = allAvailableStories.filter(story => storyIdsForNewMode.includes(story.id));
+    console.log(`Mode ${currentDisplayMode}: ${availableStories.length} stories available.`);
+
+    // Re-populate selectedModels based on the new mode
+    let modelKeysForNewMode = [];
+    if (detailedManifest && detailedManifest.outputs) {
+        modelKeysForNewMode = modelKeyMap[currentDisplayMode];
+        Object.keys(detailedManifest.outputs)
+              .filter(key => modelKeysForNewMode.includes(key))
+              .forEach(modelKey => selectedModels.add(modelKey));
+    } else {
+        console.warn("switchDisplayMode: detailedManifest.outputs is missing or invalid.");
+    }
+    console.log(`Mode ${currentDisplayMode}: ${selectedModels.size} models initially selected from ${modelKeysForNewMode.length} available for mode.`);
+
+    updateModeButtonStyles();
+    createModelVisibilitySelector(); // Rebuild model filters
+    populateStorySelector(); // Rebuild story wall
+
+    // Check if current story is still valid, if not, load the first available one
+    let storyToLoadAfterSwitch = null;
+    if (currentStoryId && availableStories.some(s => s.id === currentStoryId)) {
+        storyToLoadAfterSwitch = currentStoryId;
+    } else if (availableStories.length > 0) {
+        storyToLoadAfterSwitch = availableStories[0].id;
+    } else {
+        // No stories available for this mode, clear display areas
+        if(storyWallContainer) storyWallContainer.innerHTML = '<p class="text-gray-500 dark:text-slate-400">No stories available for this mode.</p>';
+        const paginationControls = document.getElementById('story-pagination-controls');
+        if(paginationControls) paginationControls.style.display = 'none';
+        if(modelResultsArea) modelResultsArea.innerHTML = '<p class="text-gray-500 dark:text-slate-400 p-6 bg-white dark:bg-slate-750 shadow-lg rounded-lg">No stories available for this mode.</p>';
+        updateExplorerView(-1); // Clear script details etc.
+        currentStoryId = null;
+        currentStoryData = null;
+        totalShots = 0;
+    }
+
+    if (storyToLoadAfterSwitch) {
+        await loadStory(storyToLoadAfterSwitch);
+    } else {
+        // If no story to load, explicitly clear/reset views that loadStory would handle
+        if(characterReferenceArea) characterReferenceArea.innerHTML = '<p class="text-gray-500 dark:text-slate-400">Select a story.</p>';
+        if(modelResultsArea) modelResultsArea.innerHTML = '<p class="text-gray-500 dark:text-slate-400 p-6 bg-white dark:bg-slate-750 shadow-lg rounded-lg">Select a story to view results.</p>';
+        if(shotIndicatorText) shotIndicatorText.textContent = 'Shot [?] of [?]';
+        if(prevShotBtn) prevShotBtn.disabled = true;
+        if(nextShotBtn) nextShotBtn.disabled = true;
+        const titleKey = 'story_detail_title_no_story';
+        const currentUiLang = document.documentElement.lang || 'en';
+        let genericTitle = initialTranslations[currentUiLang]?.[titleKey] || initialTranslations.en?.[titleKey] || "Result Explorer";
+        document.title = genericTitle;
+        const mainPageTitleElement = document.getElementById('story-detail-main-title');
+        if (mainPageTitleElement) {
+            mainPageTitleElement.textContent = genericTitle;
+        } else if (storyTitleElement && storyTitleElement.tagName === 'H1') {
+            storyTitleElement.textContent = genericTitle;
+        }
+    }
+}
+
+</script>

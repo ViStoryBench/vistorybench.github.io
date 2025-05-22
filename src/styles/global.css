@@ -1,0 +1,6 @@
+/* @import "tailwindcss"; */ /* Commented out or removed */
+
+/* styles/global.css */
+/* 这个文件可以用来存放一些 Tailwind 难以直接实现的全局样式， */
+/* 或者从旧的 style.css 中迁移过来的、尚未被 Tailwind 替代的样式。*/
+/* 对于大多数情况，我们应该优先使用 Tailwind 的功能。 */

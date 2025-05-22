@@ -1,0 +1,403 @@
+---
+import '/src/styles/global.css'
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// For the index page, the title in the Header component will use its default
+// or you can explicitly pass one. The document <title> is handled by BaseLayout.
+const pageSpecificTitle = "Storytelling Benchmark Overview & Leaderboard";
+const currentNav = "overview";
+
+// Data provided by user - CSV format for full, TSV for lite
+const fullDatasetCsvContent = `
+Method,model,mode,Character Consistency(CRef)_rank,Style Consistency(SRef)_rank,Prompt Alignment_rank,Generative Quality_rank,Diversity_rank,overall_rank,model_key
+Story image method,UNO (many2many version),base,2.0,2.5,3.0,4.0,4.0,1.0,Story image method - UNO (many2many version)
+Story image method,Storyadapter,(Img ref)(scale0),3.0,2.5,4.0,6.0,3.0,2.0,Story image method - Storyadapter
+Story video method,Movieagent,SD-3 version,8.0,8.5,2.0,3.0,1.0,3.0,Story video method - Movieagent
+Story video method,Animdirector,base,4.5,8.5,1.0,2.0,5.0,4.0,Story video method - Animdirector
+Story image method,Storydiffusion,(Img ref) (photomaker),4.5,6.0,5.0,5.0,7.0,5.0,Story image method - Storydiffusion
+Story video method,MM-StoryAgent,base,7.0,6.0,6.0,1.0,8.0,6.0,Story video method - MM-StoryAgent
+Naive baseline,base,base,1.0,1.0,10.0,8.0,10.0,7.0,Naive baseline - base
+Story image method,Theatergen,base,9.0,11.0,9.0,7.0,2.0,8.0,Story image method - Theatergen
+Story image method,Storygen,Multi-image-condition,6.0,6.0,8.0,10.0,9.0,9.0,Story image method - Storygen
+Story video method,Vlogger,text only,10.0,10.0,7.0,9.0,6.0,10.0,Story video method - Vlogger
+Story image method,Seedstory(AR) ,base,11.0,4.0,11.0,11.0,11.0,11.0,Story image method - Seedstory(AR) 
+`.trim();
+
+const liteDatasetTsvContent = `
+Method,model,mode,Character Consistency(CRef)_rank,Style Consistency(SRef)_rank,Prompt Alignment_rank,Generative Quality_rank,Diversity_rank,overall_rank,model_key
+MLLM model,GPT4o,base,3.0,3.0,1.0,6.0,12.0,1.0,MLLM model - GPT4o
+Business platform,doubao,base,5.0,6.0,2.0,4.0,10.0,2.0,Business platform - doubao
+Business platform,bairimeng_ai,base,2.0,2.0,8.0,3.0,11.0,3.0,Business platform - bairimeng_ai
+Story image method,UNO (many2many version),base,5.0,5.0,6.0,10.0,6.0,4.0,Story image method - UNO (many2many version)
+Story video method,Movieagent,SD-3 version,10.0,16.0,5.0,7.0,2.0,5.0,Story video method - Movieagent
+Story video method,Animdirector,base,7.0,16.0,4.0,5.0,9.0,6.0,Story video method - Animdirector
+Business platform,shenbimaliang,base,9.0,16.0,7.0,11.0,3.0,7.0,Business platform - shenbimaliang
+Business platform,morphic_studio,base,5.0,4.0,9.5,12.0,13.0,8.0,Business platform - morphic_studio
+Business platform,xunfeihuiying,base,11.0,10.0,12.0,8.0,5.0,9.0,Business platform - xunfeihuiying
+Story image method,Storyadapter,(Img ref)(scale0),13.5,7.0,9.5,15.0,4.0,10.0,Story image method - Storyadapter
+Business platform,moki,base,13.5,12.5,18.0,2.0,7.0,11.0,Business platform - moki
+Naive baseline,base,base,1.0,1.0,15.0,16.0,18.0,12.0,Naive baseline - base
+Story image method,Storydiffusion,(Img ref) (photomaker),12.0,8.5,11.0,9.0,15.0,13.0,Story image method - Storydiffusion
+MLLM model,Gemini,base,17.0,12.5,3.0,14.0,8.0,14.0,MLLM model - Gemini
+Story video method,MM-StoryAgent,base,15.0,11.0,14.0,1.0,16.0,15.0,Story video method - MM-StoryAgent
+Story image method,Theatergen,base,18.0,19.0,17.0,13.0,1.0,16.0,Story image method - Theatergen
+Story image method,Storygen,(Multi-image-condition),8.0,14.0,16.0,18.0,17.0,17.0,Story image method - Storygen
+Story video method,Vlogger,text only,16.0,18.0,13.0,17.0,14.0,18.0,Story video method - Vlogger
+Story image method,Seedstory(AR) ,base,19.0,8.5,19.0,19.0,19.0,19.0,Story image method - Seedstory(AR) 
+`.trim();
+
+interface DataRow {
+    [key: string]: string;
+}
+
+interface ParsedData {
+    headers: string[];
+    data: DataRow[];
+}
+
+function parseCSV(csvString: string): ParsedData {
+    const lines = csvString.trim().split('\n');
+    const headers = lines[0].split(',').map((h: string) => h.trim().replace(/^"|"$/g, '').replace(/\r$/, ''));
+    const data = lines.slice(1).map((line: string) => {
+        const values = line.split(','); // CSV uses comma as delimiter
+        const row: DataRow = {};
+        headers.forEach((header: string, index: number) => {
+            row[header] = values[index] ? values[index].trim().replace(/^"|"$/g, '').replace(/\r$/, '') : '';
+        });
+        return row;
+    });
+    return { headers, data };
+}
+
+const fullResults = parseCSV(fullDatasetCsvContent);
+const liteResults = parseCSV(liteDatasetTsvContent);
+// Placeholder for icons - in a real scenario, you might use Astro icons or SVG imports
+const IconDiversity = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mb-3 text-sky-600 dark:text-sky-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>`;
+const IconStructure = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mb-3 text-teal-600 dark:text-teal-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>`;
+const IconMetrics = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mb-3 text-purple-600 dark:text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" /></svg>`;
+const IconScale = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mb-3 text-indigo-600 dark:text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3M3.75 21h16.5M16.5 3v11.25 M8.25 3v11.25" /></svg>`;
+
+export interface Props {
+    title: string;
+}
+const { title } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+	</head>
+	<body>
+        
+		<BaseLayout title={pageSpecificTitle} activeNav={currentNav}>
+			{/* The <header> and <footer> are now part of BaseLayout via components */}
+			{/* Main content specific to index.astro starts here */}
+                <!-- Dataset Title & Brief Intro -->
+                <section class="py-16 sm:py-20 px-4 bg-gradient-to-br from-sky-100 via-slate-100 to-purple-100 dark:from-sky-900/50 dark:via-slate-800 dark:to-purple-900/50">
+                  <div class="container mx-auto text-center">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white mb-6">
+                      The ViStoryBench Dataset
+                    </h1>
+                    <p class="text-lg sm:text-xl text-slate-700 dark:text-slate-300 max-w-3xl mx-auto mb-8">
+                      A meticulously curated collection designed to advance story visualization research, featuring diverse narratives, artistic styles, and complex character interactions.
+                    </p>
+                    <div class="prose prose-lg dark:prose-invert mx-auto bg-white/60 dark:bg-slate-800/60 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700/50">
+                      <h2 class="text-2xl font-semibold !text-slate-800 dark:!text-slate-100 !mb-3 text-center">Core Mission</h2>
+                      <p class="!text-slate-600 dark:!text-slate-300">
+                        ViStoryBench aims to provide a comprehensive and challenging benchmark to rigorously evaluate and compare story visualization models. It focuses on real-world complexities such as character consistency, narrative coherence, and stylistic integrity across a sequence of images.
+                      </p>
+                    </div>
+                  </div>
+                  <section class="py-16 sm:py-20 px-4 text-center  from-purple-50 via-sky-50 to-teal-50 dark:from-purple-900/30 dark:via-sky-800/50 dark:to-teal-900/30">
+                  <div class="container mx-auto">
+                    <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-6">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-sky-400/50 dark:hover:shadow-sky-500/40 transition-all duration-300 transform hover:scale-105">
+                            Download Dataset (Link Coming Soon)
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-purple-400/50 dark:hover:shadow-purple-500/40 transition-all duration-300 transform hover:scale-105">
+                            View Paper (Link Placeholder)
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-teal-400/50 dark:hover:shadow-teal-500/40 transition-all duration-300 transform hover:scale-105">
+                            Code & Tools (GitHub Placeholder)
+                        </a>
+                        <a href="/leaderboard" class="inline-block bg-slate-600 hover:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-slate-400/50 dark:hover:shadow-slate-500/40 transition-all duration-300 transform hover:scale-105">
+                            View Leaderboard
+                        </a>
+                    </div>
+                </section>
+                </div>
+                </section>
+            
+			<div class="container mx-auto px-4 py-8">
+
+				<section id="leaderboard" class="mb-12 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
+                    <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+                        <h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200" data-lang-key="leaderboard_title">Leaderboard Summary</h2>
+                        <div id="mode-toggle-buttons-summary" class="flex space-x-2">
+                            <button id="lite-mode-btn-summary" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-lang-key="button_lite_mode">Lite Mode</button>
+                            <button id="full-mode-btn-summary" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-lang-key="button_full_mode">Full Mode</button>
+                        </div>
+                    </div>
+					<div class="overflow-x-auto">
+						<table id="summary-leaderboard-table" class="min-w-full bg-white dark:bg-slate-800">
+							<thead id="summary-leaderboard-thead" class="bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-300">
+								<!-- Headers will be rendered by script -->
+							</thead>
+							<tbody id="summary-leaderboard-tbody" class="text-gray-700 dark:text-slate-300">
+								<!-- Rows will be rendered by script -->
+							</tbody>
+						</table>
+					</div>
+                    <div class="mt-6 text-center">
+                        <a href="/leaderboard_detail" 
+                           class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                           data-lang-key="view_more_details_button">
+                           View More Details
+                        </a>
+                    </div>
+				</section>
+                 <!-- Task Definition Section -->
+    <section class="py-16 sm:py-20 px-4">
+        <div class="container mx-auto">
+          <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">Task Definition for Story Visualization</h2>
+          <div class="max-w-4xl mx-auto bg-white dark:bg-slate-800 p-6 sm:p-10 rounded-2xl shadow-xl border-gray-200 dark:border-gray-700">
+            <p class="text-slate-600 dark:text-slate-300 mb-6 text-lg leading-relaxed">The primary goal is to generate a sequence of images \(I_1, I_2, ..., I_m\) that faithfully and consistently visualize a given story, detailed through character information and a series of storyboard shot descriptions.</p>
+            <div class="mb-8">
+              <h4 class="text-xl font-semibold text-sky-700 dark:text-sky-400 mb-3">Given Inputs:</h4>
+              <ol class="list-decimal list-outside ml-5 space-y-4 text-slate-600 dark:text-slate-300">
+                <li>
+                  <strong>Character Information (\(C_1, ..., C_n\)):</strong> For each of the \(n\) characters, provide:
+                  <ul class="list-disc list-outside ml-6 mt-2 space-y-1 text-sm bg-slate-50 dark:bg-slate-700/50 p-4 rounded-md shadow-sm">
+                    <li>Textual appearance description (\(T_i\)).</li>
+                    <li>Corresponding reference image(s) (\(S_i\)) consistent with \(T_i\).</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Storyboard Shots (\(Shot_1, ..., Shot_m\)):</strong> For each of the \(m\) shots, provide a textual description including:
+                  <ul class="list-disc list-outside ml-6 mt-2 space-y-1 text-sm bg-slate-50 dark:bg-slate-700/50 p-4 rounded-md shadow-sm">
+                    <li><strong>Setting Description:</strong> The environment and context of the current scene.</li>
+                    <li><strong>Plot Correspondence:</strong> The segment of the original narrative relevant to this shot.</li>
+                    <li><strong>Onstage Characters:</strong> A list of characters present and active in this shot.</li>
+                    <li><strong>Static Shot Description:</strong> Detailed depiction of characters' static actions, expressions, positions, and significant objects within the frame.</li>
+                    <li><strong>Shot Perspective Design:</strong> Cinematographic details like shot scale (e.g., close-up, wide shot), camera angle, and shot type.</li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+            <div>
+              <h4 class="text-xl font-semibold text-sky-700 dark:text-sky-400 mb-3">Objective:</h4>
+              <p class="text-slate-600 dark:text-slate-300">To generate an image sequence \(I_1, ..., I_m\) where each image \(I_j\) accurately and aesthetically portrays the specified \(Shot_j\). This includes:
+              </p>
+              <ul class="list-disc list-outside ml-5 mt-2 space-y-1 text-slate-600 dark:text-slate-300">
+                <li>Faithful depiction of characters according to their references and descriptions.</li>
+                <li>Correct representation of character actions, interactions, and expressions.</li>
+                <li>Accurate portrayal of the scene setting and atmosphere.</li>
+                <li>Adherence to the specified camera perspectives and shot compositions.</li>
+                <li>Maintaining visual and stylistic consistency across the image sequence.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    <!-- Key Dataset Features Section -->
+    <section class="py-16 sm:py-20 px-4">
+        <div class="container mx-auto">
+          <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">
+            Dataset Core Characteristics
+          </h2>
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="feature-card bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-sky-500/30 dark:hover:shadow-sky-600/30 border border-transparent hover:border-sky-300 dark:hover:border-sky-600 transition-all duration-300 transform hover:-translate-y-1">
+              <Fragment set:html={IconDiversity} />
+              <h3 class="text-xl font-semibold text-sky-700 dark:text-sky-400 mb-2">Rich Diversity</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-300">Encompasses varied story types (comedy, horror, fantasy) and artistic styles (anime, 3D, realistic) for comprehensive model testing.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-teal-500/30 dark:hover:shadow-teal-600/30 border border-transparent hover:border-teal-300 dark:hover:border-teal-600 transition-all duration-300 transform hover:-translate-y-1">
+              <Fragment set:html={IconStructure} />
+              <h3 class="text-xl font-semibold text-teal-700 dark:text-teal-400 mb-2">Complex Narratives</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-300">Features stories with single/multiple protagonists, intricate plots, and detailed world-building to challenge generation accuracy and consistency.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-purple-500/30 dark:hover:shadow-purple-600/30 border border-transparent hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-300 transform hover:-translate-y-1">
+              <Fragment set:html={IconMetrics} />
+              <h3 class="text-xl font-semibold text-purple-700 dark:text-purple-400 mb-2">Character-Centric</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-300">Focuses on maintaining character consistency across shots, providing detailed descriptions and multiple reference images per character.</p>
+            </div>
+            <div class="feature-card bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-indigo-500/30 dark:hover:shadow-indigo-600/30 border border-transparent hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-300 transform hover:-translate-y-1">
+              <Fragment set:html={IconScale} />
+              <h3 class="text-xl font-semibold text-indigo-700 dark:text-indigo-400 mb-2">Significant Scale</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-300">Comprises <strong>80 story segments</strong>, <strong>344 unique characters</strong>, and <strong>509 reference images</strong>, ensuring a robust evaluation base.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+				<section id="news" class="mb-12 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
+					<h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200 mb-3" data-lang-key="news_title">News & Updates</h2>
+					<ul class="list-disc list-inside text-gray-600 dark:text-slate-300 space-y-2">
+						<li><span class="date font-medium">[Date]</span>: <span data-lang-key="news_item_1">[Placeholder: Benchmark v1.0 launched!]</span></li>
+						<li><span class="date font-medium">[Date]</span>: <span data-lang-key="news_item_2">[Placeholder: Added new model 'XYZ' to the evaluation.]</span></li>
+					</ul>
+				</section>
+
+				<section id="resources" class="mb-12 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
+					<h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200 mb-3" data-lang-key="resources_title">Resources</h2>
+					<ul class="list-disc list-inside space-y-2">
+						<li><a href="#" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_code">[Placeholder: Link to Benchmark Code (GitHub)]</a></li>
+						<li><a href="#" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_paper">[Placeholder: Link to Related Paper (arXiv/etc.)]</a></li>
+						<li><a href="/dataset" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_dataset">[Placeholder: Link to Dataset Details Page]</a></li>
+					</ul>
+				</section>
+
+				<section id="about" class="mb-12 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
+					<h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200 mb-4" data-lang-key="about_title">About</h2>
+					<div class="mb-6">
+						<h3 class="text-xl font-semibold text-gray-700 dark:text-slate-200 mb-2" data-lang-key="about_citation_title">Citation</h3>
+						<p class="text-gray-600 dark:text-slate-300 mb-2" data-lang-key="about_citation_text">[Placeholder: If you use this benchmark in your research, please cite it as follows:]</p>
+						<pre class="bg-gray-100 dark:bg-slate-700 p-4 rounded-md overflow-x-auto"><code class="text-sm text-gray-700 dark:text-slate-200">[Placeholder: BibTeX entry]</code></pre>
+					</div>
+					<div>
+						<h3 class="text-xl font-semibold text-gray-700 dark:text-slate-200 mb-2" data-lang-key="about_license_title">License</h3>
+						<p class="text-gray-600 dark:text-slate-300" data-lang-key="about_license_text">[Placeholder: The benchmark code and results are licensed under the [License Name, e.g., Apache 2.0] License. The dataset might have its own license.]</p>
+					</div>
+				</section>
+			</div>
+		</BaseLayout>
+	</body>
+</html>
+
+<script define:vars={{ fullResultsData: fullResults, liteResultsData: liteResults }}>
+    let currentSummaryView = 'lite'; // 'lite' or 'full'
+    /** @type {ParsedData} */
+    let activeSummaryDataset = liteResultsData;
+
+    const summaryLiteModeBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById('lite-mode-btn-summary'));
+    const summaryFullModeBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById('full-mode-btn-summary'));
+    const summaryTableThead = /** @type {HTMLTableSectionElement | null} */ (document.getElementById('summary-leaderboard-thead'));
+    const summaryTableTbody = /** @type {HTMLTableSectionElement | null} */ (document.getElementById('summary-leaderboard-tbody'));
+
+    const summaryColumnsToShow = {
+        'model': 'Model',
+        'Character Consistency(CRef)_rank': 'Character Consistency',
+        'Style Consistency(SRef)_rank': 'Style Consistency',
+        'Prompt Alignment_rank': 'Prompt Alignment',
+        'Generative Quality_rank': 'Generative Quality',
+        'Diversity_rank': 'Diversity',
+        'overall_rank': 'Overall Rank',
+    };
+
+    function renderSummaryTable() {
+        if (!summaryTableThead || !summaryTableTbody) return;
+
+        summaryTableThead.innerHTML = '';
+        summaryTableTbody.innerHTML = '';
+
+        const headerRow = document.createElement('tr');
+        const headersToRender = Object.keys(summaryColumnsToShow);
+        
+        headersToRender.forEach(headerKey => {
+            const th = document.createElement('th');
+            th.className = "py-3 px-4 text-center whitespace-nowrap text-gray-600 dark:text-slate-300";
+            
+            let displayText = summaryColumnsToShow[headerKey] || headerKey;
+            // Apply specific display text transformations if needed
+            if (headerKey === 'overall_rank') displayText = "Overall Rank";
+            // Removed Method specific display text as it's a group header now
+
+            th.textContent = displayText;
+            th.dataset.langKey = summaryColumnsToShow[headerKey] ? summaryColumnsToShow[headerKey].toLowerCase().replace(/ /g, '_') : headerKey;
+            headerRow.appendChild(th);
+        });
+        summaryTableThead.appendChild(headerRow);
+
+        // Group data by Method
+        const methods = [...new Set(activeSummaryDataset.data.map(row => row['Method']))].sort();
+        const numberOfColumns = headersToRender.length;
+
+        methods.forEach(methodName => {
+            if (!methodName) return; // Skip if method name is undefined or empty
+
+            // Add Method group header row to tbody
+            const groupHeaderRow = document.createElement('tr');
+            const groupTh = document.createElement('th');
+            groupTh.colSpan = numberOfColumns;
+            groupTh.className = "bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 px-4 text-center sticky top-0 z-10";
+            groupTh.textContent = methodName;
+            groupHeaderRow.appendChild(groupTh);
+            summaryTableTbody.appendChild(groupHeaderRow);
+
+            // Filter and render rows for the current method
+            const rowsForMethod = activeSummaryDataset.data.filter(row => row['Method'] === methodName);
+
+            rowsForMethod.forEach(rowData => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700/50";
+
+                headersToRender.forEach(headerKey => {
+                    const td = document.createElement('td');
+                    td.className = "py-3 px-4 text-center text-gray-700 dark:text-slate-300";
+                    let cellValue = rowData[headerKey] !== undefined ? String(rowData[headerKey]) : '';
+                    
+                    if (headerKey === 'overall_rank') {
+                        td.innerHTML = `<span class="score py-1 px-2 rounded bg-green-100 text-green-700 dark:bg-green-700/30 dark:text-green-300 font-semibold text-sm">${cellValue}</span>`;
+                    } else {
+                        td.textContent = cellValue;
+                    }
+                    tr.appendChild(td);
+                });
+                summaryTableTbody.appendChild(tr);
+            });
+        });
+    }
+
+    function updateSummaryButtonStyles() {
+        if (!summaryLiteModeBtn || !summaryFullModeBtn) return;
+        if (currentSummaryView === 'lite') {
+            summaryLiteModeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+            summaryLiteModeBtn.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300', 'dark:bg-slate-600', 'dark:text-slate-300', 'dark:hover:bg-slate-500');
+            summaryFullModeBtn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300', 'dark:bg-slate-600', 'dark:text-slate-300', 'dark:hover:bg-slate-500');
+            summaryFullModeBtn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+        } else {
+            summaryFullModeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+            summaryFullModeBtn.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300', 'dark:bg-slate-600', 'dark:text-slate-300', 'dark:hover:bg-slate-500');
+            summaryLiteModeBtn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300', 'dark:bg-slate-600', 'dark:text-slate-300', 'dark:hover:bg-slate-500');
+            summaryLiteModeBtn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+        }
+    }
+
+    summaryLiteModeBtn?.addEventListener('click', () => {
+        if (currentSummaryView === 'lite') return;
+        currentSummaryView = 'lite';
+        activeSummaryDataset = liteResultsData;
+        updateSummaryButtonStyles();
+        renderSummaryTable();
+        if (typeof window.updateTranslations === 'function') window.updateTranslations(); // Re-apply translations if needed
+    });
+
+    summaryFullModeBtn?.addEventListener('click', () => {
+        if (currentSummaryView === 'full') return;
+        currentSummaryView = 'full';
+        activeSummaryDataset = fullResultsData;
+        updateSummaryButtonStyles();
+        renderSummaryTable();
+        if (typeof window.updateTranslations === 'function') window.updateTranslations(); // Re-apply translations if needed
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (summaryLiteModeBtn && summaryFullModeBtn) { // Ensure buttons exist
+            // Set initial dark mode styles for buttons if not active
+            if (currentSummaryView === 'lite') {
+                summaryFullModeBtn.classList.add('dark:bg-slate-600', 'dark:text-slate-300', 'dark:hover:bg-slate-500');
+            } else {
+                summaryLiteModeBtn.classList.add('dark:bg-slate-600', 'dark:text-slate-300', 'dark:hover:bg-slate-500');
+            }
+        }
+        updateSummaryButtonStyles();
+        renderSummaryTable();
+        if (typeof window.updateTranslations === 'function') {
+            window.updateTranslations();
+        }
+    });
+
+</script>

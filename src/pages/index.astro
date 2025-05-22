@@ -10,40 +10,40 @@ const currentNav = "overview";
 // Data provided by user - CSV format for full, TSV for lite
 const fullDatasetCsvContent = `
 Method,model,mode,Character Consistency(CRef)_rank,Style Consistency(SRef)_rank,Prompt Alignment_rank,Generative Quality_rank,Diversity_rank,overall_rank,model_key
-Story image method,UNO (many2many version),base,2.0,2.5,3.0,4.0,4.0,1.0,Story image method - UNO (many2many version)
-Story image method,Storyadapter,(Img ref)(scale0),3.0,2.5,4.0,6.0,3.0,2.0,Story image method - Storyadapter
-Story video method,Movieagent,SD-3 version,8.0,8.5,2.0,3.0,1.0,3.0,Story video method - Movieagent
-Story video method,Animdirector,base,4.5,8.5,1.0,2.0,5.0,4.0,Story video method - Animdirector
-Story image method,Storydiffusion,(Img ref) (photomaker),4.5,6.0,5.0,5.0,7.0,5.0,Story image method - Storydiffusion
-Story video method,MM-StoryAgent,base,7.0,6.0,6.0,1.0,8.0,6.0,Story video method - MM-StoryAgent
-Naive baseline,base,base,1.0,1.0,10.0,8.0,10.0,7.0,Naive baseline - base
-Story image method,Theatergen,base,9.0,11.0,9.0,7.0,2.0,8.0,Story image method - Theatergen
-Story image method,Storygen,Multi-image-condition,6.0,6.0,8.0,10.0,9.0,9.0,Story image method - Storygen
-Story video method,Vlogger,text only,10.0,10.0,7.0,9.0,6.0,10.0,Story video method - Vlogger
-Story image method,Seedstory(AR) ,base,11.0,4.0,11.0,11.0,11.0,11.0,Story image method - Seedstory(AR) 
+Story image method,UNO,base,2,2.5,3,4,4,1,Story image method - UNO
+Story image method,Storyadapter,(Img ref)(scale0),3,2.5,4,6,3,2,Story image method - Storyadapter
+Story video method,Movieagent,SD-3 version,8,8.5,2,3,1,3,Story video method - Movieagent
+Story video method,Animdirector,base,4.5,8.5,1,2,5,4,Story video method - Animdirector
+Story image method,Storydiffusion,(Img ref) (photomaker),4.5,6,5,5,7,5,Story image method - Storydiffusion
+Story video method,MM-StoryAgent,base,7,6,6,1,8,6,Story video method - MM-StoryAgent
+Naive baseline,base,base,1,1,10,8,10,7,Naive baseline - base
+Story image method,Theatergen,base,9,11,9,7,2,8,Story image method - Theatergen
+Story image method,Storygen,Multi-image-condition,6,6,8,10,9,9,Story image method - Storygen
+Story video method,Vlogger,text only,10,10,7,9,6,10,Story video method - Vlogger
+Story image method,Seedstory ,base,11,4,11,11,11,11,Story image method - Seedstory 
 `.trim();
 
 const liteDatasetTsvContent = `
 Method,model,mode,Character Consistency(CRef)_rank,Style Consistency(SRef)_rank,Prompt Alignment_rank,Generative Quality_rank,Diversity_rank,overall_rank,model_key
-MLLM model,GPT4o,base,3.0,3.0,1.0,6.0,12.0,1.0,MLLM model - GPT4o
-Business platform,doubao,base,5.0,6.0,2.0,4.0,10.0,2.0,Business platform - doubao
-Business platform,bairimeng_ai,base,2.0,2.0,8.0,3.0,11.0,3.0,Business platform - bairimeng_ai
-Story image method,UNO (many2many version),base,5.0,5.0,6.0,10.0,6.0,4.0,Story image method - UNO (many2many version)
-Story video method,Movieagent,SD-3 version,10.0,16.0,5.0,7.0,2.0,5.0,Story video method - Movieagent
-Story video method,Animdirector,base,7.0,16.0,4.0,5.0,9.0,6.0,Story video method - Animdirector
-Business platform,shenbimaliang,base,9.0,16.0,7.0,11.0,3.0,7.0,Business platform - shenbimaliang
-Business platform,morphic_studio,base,5.0,4.0,9.5,12.0,13.0,8.0,Business platform - morphic_studio
-Business platform,xunfeihuiying,base,11.0,10.0,12.0,8.0,5.0,9.0,Business platform - xunfeihuiying
-Story image method,Storyadapter,(Img ref)(scale0),13.5,7.0,9.5,15.0,4.0,10.0,Story image method - Storyadapter
-Business platform,moki,base,13.5,12.5,18.0,2.0,7.0,11.0,Business platform - moki
-Naive baseline,base,base,1.0,1.0,15.0,16.0,18.0,12.0,Naive baseline - base
-Story image method,Storydiffusion,(Img ref) (photomaker),12.0,8.5,11.0,9.0,15.0,13.0,Story image method - Storydiffusion
-MLLM model,Gemini,base,17.0,12.5,3.0,14.0,8.0,14.0,MLLM model - Gemini
-Story video method,MM-StoryAgent,base,15.0,11.0,14.0,1.0,16.0,15.0,Story video method - MM-StoryAgent
-Story image method,Theatergen,base,18.0,19.0,17.0,13.0,1.0,16.0,Story image method - Theatergen
-Story image method,Storygen,(Multi-image-condition),8.0,14.0,16.0,18.0,17.0,17.0,Story image method - Storygen
-Story video method,Vlogger,text only,16.0,18.0,13.0,17.0,14.0,18.0,Story video method - Vlogger
-Story image method,Seedstory(AR) ,base,19.0,8.5,19.0,19.0,19.0,19.0,Story image method - Seedstory(AR) 
+MLLM model,GPT4o,base,3,3,1,6,12,1,MLLM model - GPT4o
+Commercial platform,Doubao,base,5,6,2,4,10,2,Commercial platform - Doubao
+Commercial platform,AIbrm,base,2,2,8,3,11,3,Commercial platform - AIbrm
+Story image method,UNO,base,5,5,6,10,6,4,Story image method - UNO
+Story video method,Movieagent,SD-3 version,10,16,5,7,2,5,Story video method - Movieagent
+Story video method,Animdirector,base,7,16,4,5,9,6,Story video method - Animdirector
+Commercial platform,ShenBi,base,9,16,7,11,3,7,Commercial platform - ShenBi
+Commercial platform,Morphic_Studio,base,5,4,9.5,12,13,8,Commercial platform - Morphic_Studio
+Commercial platform,Typemovie,base,11,10,12,8,5,9,Commercial platform - Typemovie
+Story image method,Storyadapter,(Img ref)(scale0),13.5,7,9.5,15,4,10,Story image method - Storyadapter
+Commercial platform,MOKI,base,13.5,12.5,18,2,7,11,Commercial platform - MOKI
+Naive baseline,base,base,1,1,15,16,18,12,Naive baseline - base
+Story image method,Storydiffusion,(Img ref) (photomaker),12,8.5,11,9,15,13,Story image method - Storydiffusion
+MLLM model,Gemini,base,17,12.5,3,14,8,14,MLLM model - Gemini
+Story video method,MM-StoryAgent,base,15,11,14,1,16,15,Story video method - MM-StoryAgent
+Story image method,Theatergen,base,18,19,17,13,1,16,Story image method - Theatergen
+Story image method,Storygen,(Multi-image-condition),8,14,16,18,17,17,Story image method - Storygen
+Story video method,Vlogger,text only,16,18,13,17,14,18,Story video method - Vlogger
+Story image method,Seedstory ,base,19,8.5,19,19,19,19,Story image method - Seedstory 
 `.trim();
 
 interface DataRow {
@@ -76,6 +76,9 @@ const IconDiversity = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewB
 const IconStructure = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mb-3 text-teal-600 dark:text-teal-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>`;
 const IconMetrics = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mb-3 text-purple-600 dark:text-purple-400"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" /></svg>`;
 const IconScale = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 mb-3 text-indigo-600 dark:text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h12A2.25 2.25 0 0020.25 14.25V3M3.75 21h16.5M16.5 3v11.25 M8.25 3v11.25" /></svg>`;
+const IconHuggingFace = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" style="flex:none;line-height:1" viewBox="0 0 24 24" width="1em"><script xmlns=""/><title>HuggingFace</title><g fill="none" fill-rule="nonzero"><path d="M2.25 11.535c0-3.407 1.847-6.554 4.844-8.258a9.822 9.822 0 019.687 0c2.997 1.704 4.844 4.851 4.844 8.258 0 5.266-4.337 9.535-9.687 9.535S2.25 16.8 2.25 11.535z" fill="#FF9D0B"/><path d="M11.938 20.086c4.797 0 8.687-3.829 8.687-8.551 0-4.722-3.89-8.55-8.687-8.55-4.798 0-8.688 3.828-8.688 8.55 0 4.722 3.89 8.55 8.688 8.55z" fill="#FFD21E"/><path d="M11.875 15.113c2.457 0 3.25-2.156 3.25-3.263 0-.576-.393-.394-1.023-.089-.582.283-1.365.675-2.224.675-1.798 0-3.25-1.693-3.25-.586 0 1.107.79 3.263 3.25 3.263h-.003z" fill="#FF323D"/><path d="M14.76 9.21c.32.108.445.753.767.585.447-.233.707-.708.659-1.204a1.235 1.235 0 00-.879-1.059 1.262 1.262 0 00-1.33.394c-.322.384-.377.92-.14 1.36.153.283.638-.177.925-.079l-.002.003zm-5.887 0c-.32.108-.448.753-.768.585a1.226 1.226 0 01-.658-1.204c.048-.495.395-.913.878-1.059a1.262 1.262 0 011.33.394c.322.384.377.92.14 1.36-.152.283-.64-.177-.925-.079l.003.003zm1.12 5.34a2.166 2.166 0 011.325-1.106c.07-.02.144.06.219.171l.192.306c.069.1.139.175.209.175.074 0 .15-.074.223-.172l.205-.302c.08-.11.157-.188.234-.165.537.168.986.536 1.25 1.026.932-.724 1.275-1.905 1.275-2.633 0-.508-.306-.426-.81-.19l-.616.296c-.52.24-1.148.48-1.824.48-.676 0-1.302-.24-1.823-.48l-.589-.283c-.52-.248-.838-.342-.838.177 0 .703.32 1.831 1.187 2.56l.18.14z" fill="#3A3B45"/><path d="M17.812 10.366a.806.806 0 00.813-.8c0-.441-.364-.8-.813-.8a.806.806 0 00-.812.8c0 .442.364.8.812.8zm-11.624 0a.806.806 0 00.812-.8c0-.441-.364-.8-.812-.8a.806.806 0 00-.813.8c0 .442.364.8.813.8zM4.515 13.073c-.405 0-.765.162-1.017.46a1.455 1.455 0 00-.333.925 1.801 1.801 0 00-.485-.074c-.387 0-.737.146-.985.409a1.41 1.41 0 00-.2 1.722 1.302 1.302 0 00-.447.694c-.06.222-.12.69.2 1.166a1.267 1.267 0 00-.093 1.236c.238.533.81.958 1.89 1.405l.24.096c.768.3 1.473.492 1.478.494.89.243 1.808.375 2.732.394 1.465 0 2.513-.443 3.115-1.314.93-1.342.842-2.575-.274-3.763l-.151-.154c-.692-.684-1.155-1.69-1.25-1.912-.195-.655-.71-1.383-1.562-1.383-.46.007-.889.233-1.15.605-.25-.31-.495-.553-.715-.694a1.87 1.87 0 00-.993-.312zm14.97 0c.405 0 .767.162 1.017.46.216.262.333.588.333.925.158-.047.322-.071.487-.074.388 0 .738.146.985.409a1.41 1.41 0 01.2 1.722c.22.178.377.422.445.694.06.222.12.69-.2 1.166.244.37.279.836.093 1.236-.238.533-.81.958-1.889 1.405l-.239.096c-.77.3-1.475.492-1.48.494-.89.243-1.808.375-2.732.394-1.465 0-2.513-.443-3.115-1.314-.93-1.342-.842-2.575.274-3.763l.151-.154c.695-.684 1.157-1.69 1.252-1.912.195-.655.708-1.383 1.56-1.383.46.007.889.233 1.15.605.25-.31.495-.553.718-.694.244-.162.523-.265.814-.3l.176-.012z" fill="#FF9D0B"/><path d="M9.785 20.132c.688-.994.638-1.74-.305-2.667-.945-.928-1.495-2.288-1.495-2.288s-.205-.788-.672-.714c-.468.074-.81 1.25.17 1.971.977.721-.195 1.21-.573.534-.375-.677-1.405-2.416-1.94-2.751-.532-.332-.907-.148-.782.541.125.687 2.357 2.35 2.14 2.707-.218.362-.983-.42-.983-.42S2.953 14.9 2.43 15.46c-.52.558.398 1.026 1.7 1.803 1.308.778 1.41.985 1.225 1.28-.187.295-3.07-2.1-3.34-1.083-.27 1.011 2.943 1.304 2.745 2.006-.2.7-2.265-1.324-2.685-.537-.425.79 2.913 1.718 2.94 1.725 1.075.276 3.813.859 4.77-.522zm4.432 0c-.687-.994-.64-1.74.305-2.667.943-.928 1.493-2.288 1.493-2.288s.205-.788.675-.714c.465.074.807 1.25-.17 1.971-.98.721.195 1.21.57.534.377-.677 1.407-2.416 1.94-2.751.532-.332.91-.148.782.541-.125.687-2.355 2.35-2.137 2.707.215.362.98-.42.98-.42S21.05 14.9 21.57 15.46c.52.558-.395 1.026-1.7 1.803-1.308.778-1.408.985-1.225 1.28.187.295 3.07-2.1 3.34-1.083.27 1.011-2.94 1.304-2.743 2.006.2.7 2.263-1.324 2.685-.537.423.79-2.912 1.718-2.94 1.725-1.077.276-3.815.859-4.77-.522z" fill="#FFD21E"/></g><script xmlns=""/></svg>`;
+const IconGitHub = `<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.026 2.747-1.026.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" /></svg>`;
+const IconLeaderboard = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>`;
 
 export interface Props {
     title: string;
@@ -86,10 +89,8 @@ const { title } = Astro.props;
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
 	</head>
 	<body>
         
@@ -115,16 +116,19 @@ const { title } = Astro.props;
                   <section class="py-16 sm:py-20 px-4 text-center  from-purple-50 via-sky-50 to-teal-50 dark:from-purple-900/30 dark:via-sky-800/50 dark:to-teal-900/30">
                   <div class="container mx-auto">
                     <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-6">
-                        <a href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-sky-400/50 dark:hover:shadow-sky-500/40 transition-all duration-300 transform hover:scale-105">
-                            Download Dataset (Link Coming Soon)
+                        <a href="https://huggingface.co/datasets/ViStoryBench/ViStoryBench" target="_blank" rel="noopener noreferrer" class="inline-flex items-center bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-sky-400/50 dark:hover:shadow-sky-500/40 transition-all duration-300 transform hover:scale-105">
+                            <Fragment set:html={IconHuggingFace} />
+                            Download Dataset
                         </a>
-                        <a href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-purple-400/50 dark:hover:shadow-purple-500/40 transition-all duration-300 transform hover:scale-105">
-                            View Paper (Link Placeholder)
+                        <!-- <a href="https://vistorybench.github.io" target="_blank" rel="noopener noreferrer" class="inline-block bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-purple-400/50 dark:hover:shadow-purple-500/40 transition-all duration-300 transform hover:scale-105">
+                            View Project Page
+                        </a> -->
+                        <a href="https://github.com/vistorybench/vistorybench" target="_blank" rel="noopener noreferrer" class="inline-flex items-center bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-teal-400/50 dark:hover:shadow-teal-500/40 transition-all duration-300 transform hover:scale-105">
+                            <Fragment set:html={IconGitHub} />
+                            Code & Tools (GitHub)
                         </a>
-                        <a href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-teal-600 hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-teal-400/50 dark:hover:shadow-teal-500/40 transition-all duration-300 transform hover:scale-105">
-                            Code & Tools (GitHub Placeholder)
-                        </a>
-                        <a href="/leaderboard" class="inline-block bg-slate-600 hover:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-slate-400/50 dark:hover:shadow-slate-500/40 transition-all duration-300 transform hover:scale-105">
+                        <a href="/leaderboard_detail" class="inline-flex items-center bg-slate-600 hover:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-slate-400/50 dark:hover:shadow-slate-500/40 transition-all duration-300 transform hover:scale-105">
+                            <Fragment set:html={IconLeaderboard} />
                             View Leaderboard
                         </a>
                     </div>
@@ -136,7 +140,7 @@ const { title } = Astro.props;
 
 				<section id="leaderboard" class="mb-12 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
-                        <h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200" data-lang-key="leaderboard_title">Leaderboard Summary</h2>
+                        <h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200" data-lang-key="leaderboard_title">Leaderboard Rankings</h2>
                         <div id="mode-toggle-buttons-summary" class="flex space-x-2">
                             <button id="lite-mode-btn-summary" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-lang-key="button_lite_mode">Lite Mode</button>
                             <button id="full-mode-btn-summary" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-lang-key="button_full_mode">Full Mode</button>
@@ -244,9 +248,9 @@ const { title } = Astro.props;
 				<section id="resources" class="mb-12 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
 					<h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200 mb-3" data-lang-key="resources_title">Resources</h2>
 					<ul class="list-disc list-inside space-y-2">
-						<li><a href="#" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_code">[Placeholder: Link to Benchmark Code (GitHub)]</a></li>
-						<li><a href="#" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_paper">[Placeholder: Link to Related Paper (arXiv/etc.)]</a></li>
-						<li><a href="/dataset" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_dataset">[Placeholder: Link to Dataset Details Page]</a></li>
+						<li><a href="https://github.com/vistorybench/vistorybench" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_code">Benchmark Code (GitHub)</a></li>
+						<li><a href="#" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_paper">Related Paper (arXiv/etc.)</a></li>
+						<li><a href="https://huggingface.co/datasets/ViStoryBench/ViStoryBench" class="text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300" data-lang-key="resources_dataset">Dataset Details Page</a></li>
 					</ul>
 				</section>
 
@@ -268,9 +272,52 @@ const { title } = Astro.props;
 </html>
 
 <script define:vars={{ fullResultsData: fullResults, liteResultsData: liteResults }}>
+    const modelUrls = {
+        'GPT4o': 'https://openai.com/research/gpt-4-1',
+        'Doubao': 'https://www.doubao.com/',
+        'AIbrm': 'https://brmgo.cn/',
+        'ShenBi': 'https://shenbi.maoyan.com/',
+        'Morphic_Studio': 'https://www.morphic.com/',
+        'Typemovie': 'https://typemovie.art',
+        'MOKI': 'https://www.moki.cn',
+        'Gemini': 'https://developers.googleblog.com/en/experiment-with-gemini-20-flash-native-image-generation/',
+        'UNO': 'https://github.com/bytedance/UNO',
+        'Storyadapter': 'https://github.com/UCSC-VLAA/story-adapter',
+        'Movieagent': 'https://github.com/showlab/MovieAgent',
+        'Animdirector': 'https://github.com/HITsz-TMG/Anim-Director',
+        'Storydiffusion': 'https://github.com/HVision-NKU/StoryDiffusion',
+        'MM-StoryAgent': 'https://github.com/X-PLUG/MM_StoryAgent',
+        'Theatergen': 'https://github.com/donahowe/Theatergen',
+        'Storygen': 'https://github.com/haoningwu3639/StoryGen',
+        'Vlogger': 'https://github.com/Vchitect/Vlogger',
+        'Seedstory': 'https://github.com/TencentARC/SEED-Story'
+    };
+
+    /**
+     * @param {DataRow[]} dataRows
+     * @returns {DataRow[]}
+     */
+    function augmentDataWithModelUrls(dataRows) {
+        if (!dataRows) return [];
+        return dataRows.map(row => {
+            const modelName = row['model'];
+            if (modelName && modelUrls[modelName]) {
+                return { ...row, model_url: modelUrls[modelName] };
+            }
+            return row;
+        });
+    }
+
+    if (fullResultsData && fullResultsData.data) {
+        fullResultsData.data = augmentDataWithModelUrls(fullResultsData.data);
+    }
+    if (liteResultsData && liteResultsData.data) {
+        liteResultsData.data = augmentDataWithModelUrls(liteResultsData.data);
+    }
+
     let currentSummaryView = 'lite'; // 'lite' or 'full'
     /** @type {ParsedData} */
-    let activeSummaryDataset = liteResultsData;
+    let activeSummaryDataset = (currentSummaryView === 'lite' && liteResultsData) ? liteResultsData : (fullResultsData || { headers: [], data: [] });
 
     const summaryLiteModeBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById('lite-mode-btn-summary'));
     const summaryFullModeBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById('full-mode-btn-summary'));
@@ -288,7 +335,7 @@ const { title } = Astro.props;
     };
 
     function renderSummaryTable() {
-        if (!summaryTableThead || !summaryTableTbody) return;
+        if (!summaryTableThead || !summaryTableTbody || !activeSummaryDataset) return;
 
         summaryTableThead.innerHTML = '';
         summaryTableTbody.innerHTML = '';
@@ -337,9 +384,18 @@ const { title } = Astro.props;
                 headersToRender.forEach(headerKey => {
                     const td = document.createElement('td');
                     td.className = "py-3 px-4 text-center text-gray-700 dark:text-slate-300";
-                    let cellValue = rowData[headerKey] !== undefined ? String(rowData[headerKey]) : '';
+                    const currentValuedRow = /** @type {DataRow & { model_url?: string }} */ (rowData);
+                    let cellValue = currentValuedRow[headerKey] !== undefined ? String(currentValuedRow[headerKey]) : '';
                     
-                    if (headerKey === 'overall_rank') {
+                    if (headerKey === 'model' && currentValuedRow.model_url) {
+                        const a = document.createElement('a');
+                        a.href = currentValuedRow.model_url;
+                        a.textContent = cellValue;
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                        a.className = 'text-blue-600 hover:underline dark:text-sky-400 dark:hover:text-sky-300';
+                        td.appendChild(a);
+                    } else if (headerKey === 'overall_rank') {
                         td.innerHTML = `<span class="score py-1 px-2 rounded bg-green-100 text-green-700 dark:bg-green-700/30 dark:text-green-300 font-semibold text-sm">${cellValue}</span>`;
                     } else {
                         td.textContent = cellValue;
@@ -369,7 +425,7 @@ const { title } = Astro.props;
     summaryLiteModeBtn?.addEventListener('click', () => {
         if (currentSummaryView === 'lite') return;
         currentSummaryView = 'lite';
-        activeSummaryDataset = liteResultsData;
+        activeSummaryDataset = liteResultsData; // This is now the augmented data
         updateSummaryButtonStyles();
         renderSummaryTable();
         if (typeof window.updateTranslations === 'function') window.updateTranslations(); // Re-apply translations if needed
@@ -378,7 +434,7 @@ const { title } = Astro.props;
     summaryFullModeBtn?.addEventListener('click', () => {
         if (currentSummaryView === 'full') return;
         currentSummaryView = 'full';
-        activeSummaryDataset = fullResultsData;
+        activeSummaryDataset = fullResultsData; // This is now the augmented data
         updateSummaryButtonStyles();
         renderSummaryTable();
         if (typeof window.updateTranslations === 'function') window.updateTranslations(); // Re-apply translations if needed

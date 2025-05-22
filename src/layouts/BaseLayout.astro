@@ -20,7 +20,7 @@ const base = import.meta.env.BASE_URL;
 // Though for public assets, paths like "/js/main.js" are usually resolved correctly by Astro by prepending base.
 // This explicit construction is a fallback if auto-resolution isn't working as expected in preview.
 const mainJsPathWithBase = `${base.replace(/\/$/, '')}/js/main.js`.replace(/\/\//g, '/'); 
-const faviconPathWithBase = `${base.replace(/\/$/, '')}/favicon.svg`.replace(/\/\//g, '/');
+const faviconPathWithBase = `${base.replace(/\/$/, '')}/favicon.png`.replace(/\/\//g, '/');
 ---
 <!DOCTYPE html>
 <html lang="en"> {/* The lang attribute will be dynamically set by main.js */}

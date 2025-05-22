@@ -10,7 +10,7 @@ export const translations = {
         leaderboard_detail_title: "Detailed Leaderboard",
         intro_goal_title: "Goal, Value, and Core Findings",
         intro_goal_text: "[Placeholder EN: Briefly describe the objective of this benchmark - e.g., to comprehensively evaluate image generation models for storytelling tasks. Explain the value - e.g., providing insights into model capabilities in consistency, adherence, and quality. Mention 1-2 key findings - e.g., Model X excels in character consistency, while Model Y shows better prompt adherence.]",
-        leaderboard_title: "Leaderboard Summary",
+        leaderboard_title: "Leaderboard Average Rankings",
         leaderboard_detail_results: "Results",
         leaderboard_expand_hint: "Click the '+' icon to view detailed sub-metric scores.",
         table_model: "Model/Method",

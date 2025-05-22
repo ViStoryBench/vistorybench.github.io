@@ -14,13 +14,25 @@ const activeNav = "dataset";
         <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">How ViStoryBench Was Built</h2>
         <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           <div class="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300">
-            <h3 class="text-2xl font-semibold text-sky-700 dark:text-sky-400">Story & Script Curation</h3>
-            <p>We meticulously gathered 80 story segments from a wide array of sources, including film and television scripts, classic literary works, global myths and legends, contemporary novels, and children's picture books. This diversity ensures a broad spectrum of narrative styles and themes.</p>
-            <p>For narratives that were extensive, Large Language Models (LLMs) were employed to assist in summarizing them into concise versions, typically a few hundred words each. Subsequently, these condensed stories were transformed, again with LLM assistance, into structured scripts. Each script delineates character descriptions and detailed storyboards for visualization.</p>
+            <h3 class="text-2xl font-semibold text-sky-700 dark:text-sky-400">Defining the Task: Comprehensive Story Visualization</h3>
+            <p>ViStoryBench is designed around a comprehensive story generation task. The goal is to generate a sequence of images \(I_1...I_m\) that faithfully represent \(m\) storyboard shot descriptions. This process starts with providing appearance descriptions \(T_1, T_2, ..., T_n\) and corresponding reference images \(S_1, S_2, ..., S_n\) for \(n\) characters \(C_1, C_2, ..., C_n\), where each character \(C_i = (T_i, S_i)\).</p>
+            <p>Each of the \(m\) storyboard shot descriptions (Shot\(_i\)) includes several key components to guide image generation:</p>
+            <ul class="list-disc pl-5 space-y-1">
+              <li><strong>Setting Description:</strong> Details of the current scene's environment and atmosphere.</li>
+              <li><strong>Plot Correspondence:</strong> The specific segment from the original narrative corresponding to this shot.</li>
+              <li><strong>Onstage Characters:</strong> A list of characters present in the current shot.</li>
+              <li><strong>Static Shot Description:</strong> A description of characters' static actions or positions and object placements, representing a fixed visual state.</li>
+              <li><strong>Shot Perspective Design:</strong> Photography information, including shot scale, type, and camera angle.</li>
+            </ul>
+            <p>The objective is to accurately depict characters, their actions, scene settings, and specified camera perspectives, adhering to all provided information.</p>
+
+            <h3 class="text-2xl font-semibold text-sky-700 dark:text-sky-400 mt-8">Story & Script Curation</h3>
+            <p>To ensure diversity, we manually collected 80 story segments from various sources, including film and television scripts, literary masterpieces, global legends, novels, and picture books. This extensive collection covers a wide range of narrative styles and themes.</p>
+            <p>For lengthy stories, Large Language Models (LLMs) assisted in summarizing them to a few hundred words each. These summaries were then converted into structured scripts, again with LLM assistance. Each script provides character descriptions and detailed storyboards for each shot, laying a clear foundation for visual generation. This process is exemplified in Figure 1(a) of the ViStoryBench paper.</p>
             
             <h3 class="text-2xl font-semibold text-sky-700 dark:text-sky-400 mt-8">Character Reference Imagery</h3>
-            <p>Reference images for each character were manually collected from online sources, ensuring they closely matched the textual descriptions. A critical aspect of this process was maintaining stylistic consistency for all character images within the same story (e.g., all characters in a story share an anime style, or a realistic style).</p>
-            <p>For a subset of characters, reference images were generated using advanced text-to-image models like SDXL, particularly where specific or unique visual traits were required. This dual approach of manual collection and AI generation allowed for a rich and consistent set of visual references. In total, the dataset includes 344 unique character roles and 509 reference images.</p>
+            <p>We manually collected reference images from the internet that aligned with the character descriptions. A crucial aspect was maintaining stylistic consistency within each story, ensuring all character images in a single narrative shared the same artistic style (e.g., all anime or all realistic), as shown in Figure 1(b) of the paper.</p>
+            <p>For a small portion of characters where specific visual traits were needed, reference images were generated using SDXL. This dual strategy resulted in 344 unique characters and 509 reference images in total. Basic statistics about characters and story genres are presented in Figure 1(c) of the ViStoryBench paper.</p>
           </div>
           <div class="bg-white dark:bg-slate-700 p-6 sm:p-8 rounded-xl shadow-xl border border-gray-200 dark:border-gray-600">
             <h4 class="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-6 text-center">Visualizing Dataset Composition</h4>

@@ -15,30 +15,30 @@ lite="""Method	model	mode	Cross CSD Score (Ref-Gen)	Self CSD Score (Gen-Gen)	Cro
 Story image method	Storydiffusion	(Img ref) (photomaker)	0.423	0.618	0.331	0.61	5.207	8.178	1.763	3.209	0.832	2.333	2.407	60.696	
 Story image method	Storyadapter	(Img ref)(scale0)	0.527	0.616	0.345	0.597	4.892	11.485	1.804	3.141	0.845	2.393	2.329	60.414	
 Story image method	Storygen	(Multi-image-condition)	0.399	0.549	0.37	0.642	4.089	7.667	1.091	2.043	0.831	1.352	1.419	36.902	
-Story image method	UNO (many2many version)	base	0.446	0.656	0.423	0.692	5.134	10.497	3.479	2.927	0.891	2.817	2.321	72.147	
+Story image method	UNO	base	0.446	0.656	0.423	0.692	5.134	10.497	3.479	2.927	0.891	2.817	2.321	72.147	
 Story image method	Theatergen	base	0.237	0.421	0.265	0.546	4.943	13.604	2.752	1.729	0.813	0.953	1.037	40.446	
-Story image method	Seedstory(AR) 	base	0.264	0.762	0.219	0.486	3.823	4.927	1.932	1.776	0.831	0.478	0.473	29.118	
+Story image method	Seedstory 	base	0.264	0.762	0.219	0.486	3.823	4.927	1.932	1.776	0.831	0.478	0.473	29.118	
 MLLM model	GPT4o	base	0.487	0.685	0.532	0.731	5.519	9.019	3.868	3.568	0.934	3.755	3.099	89.315	
 MLLM model	Gemini	base	0.381	0.586	0.315	0.537	4.906	10.117	3.482	3.081	0.869	3.045	2.565	76.083	
 Story video method	Vlogger	text only	0.257	0.462	0.287	0.554	4.302	8.443	1.629	2.82	0.834	2.352	2.127	55.799	
 Story video method	Movieagent	SD-3 version	0.361	0.543	0.357	0.605	5.332	12.049	3.365	2.905	0.869	3.282	2.648	76.257	
 Story video method	Animdirector	base	0.321	0.555	0.384	0.655	5.612	9.996	3.634	2.734	0.877	3.35	2.546	76.651	
 Story video method	MM-StoryAgent	base	0.28	0.662	0.321	0.566	5.91	8.088	2.888	2.295	0.822	1.493	1.39	50.419	
-Business platform	moki	base	0.229	0.7	0.292	0.626	5.813	10.358	2.81	1.668	0.82	0.888	0.848	38.841	
-Business platform	morphic_studio	base	0.59	0.638	0.5	0.664	4.956	9.004	3.278	2.934	0.829	2.475	2.106	67.46	
-Business platform	bairimeng_ai	base	0.426	0.73	0.559	0.762	5.731	9.552	3.447	2.789	0.894	2.361	1.83	65.172	
-Business platform	shenbimaliang	base	0.292	0.582	0.347	0.611	5.07	11.599	3.742	2.66	0.856	3.37	2.358	75.809	
-Business platform	xunfeihuiying	base	0.342	0.652	0.392	0.546	5.321	11.156	2.773	2.708	0.841	2.424	2.081	62.421	
-Business platform	doubao	base	0.386	0.698	0.394	0.714	5.615	9.878	3.96	2.995	0.875	3.721	2.788	84.155	
+Commercial platform	MOKI	base	0.229	0.7	0.292	0.626	5.813	10.358	2.81	1.668	0.82	0.888	0.848	38.841	
+Commercial platform	Morphic_Studio	base	0.59	0.638	0.5	0.664	4.956	9.004	3.278	2.934	0.829	2.475	2.106	67.46	
+Commercial platform	AIbrm	base	0.426	0.73	0.559	0.762	5.731	9.552	3.447	2.789	0.894	2.361	1.83	65.172	
+Commercial platform	ShenBi	base	0.292	0.582	0.347	0.611	5.07	11.599	3.742	2.66	0.856	3.37	2.358	75.809	
+Commercial platform	Typemovie	base	0.342	0.652	0.392	0.546	5.321	11.156	2.773	2.708	0.841	2.424	2.081	62.421	
+Commercial platform	Doubao	base	0.386	0.698	0.394	0.714	5.615	9.878	3.96	2.995	0.875	3.721	2.788	84.155	
 Naive baseline	base	base	0.736	0.773	0.932	0.996	4.396	5.474	0.532	2.021	1	0.671	1.097	27.003	
 """
 full="""Method	model	mode	Cross CSD Score (Ref-Gen)	Self CSD Score (Gen-Gen)	Cross Cref Score (Ref-Gen)	Self Cref Score (Gen-Gen)	Aesthetics Score	Inception Score	Prompt Align (Scene)	Prompt Align (Camera)	Prompt Align (Character Existence|Number)	Prompt Align (Global Character Action|Script)	Prompt Align (Local/Single Character Action|Script)	Prompt Align Avg
 Story image method	Storydiffusion	(Img ref) (photomaker)	0.3511	0.5536	0.3379	0.6634	5.125	10.057	1.878	3.266	0.868	2.411	2.23	61.151	
 Story image method	Storyadapter	(Img ref)(scale0)	0.4619	0.5537	0.3533	0.6653	4.995	12.978	1.953	3.263	0.857	2.489	2.25	62.218	
 Story image method	Storygen	Multi-image-condition	0.3711	0.5256	0.3518	0.6399	4.022	8.889	1.123	2.125	0.862	1.304	1.387	37.117	
-Story image method	UNO (many2many version)	base	0.408	0.6103	0.3938	0.6711	5.232	12.398	3.47	3.062	0.898	2.617	2.121	70.43	
+Story image method	UNO	base	0.408	0.6103	0.3938	0.6711	5.232	12.398	3.47	3.062	0.898	2.617	2.121	70.43	
 Story image method	Theatergen	base	0.1989	0.4037	0.2708	0.6045	4.897	14.882	2.673	1.645	0.844	0.874	0.875	37.923	
-Story image method	Seedstory(AR) 	base	0.2334	0.7486	0.2174	0.5286	3.836	6.325	1.931	1.638	0.859	0.592	0.559	29.499	
+Story image method	Seedstory 	base	0.2334	0.7486	0.2174	0.5286	3.836	6.325	1.931	1.638	0.859	0.592	0.559	29.499	
 Story video method	Vlogger	text only	0.2141	0.4073	0.2686	0.5662	4.334	10.482	1.576	2.854	0.845	2.191	1.982	53.769	
 Story video method	Movieagent	SD-3 version	0.3089	0.4826	0.3163	0.607	5.33	15.021	3.456	2.985	0.875	3.233	2.496	76.061	
 Story video method	Animdirector	base	0.2983	0.507	0.3388	0.6534	5.599	12.037	3.607	2.887	0.884	3.239	2.435	76.049	

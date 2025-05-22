@@ -21,9 +21,9 @@ Story image method	Storyadapter	(Img ref)(scale5)	0.382	0.759	0.295	0.55	4.803	1
 Story image method	Storygen	(Auto-regressive)	0.407	0.558	0.376	0.588	4.091	7.152	0.974	2.165	0.836	1.21	1.299	35.302	
 Story image method	Storygen	(Multi-image-condition)	0.399	0.549	0.37	0.642	4.089	7.667	1.091	2.043	0.831	1.352	1.419	36.902	
 Story image method	Storygen	(Mix)	0.315	0.609	0.364	0.688	3.862	6.246	0.75	2.154	0.833	1.231	1.598	35.823	
-Story image method	UNO (many2many version)	base	0.446	0.656	0.423	0.692	5.134	10.497	3.479	2.927	0.891	2.817	2.321	72.147	
+Story image method	UNO	base	0.446	0.656	0.423	0.692	5.134	10.497	3.479	2.927	0.891	2.817	2.321	72.147	
 Story image method	Theatergen	base	0.237	0.421	0.265	0.546	4.943	13.604	2.752	1.729	0.813	0.953	1.037	40.446	
-Story image method	Seedstory(AR) 	base	0.264	0.762	0.219	0.486	3.823	4.927	1.932	1.776	0.831	0.478	0.473	29.118	
+Story image method	Seedstory 	base	0.264	0.762	0.219	0.486	3.823	4.927	1.932	1.776	0.831	0.478	0.473	29.118	
 MLLM model	GPT4o	base	0.487	0.685	0.532	0.731	5.519	9.019	3.868	3.568	0.934	3.755	3.099	89.315	
 MLLM model	Gemini	base	0.381	0.586	0.315	0.537	4.906	10.117	3.482	3.081	0.869	3.045	2.565	76.083	
 Story video method	Vlogger	text only	0.257	0.462	0.287	0.554	4.302	8.443	1.629	2.82	0.834	2.352	2.127	55.799	
@@ -32,12 +32,12 @@ Story video method	Movieagent	ROICtrl version	0.248	0.557	0.277	0.577	4.704	10.0
 Story video method	Movieagent	SD-3 version	0.361	0.543	0.357	0.605	5.332	12.049	3.365	2.905	0.869	3.282	2.648	76.257	
 Story video method	Animdirector	base	0.321	0.555	0.384	0.655	5.612	9.996	3.634	2.734	0.877	3.35	2.546	76.651	
 Story video method	MM-StoryAgent	base	0.28	0.662	0.321	0.566	5.91	8.088	2.888	2.295	0.822	1.493	1.39	50.419	
-Business platform	moki	base	0.229	0.7	0.292	0.626	5.813	10.358	2.81	1.668	0.82	0.888	0.848	38.841	
-Business platform	morphic_studio	base	0.59	0.638	0.5	0.664	4.956	9.004	3.278	2.934	0.829	2.475	2.106	67.46	
-Business platform	bairimeng_ai	base	0.426	0.73	0.559	0.762	5.731	9.552	3.447	2.789	0.894	2.361	1.83	65.172	
-Business platform	shenbimaliang	base	0.292	0.582	0.347	0.611	5.07	11.599	3.742	2.66	0.856	3.37	2.358	75.809	
-Business platform	xunfeihuiying	base	0.342	0.652	0.392	0.546	5.321	11.156	2.773	2.708	0.841	2.424	2.081	62.421	
-Business platform	doubao	base	0.386	0.698	0.394	0.714	5.615	9.878	3.96	2.995	0.875	3.721	2.788	84.155	
+Commercial platform	MOKI	base	0.229	0.7	0.292	0.626	5.813	10.358	2.81	1.668	0.82	0.888	0.848	38.841	
+Commercial platform	Morphic_Studio	base	0.59	0.638	0.5	0.664	4.956	9.004	3.278	2.934	0.829	2.475	2.106	67.46	
+Commercial platform	AIbrm	base	0.426	0.73	0.559	0.762	5.731	9.552	3.447	2.789	0.894	2.361	1.83	65.172	
+Commercial platform	ShenBi	base	0.292	0.582	0.347	0.611	5.07	11.599	3.742	2.66	0.856	3.37	2.358	75.809	
+Commercial platform	Typemovie	base	0.342	0.652	0.392	0.546	5.321	11.156	2.773	2.708	0.841	2.424	2.081	62.421	
+Commercial platform	Doubao	base	0.386	0.698	0.394	0.714	5.615	9.878	3.96	2.995	0.875	3.721	2.788	84.155	
 Naive baseline	base	base	0.736	0.773	0.932	0.996	4.396	5.474	0.532	2.021	1	0.671	1.097	27.003	
 """  # 这里贴入完整的TSV数据
 

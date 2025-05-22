@@ -642,7 +642,7 @@
         }
     ],
     "outputs": {
-        "moki": {
+        "MOKI": {
             "base": {
                 "ViStory": {
                     "en": {
@@ -651,7 +651,7 @@
                 }
             }
         },
-        "storydiffusion": {
+        "Storydiffusion": {
             "Photomaker": {
                 "ViStory": {
                     "en": {
@@ -667,7 +667,7 @@
                 }
             }
         },
-        "uno": {
+        "UNO": {
             "base": {
                 "ViStory": {
                     "en": {
@@ -676,7 +676,7 @@
                 }
             }
         },
-        "shenbimaliang": {
+        "ShenBi": {
             "base": {
                 "ViStory": {
                     "en": {
@@ -685,7 +685,7 @@
                 }
             }
         },
-        "animdirector": {
+        "Animdirector": {
             "sd3": {
                 "ViStory": {
                     "en": {
@@ -694,7 +694,7 @@
                 }
             }
         },
-        "bairimeng_ai": {
+        "AIbrm": {
             "base": {
                 "ViStory": {
                     "en": {
@@ -703,7 +703,7 @@
                 }
             }
         },
-        "movieagent": {
+        "Movieagent": {
             "SD-3": {
                 "ViStory": {
                     "en": {
@@ -712,7 +712,7 @@
                 }
             }
         },
-        "storygen": {
+        "Storygen": {
             "auto-regressive": {
                 "ViStory": {
                     "en": {
@@ -735,7 +735,7 @@
                 }
             }
         },
-        "xunfeihuiying": {
+        "Typemovie": {
             "base": {
                 "ViStory": {
                     "en": {
@@ -744,7 +744,7 @@
                 }
             }
         },
-        "seedstory": {
+        "Seedstory": {
             "base": {
                 "ViStory": {
                     "en": {
@@ -769,7 +769,7 @@
                 }
             }
         },
-        "storyadapter": {
+        "Storyadapter": {
             "text_only_results_xl5": {
                 "ViStory": {
                     "en": {
@@ -799,7 +799,7 @@
                 }
             }
         },
-        "morphic_studio": {
+        "Morphic_Studio": {
             "base": {
                 "ViStory": {
                     "en": {
@@ -808,7 +808,7 @@
                 }
             }
         },
-        "mmstoryagent": {
+        "MM-StoryAgent": {
             "base": {
                 "ViStory": {
                     "en": {
@@ -817,7 +817,7 @@
                 }
             }
         },
-        "theatergen": {
+        "Theatergen": {
             "base": {
                 "ViStory": {
                     "en": {

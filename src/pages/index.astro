@@ -10,11 +10,11 @@ const currentNav = "overview";
 // Data provided by user - CSV format for full, TSV for lite
 const fullDatasetCsvContent = `
 Method,model,mode,Character Consistency(CRef)_rank,Style Consistency(SRef)_rank,Prompt Alignment_rank,Generative Quality_rank,Diversity_rank,overall_rank,model_key
-Story image method,UNO,base,2,2.5,3,4,4,1,Story image method - UNO
-Story image method,Storyadapter,(Img ref)(scale0),3,2.5,4,6,3,2,Story image method - Storyadapter
-Story video method,Movieagent,SD-3 version,8,8.5,2,3,1,3,Story video method - Movieagent
-Story video method,Animdirector,base,4.5,8.5,1,2,5,4,Story video method - Animdirector
-Story image method,Storydiffusion,(Img ref) (photomaker),4.5,6,5,5,7,5,Story image method - Storydiffusion
+Story image method,UNO,base,2,2,3,4,4,1,Story image method - UNO
+Story image method,Storyadapter,(Img ref)(scale0),3,2,4,6,3,2,Story image method - Storyadapter
+Story video method,Movieagent,SD-3 version,8,8,2,3,1,3,Story video method - Movieagent
+Story video method,Animdirector,base,4,8,1,2,5,4,Story video method - Animdirector
+Story image method,Storydiffusion,(Img ref) (photomaker),4,6,5,5,7,5,Story image method - Storydiffusion
 Story video method,MM-StoryAgent,base,7,6,6,1,8,6,Story video method - MM-StoryAgent
 Naive baseline,base,base,1,1,10,8,10,7,Naive baseline - base
 Story image method,Theatergen,base,9,11,9,7,2,8,Story image method - Theatergen
@@ -32,18 +32,18 @@ Story image method,UNO,base,5,5,6,10,6,4,Story image method - UNO
 Story video method,Movieagent,SD-3 version,10,16,5,7,2,5,Story video method - Movieagent
 Story video method,Animdirector,base,7,16,4,5,9,6,Story video method - Animdirector
 Commercial platform,ShenBi,base,9,16,7,11,3,7,Commercial platform - ShenBi
-Commercial platform,Morphic_Studio,base,5,4,9.5,12,13,8,Commercial platform - Morphic_Studio
+Commercial platform,Morphic_Studio,base,5,4,9,12,13,8,Commercial platform - Morphic_Studio
 Commercial platform,Typemovie,base,11,10,12,8,5,9,Commercial platform - Typemovie
-Story image method,Storyadapter,(Img ref)(scale0),13.5,7,9.5,15,4,10,Story image method - Storyadapter
-Commercial platform,MOKI,base,13.5,12.5,18,2,7,11,Commercial platform - MOKI
+Story image method,Storyadapter,(Img ref)(scale0),13,7,9,15,4,10,Story image method - Storyadapter
+Commercial platform,MOKI,base,13,12,18,2,7,11,Commercial platform - MOKI
 Naive baseline,base,base,1,1,15,16,18,12,Naive baseline - base
-Story image method,Storydiffusion,(Img ref) (photomaker),12,8.5,11,9,15,13,Story image method - Storydiffusion
-MLLM model,Gemini,base,17,12.5,3,14,8,14,MLLM model - Gemini
+Story image method,Storydiffusion,(Img ref) (photomaker),12,8,11,9,15,13,Story image method - Storydiffusion
+MLLM model,Gemini,base,17,12,3,14,8,14,MLLM model - Gemini
 Story video method,MM-StoryAgent,base,15,11,14,1,16,15,Story video method - MM-StoryAgent
 Story image method,Theatergen,base,18,19,17,13,1,16,Story image method - Theatergen
 Story image method,Storygen,(Multi-image-condition),8,14,16,18,17,17,Story image method - Storygen
 Story video method,Vlogger,text only,16,18,13,17,14,18,Story video method - Vlogger
-Story image method,Seedstory ,base,19,8.5,19,19,19,19,Story image method - Seedstory 
+Story image method,Seedstory ,base,19,8,19,19,19,19,Story image method - Seedstory 
 `.trim();
 
 interface DataRow {

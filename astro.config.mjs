@@ -81,5 +81,5 @@ export default defineConfig({
       },
     },
   },
-  base: '/bmk_leaderboard/', 
+  base: '/', 
 });

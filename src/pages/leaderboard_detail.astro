@@ -243,10 +243,92 @@ const bestOfModeData = {
 
         calculateColumnStats(); // Calculate min/max for color gradients
 
+        const groupHeaderRow = document.createElement('tr');
         const headerRow = document.createElement('tr');
+
+        // 从 main_rank.py 获取的维度信息
+        const dimensions = {
+            "Method": [], // Method, model, mode 不属于任何维度分组
+            "model": [],
+            "mode": [],
+            "Character Consistency(CRef)": [
+                "Cross Cref Score (Ref-Gen)", 
+                "Self Cref Score (Gen-Gen)"
+            ],
+            "Style Consistency(SRef)": [
+                "Cross CSD Score (Ref-Gen)", 
+                "Self CSD Score (Gen-Gen)"
+            ],
+            "Prompt Alignment": [
+                "Prompt Align (Scene)",
+                "Prompt Align (Camera)",
+                "Prompt Align (Character Existence|Number) OCCM", // Lite data specific
+                "Prompt Align (Character Existence|Number)", // Full data specific
+                "Prompt Align (Global Character Action|Script)",
+                "Prompt Align (Local/Single Character Action|Script)",
+                "Prompt Align Avg（Alignment score）", // Lite data specific
+                "Prompt Align Avg" // Full data specific
+            ],
+            "Generative Quality": [
+                "Aesthetics Score"
+            ],
+            "Diversity": [
+                "Inception Score"
+            ]
+        };
+
+        let currentGroup = "";
+        let colspanCount = 0;
+        let previousTh = null;
+
         activeHeaders.forEach((headerText, index) => {
+            let groupNameForHeader = "";
+            let isInAnyGroup = false;
+            for (const group in dimensions) {
+                if (dimensions[group].includes(headerText)) {
+                    groupNameForHeader = group;
+                    isInAnyGroup = true;
+                    break;
+                } else if (headerText === group) { // For Method, Model, Mode
+                    groupNameForHeader = headerText;
+                    isInAnyGroup = true;
+                    break;
+                }
+            }
+            // If not in any predefined group, use the header itself as group (for ungrouped metrics)
+            if (!isInAnyGroup) {
+                 groupNameForHeader = headerText;
+            }
+
+            const isNewDisplayGroup = groupNameForHeader !== currentGroup;
+            let newGroupThGotBorder = false; // Flag: true if the new groupTh (in groupHeaderRow) gets a border
+
+            if (isNewDisplayGroup) {
+                if (previousTh) { // Finalize the colspan of the previous group's th in groupHeaderRow
+                    previousTh.colSpan = colspanCount;
+                }
+                // Create the new groupTh for groupHeaderRow
+                const groupTh = document.createElement('th');
+                let groupThClass = "py-3 px-6 text-center bg-gray-300 dark:bg-slate-600 text-gray-700 dark:text-slate-200 uppercase text-sm leading-normal";
+                
+                if (previousTh) { // If this new groupTh is NOT the first one on the groupHeaderRow
+                    groupThClass += " border-l border-gray-400 dark:border-slate-500";
+                    newGroupThGotBorder = true; // Mark that this new group's header cell got a border
+                }
+                groupTh.className = groupThClass;
+                groupTh.textContent = groupNameForHeader;
+                groupHeaderRow.appendChild(groupTh);
+                
+                previousTh = groupTh; // This new groupTh is now the "previousTh" for the next potential group
+                currentGroup = groupNameForHeader;
+                colspanCount = 1; // Reset colspan for this new group
+            } else { // Continuing an existing group in groupHeaderRow
+                colspanCount++;
+            }
+
+            // Create the metric th for headerRow (the second row of headers)
             const th = document.createElement('th');
-            th.className = "py-3 px-6 text-left cursor-pointer hover:bg-gray-300 dark:hover:bg-slate-600 whitespace-normal text-gray-600 dark:text-slate-300"; // px-6 for more padding, dark mode text and hover, changed whitespace-nowrap to whitespace-normal
+            th.className = "py-3 px-6 text-left cursor-pointer hover:bg-gray-300 dark:hover:bg-slate-600 whitespace-normal text-gray-600 dark:text-slate-300";
             
             const displayHeaderText = headerText.replace('\\n', ' '); 
             th.textContent = displayHeaderText;
@@ -261,8 +343,58 @@ const bestOfModeData = {
             th.appendChild(arrowSpan);
 
             th.addEventListener('click', () => sortTable(index, columnType));
-            headerRow.appendChild(th);
+            // headerRow.appendChild(th); // Deferred appending after border logic
+
+            // Logic to add border to this metric `th` (in headerRow)
+            if (isNewDisplayGroup) { // This metric `th` is the first in its display group
+                const individualHeadersThatGetRowspan2 = ['Method', 'model', 'mode'];
+                let currentGroupWillBeRowspan2 = false;
+                // The group this `th` belongs to is `groupNameForHeader`.
+                if (individualHeadersThatGetRowspan2.includes(groupNameForHeader)) {
+                    // These groups (Method, model, mode) get rowspan=2 if their groupTh's colspan is 1.
+                    // As they form their own groups, their colspanCount will effectively be 1 when their groupTh is processed.
+                    currentGroupWillBeRowspan2 = true;
+                }
+                
+                // If the groupTh for this group (in groupHeaderRow) received a border, 
+                // AND this group is not a rowspan=2 type, then this metric th also gets a border.
+                if (newGroupThGotBorder && !currentGroupWillBeRowspan2) {
+                    th.classList.add("border-l", "border-gray-400", "dark:border-slate-500");
+                }
+            }
+            
+            headerRow.appendChild(th); // Append the metric th to headerRow
         });
+
+        if (previousTh) { // Set colspan for the very last group in groupHeaderRow
+            previousTh.colSpan = colspanCount;
+        }
+        
+        // Correct removal of Method, model, mode from second header row
+        // And ensure the first few group headers have rowspan=2
+        const individualHeadersToRemoveFromSecondRow = ['Method', 'model', 'mode'];
+        /** @type {HTMLTableCellElement[]} */
+        let actualHeaderRowChildNodes = Array.from(headerRow.childNodes);
+        
+        activeHeaders.forEach((headerText, index) => {
+            if (individualHeadersToRemoveFromSecondRow.includes(headerText)) {
+                // Find the corresponding groupTh and set rowspan
+                 Array.from(groupHeaderRow.childNodes).forEach(groupThNode => {
+                    const groupTh = /** @type {HTMLTableCellElement} */ (groupThNode);
+                    if (groupTh.textContent === headerText && parseInt(groupTh.getAttribute('colspan') || '1') === 1) { // Ensure it's the specific th, not a larger group
+                        groupTh.rowSpan = 2;
+                    }
+                });
+                // Remove the th from the actualHeaderRowChildNodes list if it exists for this header
+                const thToRemove = actualHeaderRowChildNodes.find(th => th.dataset.columnIndex === String(index));
+                if (thToRemove && headerRow.contains(thToRemove)) {
+                    headerRow.removeChild(thToRemove);
+                }
+            }
+        });
+
+
+        tableThead.appendChild(groupHeaderRow);
         tableThead.appendChild(headerRow);
         if (leaderboardTable) updateSortIndicators(leaderboardTable, -1, 'asc'); 
 
@@ -307,11 +439,11 @@ const bestOfModeData = {
                     const td = document.createElement('td');
                     let baseTdClass = "py-3 px-6 text-left align-top whitespace-normal text-gray-700 dark:text-slate-200"; // Changed nowrap to normal for all TDs
 
-                    if (header === 'METHOD') {
-                        td.className = baseTdClass + " w-40"; // Add width constraint (10rem) for Method column
+                    if (header === 'METHOD') { // Note: Original was 'METHOD', but data uses 'Method'. Assuming case-insensitivity or data consistency.
+                        td.className = baseTdClass + " w-40"; 
                     } 
-                    else if (header === 'MODEL') {
-                        td.className = baseTdClass + " w-20"; // Add width constraint (10rem) for Method column
+                    else if (header === 'MODEL') { // Similarly, 'MODEL' vs 'model'
+                        td.className = baseTdClass + " w-20"; 
                     } else {
                         td.className = baseTdClass;
                     }
@@ -327,39 +459,26 @@ const bestOfModeData = {
                         const numericValue = parseFloat(cellValue);
                         if (!isNaN(numericValue)) {
                             const stats = columnStats[header];
-                            let normalizedValue = 0.5; // Default for single value or all same values
+                            let normalizedValue = 0.5; 
                             if (stats && stats.max !== stats.min) {
                                 normalizedValue = (numericValue - stats.min) / (stats.max - stats.min);
                             }
-                            normalizedValue = Math.max(0, Math.min(1, normalizedValue)); // Clamp between 0 and 1
+                            normalizedValue = Math.max(0, Math.min(1, normalizedValue)); 
                             
-                            const hue = (1 - normalizedValue) * 120; // 0 (red) to 120 (green). Low value = red, High value = green.
-                            // To make high values green and low values red, we want normalized 1 -> hue 120, normalized 0 -> hue 0.
-                            // So, hue = normalizedValue * 120; is correct for (0=red, 1=green)
                             const finalHue = normalizedValue * 120;
 
-                            // td.style.backgroundColor = `hsl(${finalHue}, 70%, 85%)`; // Light mode HSL
-                            // For dark mode, we want darker shades. Let's adjust lightness. L in HSL (e.g., 25-35% for dark backgrounds)
-                            // Or use a completely different color palette for dark mode if HSL becomes too complex to manage
                             const isDarkMode = document.documentElement.classList.contains('dark');
                             if (isDarkMode) {
-                                // Darker shades for dark mode, e.g., using a lower lightness
-                                // Red (0) to Green (120). For dark mode, Red could be dark red, Green dark green.
-                                // Let's try a simpler approach: pre-defined dark-mode color scale or adjust lightness significantly.
-                                // For example, very low saturation and lightness for reds, slightly higher for greens.
-                                // Hue: 0 (red) to 120 (green)
-                                // Saturation: ~50-70%
-                                // Lightness: ~20-30% for reds, ~30-40% for greens
                                 let darkSat = 60;
-                                let darkLight = normalizedValue * 20 + 20; // maps 0 to 20%, 1 to 40%
+                                let darkLight = normalizedValue * 20 + 20; 
                                 td.style.backgroundColor = `hsl(${finalHue}, ${darkSat}%, ${darkLight}%)`;
                             } else {
-                                td.style.backgroundColor = `hsl(${finalHue}, 70%, 85%)`; // Original light mode
+                                td.style.backgroundColor = `hsl(${finalHue}, 70%, 85%)`;
                             }
                             td.textContent = numericValue.toFixed(3);
                             td.classList.add('text-center');
                         } else {
-                            td.textContent = cellValue; // Display as is if not a valid number (e.g. empty string, text)
+                            td.textContent = cellValue; 
                         }
                     } else {
                         td.textContent = cellValue.replace('\n', ' ');

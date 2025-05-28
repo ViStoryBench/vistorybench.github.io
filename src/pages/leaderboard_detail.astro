@@ -120,13 +120,13 @@ const bestOfModeData = {
             <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
                 <h2 class="text-2xl font-semibold text-gray-700 dark:text-slate-200" data-lang-key="charts_title">Method Comparison Radar Charts</h2>
                 <div class="flex items-center space-x-4">
-                    <div id="radar-mode-toggle-buttons" class="flex space-x-2 mr-4">
-                        <button id="radar-lite-mode-btn" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500" data-lang-key="button_lite_mode">Lite Mode</button>
-                        <button id="radar-full-mode-btn" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500" data-lang-key="button_full_mode">Full Mode</button>
-                    </div>
                     <div class="flex items-center">
                         <input id="best-of-method-checkbox" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 dark:border-slate-600 dark:focus:ring-indigo-500 dark:checked:bg-indigo-500">
                         <label for="best-of-method-checkbox" class="ml-2 block text-sm text-gray-900 dark:text-slate-300" data-lang-key="best_of_method_toggle">Best of Method Mode</label>
+                    </div>
+                    <div id="radar-mode-toggle-buttons" class="flex space-x-2 mr-4">
+                        <button id="radar-lite-mode-btn" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500" data-lang-key="button_lite_mode">Lite Mode</button>
+                        <button id="radar-full-mode-btn" class="px-4 py-2 rounded font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-slate-600 dark:text-slate-300 dark:hover:bg-slate-500" data-lang-key="button_full_mode">Full Mode</button>
                     </div>
                 </div>
             </div>
@@ -246,9 +246,9 @@ const bestOfModeData = {
         const headerRow = document.createElement('tr');
         activeHeaders.forEach((headerText, index) => {
             const th = document.createElement('th');
-            th.className = "py-3 px-6 text-left cursor-pointer hover:bg-gray-300 dark:hover:bg-slate-600 whitespace-nowrap text-gray-600 dark:text-slate-300"; // px-6 for more padding, dark mode text and hover
+            th.className = "py-3 px-6 text-left cursor-pointer hover:bg-gray-300 dark:hover:bg-slate-600 whitespace-normal text-gray-600 dark:text-slate-300"; // px-6 for more padding, dark mode text and hover, changed whitespace-nowrap to whitespace-normal
             
-            const displayHeaderText = headerText.replace('\n', ' '); 
+            const displayHeaderText = headerText.replace('\\n', ' '); 
             th.textContent = displayHeaderText;
 
             const sampleValue = activeDataset.length > 0 && activeDataset[0] ? activeDataset[0][headerText] : "";
@@ -305,7 +305,17 @@ const bestOfModeData = {
 
                 if (shouldRenderCell) {
                     const td = document.createElement('td');
-                    td.className = "py-3 px-6 text-left align-top whitespace-nowrap text-gray-700 dark:text-slate-200"; // Changed dark:text-slate-300 to dark:text-slate-200
+                    let baseTdClass = "py-3 px-6 text-left align-top whitespace-normal text-gray-700 dark:text-slate-200"; // Changed nowrap to normal for all TDs
+
+                    if (header === 'METHOD') {
+                        td.className = baseTdClass + " w-40"; // Add width constraint (10rem) for Method column
+                    } 
+                    else if (header === 'MODEL') {
+                        td.className = baseTdClass + " w-20"; // Add width constraint (10rem) for Method column
+                    } else {
+                        td.className = baseTdClass;
+                    }
+
                     if (calculatedRowspan > 1) {
                         td.rowSpan = calculatedRowspan;
                     }
@@ -662,10 +672,11 @@ const bestOfModeData = {
                                     size: 20,
                                     family: "'PingFang SC', 'Helvetica Neue', Arial, sans-serif",
                                 },
-                                titleColor: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333', // Changed to slate-200 for dark
-                                bodyColor: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333', // Changed to slate-200 for dark
-                                backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(30, 41, 59, 0.9)' : 'rgba(0,0,0,0.8)', // slate-800 based for dark
-                                borderColor: document.documentElement.classList.contains('dark') ? 'rgba(71, 85, 105, 0.9)' : 'rgba(0,0,0,0.8)', // slate-600 based for dark
+                                titleColor: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333333', // 暗色模式用浅色，亮色模式用深色
+                                bodyColor: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333333', // 暗色模式用浅色，亮色模式用深色
+                                backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)', // 暗色模式用深色背景，亮色模式用白色背景
+                                borderColor: document.documentElement.classList.contains('dark') ? 'rgba(71, 85, 105, 0.9)' : 'rgba(156, 163, 175, 0.8)', // 暗色模式用深灰边框，亮色模式用浅灰边框
+                                borderWidth: 1,
                                 callbacks: {
                                     label: function(context) {
                                         let label = context.dataset.label || '';
@@ -676,9 +687,9 @@ const bestOfModeData = {
                                         const originalValue = context.dataset._originalValues[metricName]; 
                                         
                                         if (originalValue !== undefined && originalValue !== "N/A") {
-                                            label += `${Number(originalValue).toFixed(3)} (归一化: ${context.parsed.r.toFixed(2)})`;
+                                            label += `${Number(originalValue).toFixed(3)} (normalized: ${context.parsed.r.toFixed(2)})`;
                                         } else if (originalValue === "N/A") {
-                                            label += `N/A (归一化: ${context.parsed.r.toFixed(2)})`;
+                                            label += `N/A (normalized: ${context.parsed.r.toFixed(2)})`;
                                         } else {
                                             label += context.parsed.r.toFixed(2); // Fallback to normalized if original not found
                                         }

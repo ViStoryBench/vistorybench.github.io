@@ -7,16 +7,9 @@ const activeNav = "metrics";
 <BaseLayout title={pageTitle} activeNav={activeNav}>
   <main class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 py-12 md:py-16 px-4">
     <div class="container mx-auto">
-      <header class="mb-10 md:mb-12 text-center">
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-4" data-lang-key="metrics_page_title">Benchmark Metrics</h1>
-        <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto" data-lang-key="metrics_page_subtitle">
-          Comprehensive evaluation metrics for story visualization, assessing consistency, adherence, quality, diversity, and human perception.
-        </p>
-      </header>
 
       <section id="metrics-definitions" class="space-y-8 md:space-y-10">
 
-        <!-- 1. Character Consistency (CRef) -->
         <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
           <div class="flex items-start sm:items-center mb-4">
             <div class="flex-shrink-0 mr-4">
@@ -25,51 +18,26 @@ const activeNav = "metrics";
               </svg>
             </div>
             <div>
-              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="cref_title">1. Character Consistency (CRef / CIDS)</h3>
-              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="cref_desc">Evaluates whether characters maintain consistent appearance across an image sequence. Focuses on self-similarity of character identity features and cross-similarity with reference images. Also known as Character Identification Similarity (CIDS) in ViStoryBench.</p>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="cref_title">1. Character Identification Similarity (CIDS)</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="cref_desc">Evaluates character identity consistency using Grounding DINO for character detection and feature extraction via CLIP or face embedding models (ArcFace/AdaFace/FaceNet). This metric measures both 'Cross-Similarity' between generated and reference images, and 'Self-Similarity' within the sequence of generated images.</p>
             </div>
           </div>
           <div class="space-y-4 mt-6">
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_accs">Average Character Cosine Similarity (aCCS)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_accs_desc">Calculates character similarity across frames using CLIP image features (referencing Theatregen, Story-Adapter). Suitable for general characters.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_pipeline">CIDS Pipeline</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_pipeline_desc">1) Detection & Cropping: Grounding DINO detects character bounding boxes from reference and generated images based on text prompts. 2) Feature Extraction: For realistic characters, features are extracted using ArcFace, AdaFace, and FaceNet. For non-realistic characters, CLIP is used. Both produce a 512-dimensional vector. 3) Matching & Scoring: Cosine similarity is computed between feature vectors to match characters and calculate similarity scores.</p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_face">ArcFace / AdaFace</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_face_desc">Face recognition models specialized for real human faces, extracting facial features for similarity computation.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_cross">Cross-Similarity Score</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_cross_desc">Measures the similarity between characters in the generated images and their corresponding reference images.</p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_ccip">CCIP (Contextual Character Identity Preservation)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_ccip_desc">Evaluates consistency for anime-style characters, often requiring detection of individual characters within images.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_confusion">Multi-Character Confusion</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_confusion_desc">Measures the model's ability to distinguish different characters in multi-character scenes, avoiding identity mismatches.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_grounding">Grounding DINO + Similarity</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_grounding_desc">First uses Grounding DINO to detect and crop main characters based on text descriptions, then calculates their similarity with reference images in feature spaces like CLIP, FID, or DreamSim.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_dreamsim">DreamSim Similarity</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_dreamsim_desc">A cross-modal fine-grained matching metric for evaluating the perceptual similarity between generated and reference images.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_vbench">VBench Character Tracking</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_vbench_desc">Applies methods for evaluating character consistency in videos to image sequences, tracking character stability across the sequence.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_charf1">Char-F1 / Char-Acc</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_charf1_desc">Uses a pre-trained character classifier to identify characters in generated images and compares with ground truth labels to calculate F1 score or accuracy.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_vlm">VLM Verification</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_vlm_desc">Utilizes Vision Language Models (VLMs) to compare characters in generated images with manually annotated ground truth character information for consistency verification.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="cref_sub_self">Self-Similarity Score</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="cref_sub_self_desc">Evaluates the identity consistency of a character across different generated shots within the same story. A higher score indicates that the character's appearance remains stable throughout the sequence.</p>
             </div>
           </div>
         </div>
 
-        <!-- 2. Style Consistency (SRef) -->
         <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
           <div class="flex items-start sm:items-center mb-4">
             <div class="flex-shrink-0 mr-4">
@@ -81,31 +49,18 @@ const activeNav = "metrics";
               </svg>
             </div>
             <div>
-              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="sref_title">2. Style Consistency (SRef / CSD)</h3>
-              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="sref_desc">Evaluates whether the artistic style remains consistent across an image sequence, including style cross-similarity with reference images and style self-similarity among generated images. ViStoryBench uses CSD (CLIP Style Disentanglement) for this.</p>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="sref_title">2. Style Similarity (CSD)</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="sref_desc">Adopts a CSD (CLIP Style Disentanglement) based metric to evaluate both intra-image (self) and inter-image (reference) consistency. Each image is encoded by a CLIP vision encoder trained on large-scale style datasets, and pairwise cosine similarity is computed between style embeddings.</p>
             </div>
           </div>
           <div class="space-y-4 mt-6">
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
               <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="sref_sub_csd">CSD (CLIP Style Disentanglement)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="sref_sub_csd_desc">Quantifies self-similarity (within generated images) and cross-similarity (between generated and reference images) through CSD-CLIP feature analysis. First, features are extracted using a CLIP vision encoder, then CSD layers separate content and style features, and finally, cosine similarity between style feature embeddings is computed.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="sref_sub_vlm">VLM Scoring</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="sref_sub_vlm_desc">Utilizes Vision Language Models like Qwen or GPT-4o to score the style consistency of generated image sequences.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="sref_sub_artfid">ArtFID</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="sref_sub_artfid_desc">A variant of FID (Fréchet Inception Distance) tailored for artistic styles, used to evaluate the realism and diversity of generated images in terms of artistic aesthetics.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="sref_sub_freq">Frequency Analysis / VGG Distance</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="sref_sub_freq_desc">Evaluates style similarity by analyzing frequency domain features of images or distances between deep features extracted by VGG networks; considered a more advanced exploratory method.</p>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="sref_sub_csd_desc">This metric quantifies style consistency using CSD-CLIP features. The process involves: 1) Extracting features with a CLIP vision encoder. 2) Using CSD layers to separate content and style features. 3) Computing the cosine similarity between the resulting style feature embeddings to score both self-similarity (within generated images) and cross-similarity (vs. reference images).</p>
             </div>
           </div>
         </div>
 
-        <!-- 3. Prompt Adherence -->
         <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
           <div class="flex items-start sm:items-center mb-4">
             <div class="flex-shrink-0 mr-4">
@@ -115,72 +70,70 @@ const activeNav = "metrics";
               </svg>
             </div>
             <div>
-              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="prompt_title">3. Prompt Adherence</h3>
-              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="prompt_desc">Assesses how well the generated images align with the storyboard descriptions (prompts), including character interactions, shooting methods, accuracy of the number of on-stage characters, and individual actions.</p>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="prompt_title">3. Prompt Adherence (Alignment Score)</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="prompt_desc">
+                {'Evaluates how well generated images align with the storyboard descriptions. Using GPT-4.1, we assess four key aspects on a 0-4 Likert scale, which is then converted to a 100-point scale: Character Interaction, Shooting Method, Static Shot Description, and Individual Actions.'}
+              </p>
             </div>
           </div>
           <div class="space-y-4 mt-6">
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_entity">Objective Assessment - Entity Presence (VLM)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_entity_desc">Uses VLMs to evaluate whether key entities (objects, colors, character count & description, behaviors) appear as prompted. Specifically, Onstage Character Count Matching (OCCM) is calculated using the formula: `100 * exp(-|Detected - Expected| / (epsilon + Expected))`.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_occm">Onstage Character Count Matching (OCCM)</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_occm_desc">
+                {'Addresses superfluous or missing characters by calculating the accuracy of the character count. The score is calculated as $OCCM = 100 \\times \\exp(-\\frac{|D-E|}{\\epsilon + E})$, where $D$ is the detected count, $E$ is the expected count, and $\\epsilon = e^{-6}$ is a smoothing factor.'}
+              </p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_camera">Objective Assessment - Camera/Shot Type (VLM)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_camera_desc">Evaluates whether the shooting method in the generated image (e.g., long/medium shot, high/low angle) aligns with the "Shot Perspective Design" in the storyboard.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_interaction">Character Interaction Actions</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_interaction_desc">
+                {'Evaluates the alignment between the group-level interactions of characters in the generated image and the intended interactions described in the storyboard’s static shot description.'}
+              </p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_env">Objective Assessment - Environmental Consistency (VLM)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_env_desc">Evaluates whether scene attributes, time, location, etc., in the generated image align with the "Setting Description" in the storyboard.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_camera">Shooting Method</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_camera_desc">
+                {'Assesses consistency between the depicted camera perspective (e.g., close-up, wide shot) in the generated image and the specified shot design in the storyboard.'}
+              </p>
+            </div>
+             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_static_desc">Static Shot Description</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_static_desc_desc">
+                {'Measures the overall correspondence between the generated scene and the narrative details provided in the storyboard’s static shot description, including setting, mood, and layout.'}
+              </p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_emotion">Subjective Assessment - Emotion / Atmosphere (VLM)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_emotion_desc">Evaluates whether the emotion and atmosphere conveyed by the generated image align with the descriptions in the prompt (e.g., character interactions, static descriptions).</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_action">Subjective Assessment - Action / Expression (Grounding DINO + VLM)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_action_desc">After character segmentation using Grounding DINO, VLMs are used to verify if individual character actions and expressions conform to the "Static Shot Description" in the storyboard.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="prompt_sub_action">Individual Actions</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="prompt_sub_action_desc">
+                {'Evaluates the accuracy of gestures, expressions, and poses for each character in the generated image relative to their described behavior in the static shot description.'}
+              </p>
             </div>
           </div>
         </div>
         
-        <!-- 4. Generation Quality -->
         <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
           <div class="flex items-start sm:items-center mb-4">
             <div class="flex-shrink-0 mr-4">
-               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-amber-500 dark:text-amber-400">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-amber-500 dark:text-amber-400">
                 <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
               </svg>
             </div>
             <div>
-              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="quality_title">4. Generation Quality</h3>
-              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="quality_desc">Evaluates the visual quality and aesthetic appeal of generated images, and whether there is an issue of "copy-pasting" reference images.</p>
+              <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="quality_title">4. Image Quality & Aesthetic</h3>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="quality_desc">Evaluates the visual and aesthetic quality of the generated images. This includes an Aesthetic Score from Aesthetic Predictor V2.5, diversity and clarity via Inception Score (IS), and a specific check for Copy-Paste behavior.</p>
             </div>
           </div>
           <div class="space-y-4 mt-6">
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="quality_sub_aesthetic">Aesthetic Score (aesthetic-predictor-v2-5)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="quality_sub_aesthetic_desc">Uses Aesthetic Predictor V2.5 (based on SigLIP) to evaluate image aesthetics, with scores ranging from 1-10. Scores above 5.5 are generally considered excellent quality. Focuses on whether images are blurry, noisy, etc.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="quality_sub_fid">FID (Fréchet Inception Distance)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="quality_sub_fid_desc">Measures the similarity in feature space distribution between generated images and real images, commonly used to assess the quality of realistic images.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="quality_sub_pickscore">PickScore</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="quality_sub_pickscore_desc">A CLIP-based image quality assessment model that predicts human preference rankings for images, reflecting the overall attractiveness of generated images.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="quality_sub_aesthetic">Aesthetic Score</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="quality_sub_aesthetic_desc">Uses Aesthetic Predictor V2.5 (a SigLIP-based model) to assess image aesthetics on a 1-10 scale. It penalizes blurry, noisy, or visually unappealing images. Scores above 5.5 are generally considered high quality.</p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
               <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="quality_sub_copypaste">Copy-Paste Detection</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="quality_sub_copypaste_desc">Detects whether the model excessively relies on or directly copies character reference images. For single-image input models, compares the similarity difference of output characters with the input image and an alternative reference image; this item is not applicable to multi-image input models.</p>
-            </div>
-             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="quality_sub_degradation">Degradation Analysis</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="quality_sub_degradation_desc">Analyzes whether generation quality decreases as the length of the image sequence increases.</p>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="quality_sub_copypaste_desc">Quantifies the model's tendency to directly reuse character reference images instead of generating novel depictions. For single-image input models, it measures the similarity gap between a generated character and both its true reference and an unrelated reference. A higher value indicates stronger copy-paste behavior. This metric is not applicable to models that take multiple reference images as input.</p>
             </div>
           </div>
         </div>
 
-        <!-- 5. Diversity -->
         <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
           <div class="flex items-start sm:items-center mb-4">
             <div class="flex-shrink-0 mr-4">
@@ -190,50 +143,45 @@ const activeNav = "metrics";
             </div>
             <div>
               <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="diversity_title">5. Diversity</h3>
-              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="diversity_desc">Measures the model's ability to generate multiple different outputs from a single prompt or to exhibit variation in sequence generation.</p>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="diversity_desc">Measures the model's ability to generate varied outputs. Diversity is a key aspect of generation quality, evaluated alongside clarity using the Inception Score (IS).</p>
             </div>
           </div>
           <div class="space-y-4 mt-6">
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
               <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="diversity_sub_is">Inception Score (IS)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="diversity_sub_is_desc">Evaluates the clarity and diversity of a batch of generated images. For multiple results generated from a single prompt, IS can reflect the diversity of their content.</p>
-            </div>
-            <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="diversity_sub_clipvar">CLIP Feature Variance</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="diversity_sub_clipvar_desc">Calculates the variance of CLIP features for all generated images in a story sequence. Higher variance indicates more content or style variation among images, thus higher diversity.</p>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="diversity_sub_is_desc">The diversity component of the Inception Score evaluates the variety of content across a batch of generated images. Higher scores suggest the model is producing a wider range of distinct images.</p>
             </div>
           </div>
         </div>
 
-        <!-- 6. Human Evaluation -->
         <div class="metric-card bg-white dark:bg-slate-800 shadow-lg rounded-xl p-6 md:p-8 transition-all hover:shadow-xl">
           <div class="flex items-start sm:items-center mb-4">
-             <div class="flex-shrink-0 mr-4">
+            <div class="flex-shrink-0 mr-4">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-rose-500 dark:text-rose-400">
                 <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-2.625 6c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm5.25 0c-.54 0-.828.419-.936.634a1.96 1.96 0 0 0-.189.866c0 .298.059.605.189.866.108.215.395.634.936.634.54 0 .828-.419.936-.634.13-.26.189-.568.189-.866 0-.298-.059-.605-.189-.866-.108-.215-.395-.634-.936-.634Zm-5.094 6.032c.068.02.135.032.202.032h4.886c.067 0 .134-.012.202-.032a.75.75 0 0 1 .628.878A3.751 3.751 0 0 1 12 16.5a3.751 3.751 0 0 1-3.292-1.602.75.75 0 0 1 .627-.878Z" clip-rule="evenodd" />
               </svg>
             </div>
             <div>
               <h3 class="text-2xl font-semibold text-slate-800 dark:text-slate-100" data-lang-key="human_eval_title">6. Human Evaluation</h3>
-              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="human_eval_desc">Subjective assessment of generated results by human evaluators, typically covering environmental consistency, character identification consistency, and subjective aesthetics.</p>
+              <p class="text-slate-600 dark:text-slate-300 mt-1 text-base leading-relaxed" data-lang-key="human_eval_desc">A user study was conducted to validate the automated metrics. Participants assessed generated results on three key dimensions. The analysis revealed a strong correlation between the automated metrics and human preferences.</p>
             </div>
           </div>
           <div class="space-y-4 mt-6">
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="human_eval_cinematography">Cinematography</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="human_eval_cinematography_desc">Assesses the use of camera language, the rationality and aesthetics of composition, and the effectiveness of visual storytelling.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="human_eval_env">Environment Consistency</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="human_eval_env_desc">Evaluates if scenes within the same story appear visually cohesive. This metric corresponds to the automated Style Similarity (CSD) score. Top performers in user ratings: UNO (82.0), GPT-4o (81.2), Doubao (80.4).</p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="human_eval_narrative">Narrative Coherence</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="human_eval_narrative_desc">Evaluates the fluency of visual presentation, the rationality of plot development, and the overall comprehensibility of the story through methods like questionnaires.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="human_eval_character">Character Identification Consistency</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="human_eval_character_desc">Assesses how consistently main characters are identifiable and coherent throughout the story. This metric corresponds to the automated CIDS score. Top performers in user ratings: Doubao (92.6), AIbrm (88.4), UNO (84.0).</p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="human_eval_visual">Visual Coherence</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="human_eval_visual_desc">Assesses the continuity and consistency of visual elements (such as lighting, color, object placement) in adjacent or related images within an image sequence.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="human_eval_aesthetics">Subjective Aesthetics</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="human_eval_aesthetics_desc">Gauges the overall artistic appeal, detail, and storytelling effectiveness of the generated images. This metric corresponds to the automated Aesthetic Quality score. Top performers in user ratings: GPT-4o (85.6), Doubao (85.0), AIbrm (83.0).</p>
             </div>
             <div class="sub-metric-item p-4 bg-slate-50 dark:bg-slate-700/60 rounded-lg border border-slate-200 dark:border-slate-600/80">
-              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="human_eval_layout">Layout (Comics)</strong>
-              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="human_eval_layout_desc">For comic generation tasks, evaluates the appeal, narrative guidance, and visual impact of panel layouts.</p>
+              <strong class="text-slate-700 dark:text-slate-200 font-medium" data-lang-key="human_eval_correlation">Correlation Analysis</strong>
+              <p class="italic text-sm text-slate-500 dark:text-slate-400 mt-1" data-lang-key="human_eval_correlation_desc">The study demonstrated a strong correlation between human evaluation and automated metrics. Key correlations found were: Self CSD (Kendall's $\tau$=0.42, Spearman's $\rho$=0.56, Pearson's $\sigma$=0.60), Self CIDS ($\tau$=0.50, $\rho$=0.68, $\sigma$=0.80), and Aesthetics ($\tau$=0.26, $\rho$=0.40, $\sigma$=0.54).</p>
             </div>
           </div>
         </div>
@@ -241,4 +189,4 @@ const activeNav = "metrics";
       </section>
     </div>
   </main>
-</BaseLayout> 
+</BaseLayout>

@@ -75,19 +75,17 @@ bmk_leaderboard/
 
 ## 许可证
 
-[在此处添加你的项目许可证信息，例如：]
-本项目代码和结果根据 [许可证名称，例如 Apache 2.0] 许可证授权。数据集本身可能遵循其原始来源的许可证。
+本项目代码和结果根据 [MIT] 许可证授权。数据集本身可能遵循其原始来源的许可证。
 
 ## 引用
 
-[在此处添加引用信息，例如：]
 如果你在研究中使用了此 Benchmark 或网站，请引用：
 ```bibtex
-@misc{yourbenchmark2024,
-  title={Storytelling Benchmark Results Viewer},
-  author={Your Name/Team},
-  year={2024},
-  howpublished={\url{Your Project URL}},
+@article{zhuang2025vistorybench,
+  title={ViStoryBench: Comprehensive Benchmark Suite for Story Visualization}, 
+  author={Cailin Zhuang, Ailin Huang, Wei Cheng, Jingwei Wu, Yaoqi Hu, Jiaqi Liao, Hongyuan Wang, Xinyao Liao, Weiwei Cai, Hengyuan Xu, Xuanyang Zhang, Xianfang Zeng, Zhewei Huang, Gang Yu, Chi Zhang},
+  journal={arXiv preprint arxiv:2505.24862}, 
+  year={2025}
 }
 ```
 

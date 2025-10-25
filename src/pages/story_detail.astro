@@ -140,13 +140,9 @@ const storyIdMap = {
   full: Array.from({ length: 80 }, (_, i) => (i + 1).toString().padStart(2, '0'))
 };
 const modelKeyMap = {
-  lite: ['OmniGen2'],
-  full: ['OmniGen2']
+  lite: ['OminiGen2','NanoBanana','StoryDiffusion', 'StoryAdapter', 'StoryGen', 'UNO', 'TheaterGen', 'SeedStory', 'Vlogger', 'MovieAgent', 'AnimDirector', 'MMStoryAgent', 'MOKI', 'MorphicStudio', 'AIbrm', 'ShenBi', 'TypeMovie', 'DouBao'],
+  full: ['OminiGen2','StoryDiffusion', 'StoryAdapter', 'StoryGen', 'UNO', 'TheaterGen', 'SeedStory', 'Vlogger', 'MovieAgent', 'AnimDirector', 'MMStoryAgent']
 };
-// const modelKeyMap = {
-//   lite: ['OminiGen2','NanoBanana','StoryDiffusion', 'StoryAdapter', 'StoryGen', 'UNO', 'TheaterGen', 'SeedStory', 'Vlogger', 'MovieAgent', 'AnimDirector', 'MMStoryAgent', 'MOKI', 'MorphicStudio', 'AIbrm', 'ShenBi', 'TypeMovie', 'DouBao'],
-//   full: ['OminiGen2','StoryDiffusion', 'StoryAdapter', 'StoryGen', 'UNO', 'TheaterGen', 'SeedStory', 'Vlogger', 'MovieAgent', 'AnimDirector', 'MMStoryAgent']
-// };
 let allAvailableStories = []; // To store all stories from manifest initially
 
 let currentStoryData = null;

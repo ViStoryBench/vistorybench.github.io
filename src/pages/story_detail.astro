@@ -340,94 +340,127 @@ function changeStoryPage(direction) {
 async function updateCharacterReferences() {
   if (!characterReferenceArea) return;
   characterReferenceArea.innerHTML = '';
-  if (!currentStoryData || !currentStoryData.Characters) {
-    const lang = document.documentElement.lang || 'en';
-    const noDataMsg = initialTranslations[lang]?.['no_character_data'] || initialTranslations.en?.['no_character_data'] || "No character data found.";
+
+  const currentUiLang = document.documentElement.lang || 'en';
+
+  // Ensure we have manifest and current story metadata
+  if (!detailedManifest || !detailedManifest.stories || !currentStoryId) {
+    const msg = initialTranslations[currentUiLang]?.['error_loading_character'] || initialTranslations.en?.['error_loading_character'] || "Error loading character data.";
+    characterReferenceArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${msg}</p>`;
+    return;
+  }
+
+  const storyInfo = detailedManifest.stories.find(s => s.id === currentStoryId);
+  if (!storyInfo) {
+    const msg = initialTranslations[currentUiLang]?.['error_loading_character'] || initialTranslations.en?.['error_loading_character'] || "Error loading character data.";
+    characterReferenceArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${msg}</p>`;
+    return;
+  }
+
+  // Derive base image directory using cover_image_path
+  const coverRel = storyInfo.cover_image_path || '';
+  const imageSeg = '/image/';
+  const segIdx = coverRel.indexOf(imageSeg);
+  if (segIdx === -1) {
+    const msg = initialTranslations[currentUiLang]?.['error_loading_character'] || initialTranslations.en?.['error_loading_character'] || "Error loading character data.";
+    characterReferenceArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${msg}</p>`;
+    return;
+  }
+  // e.g., 'datasets/01/image/'
+  const baseImageDirRel = coverRel.substring(0, segIdx + imageSeg.length);
+  const urlBase = `${CDN_PATH}/file/vistorybench/${baseImageDirRel}`;
+
+  // Read characters lists with counts from manifest
+  const enChars = Array.isArray(storyInfo.characters_en) ? storyInfo.characters_en : [];
+  const zhChars = Array.isArray(storyInfo.characters_ch) ? storyInfo.characters_ch : [];
+
+  if (enChars.length === 0 && zhChars.length === 0) {
+    const noDataMsg = initialTranslations[currentUiLang]?.['no_character_data'] || initialTranslations.en?.['no_character_data'] || "No character data found.";
     characterReferenceArea.innerHTML = `<p class="text-gray-500 dark:text-slate-400 p-4 bg-purple-50/70 dark:bg-purple-900/60 dark:border-purple-700/80 rounded-xl border border-purple-200/80">${noDataMsg}</p>`;
     return;
   }
-  const currentLang = document.documentElement.lang || 'en';
 
-  const maxProbeCount = 50;
+  // Helper to find charKey in story.json for highlight mapping
+  const findCharKeyByName = (name) => {
+    if (!currentStoryData || !currentStoryData.Characters) return null;
+    for (const [key, charData] of Object.entries(currentStoryData.Characters)) {
+      if (
+        charData.name_en === name ||
+        charData.name_zh === name ||
+        charData.name_cn === name ||
+        charData.name_ch === name
+      ) return key;
+      for (const [langKey, value] of Object.entries(charData)) {
+        if (langKey.startsWith('name_') && value === name) return key;
+      }
+    }
+    return null;
+  };
 
-  function preloadImage(url) {
-    return new Promise(resolve => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = url; // simple GET via <img> avoids CORS preflight
-    });
-  }
+  const pad2 = (n) => String(n).padStart(2, '0');
 
-  for (const [charKey, charData] of Object.entries(currentStoryData.Characters)) {
+  // Iterate using english list for path generation; use zh for display when available
+  enChars.forEach((enChar, idx) => {
+    const enName = enChar?.name || `Character ${idx + 1}`;
+    const zhName = zhChars[idx]?.name;
+    const displayName = currentUiLang === 'zh' ? (zhName || enName) : (enName || zhName);
+
     const charDiv = document.createElement('div');
     charDiv.className = 'p-4 bg-white dark:bg-slate-600 rounded-lg shadow-md flex flex-col items-center space-y-2 text-slate-700 dark:text-slate-100';
 
-    let charName;
-    if (currentLang === 'zh') {
-      charName = charData.name_ch || charData.name_zh || charData.name_cn || charData.name_en || charKey;
-    } else {
-      charName = charData[`name_${currentLang}`] || charData.name_en || charKey;
-    }
-    charDiv.setAttribute('data-char-key', charKey);
-
     const nameEl = document.createElement('strong');
     nameEl.className = 'block text-base font-semibold text-purple-800 dark:text-purple-300 mb-2';
-    nameEl.textContent = charName;
+    nameEl.textContent = displayName;
     charDiv.appendChild(nameEl);
 
-    const safeCharKey = encodeURIComponent(charKey);
-    const imageBasePath = `${DATASET_ROOT_URL}/${currentStoryId}/image/${safeCharKey}/`;
+    const charKeyForHighlight = findCharKeyByName(displayName) || findCharKeyByName(enName);
+    if (charKeyForHighlight) {
+      charDiv.setAttribute('data-char-key', charKeyForHighlight);
+    } else {
+      charDiv.setAttribute('data-char-key', enName);
+    }
 
     const imagesContainer = document.createElement('div');
     imagesContainer.className = 'flex flex-wrap gap-3 items-center';
 
-    const refUrls = [];
-    for (let i = 0; i < maxProbeCount; i++) {
-      const filename = `${String(i).padStart(2, '0')}.jpg`;
-      const urlWithParams = `${imageBasePath}${filename}?x-oss-process=image/resize,p_25`;
-      const exists = await preloadImage(urlWithParams);
-      if (exists) {
-        refUrls.push(urlWithParams);
-      } else {
-        // First missing image -> stop probing further indices for this character
-        break;
-      }
+    const count = parseInt(enChar?.ref_image_count) || 0;
+    for (let i = 0; i < count; i++) {
+      const filename = `${pad2(i)}.jpg`;
+      const imgSrc = `${urlBase}${encodeURIComponent(enName)}/${filename}?x-oss-process=image/resize,p_25`;
+
+      const img = document.createElement('img');
+      img.className = 'h-28 w-28 md:h-32 md:w-32 object-cover rounded-lg shadow-md border-2 border-purple-200/60 dark:border-purple-700/60 hover:border-purple-400 dark:hover:border-purple-500 transition-all duration-200 ease-in-out cursor-pointer hover:scale-105 hover:shadow-purple-300/50 dark:hover:shadow-purple-800/50';
+      img.src = imgSrc;
+      img.alt = `${displayName} Ref ${i + 1}`;
+      // Use highlight key for shot mapping when available
+      img.setAttribute('data-char-key', charKeyForHighlight || enName);
+      img.onerror = () => { img.style.display = 'none'; };
+      img.loading = 'lazy';
+      imagesContainer.appendChild(img);
     }
 
-    if (refUrls.length > 0) {
-      refUrls.forEach((imgSrc, index) => {
-        const img = document.createElement('img');
-        img.className = 'h-28 w-28 md:h-32 md:w-32 object-cover rounded-lg shadow-md border-2 border-purple-200/60 dark:border-purple-700/60 hover:border-purple-400 dark:hover:border-purple-500 transition-all duration-200 ease-in-out cursor-pointer hover:scale-105 hover:shadow-purple-300/50 dark:hover:shadow-purple-800/50';
-        img.src = imgSrc;
-        img.alt = `${charName} Ref ${index + 1}`;
-        img.setAttribute('data-char-key', charKey);
-        img.onerror = () => {
-          img.style.display = 'none';
-        };
-        img.loading = 'lazy';
-        imagesContainer.appendChild(img);
-      });
+    if (imagesContainer.children.length > 0) {
       charDiv.appendChild(imagesContainer);
     } else {
       const noRefText = document.createElement('p');
       noRefText.className = 'text-sm text-purple-600 dark:text-purple-400 italic';
-      const noRefImagesMsg = initialTranslations[currentLang]?.['no_ref_images'] || initialTranslations.en?.['no_ref_images'] || "[No reference images listed]";
+      const noRefImagesMsg = initialTranslations[currentUiLang]?.['no_ref_images'] || initialTranslations.en?.['no_ref_images'] || "[No reference images listed]";
       noRefText.textContent = noRefImagesMsg;
       charDiv.appendChild(noRefText);
     }
 
+    // In case all images failed to load (hidden), show failure text
     if (imagesContainer.children.length > 0 && imagesContainer.querySelectorAll('img[style*="display: none"]').length === imagesContainer.children.length) {
       imagesContainer.innerHTML = '';
       const loadFailText = document.createElement('p');
       loadFailText.className = 'text-sm text-red-500 dark:text-red-400 italic mt-1';
-      const imagesFailedLoadMsg = initialTranslations[currentLang]?.['images_failed_to_load'] || initialTranslations.en?.['images_failed_to_load'] || "[All reference images failed to load]";
+      const imagesFailedLoadMsg = initialTranslations[currentUiLang]?.['images_failed_to_load'] || initialTranslations.en?.['images_failed_to_load'] || "[All reference images failed to load]";
       loadFailText.textContent = imagesFailedLoadMsg;
       charDiv.appendChild(loadFailText);
     }
+
     characterReferenceArea.appendChild(charDiv);
-  }
+  });
 }
 
 function createModelVisibilitySelector() {

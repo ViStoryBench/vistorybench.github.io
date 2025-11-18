@@ -132,7 +132,7 @@ const baseUrlForClient = import.meta.env.BASE_URL;
 const astroBaseUrl = clientSideBaseUrl.replace(/\/$/, ''); // Ensure no trailing slash for clean joining
 const CDN_PATH = 'https://img.blenet.top';
 const OUTPUTS_INDEX_URL = 'https://img.blenet.top/file/vistorybench/outputs/outputs_index.json';
-const DATASET_ROOT_URL = 'https://img.blenet.top/file/vistorybench/datasets';
+const DATASET_ROOT_URL = 'https://img.blenet.top/file/vistorybench/datasets_avif';
 
 let currentDisplayMode = 'lite'; // 'lite' or 'full'
 const storyIdMap = {
@@ -426,7 +426,7 @@ async function updateCharacterReferences() {
 
     const count = parseInt(enChar?.ref_image_count) || 0;
     for (let i = 0; i < count; i++) {
-      const filename = `${pad2(i)}.jpg`;
+      const filename = `${pad2(i)}.avif`;
       const imgSrc = `${urlBase}${encodeURIComponent(enName)}/${filename}?x-oss-process=image/resize,p_25`;
 
       const img = document.createElement('img');
@@ -825,7 +825,7 @@ function loadModelSequence(modelKey) {
   currentStoryData.Shots.forEach((shot, index) => {
     const img = document.createElement('img');
     const shotIndexStr = shot.index.toString().padStart(2, '0');
-    const imagePath = `${CDN_PATH}/file/vistorybench/outputs/${modelKey}/${selectedMode}/${selectedLang}/${selectedTimestamp}/${currentStoryId}/shots/shot_${shotIndexStr}.png?x-oss-process=image/resize,p_25`;
+    const imagePath = `${CDN_PATH}/file/vistorybench/outputs_avif/${modelKey}/${selectedMode}/${selectedLang}/${selectedTimestamp}/${currentStoryId}/shots/shot_${shotIndexStr}.avif?x-oss-process=image/resize,p_25`;
     img.className = 'h-44 md:h-48 w-auto inline-block border-2 border-transparent cursor-pointer transition-all duration-300 rounded-md shadow-sm hover:shadow-md hover:scale-110 object-contain';
     img.src = imagePath;
     img.alt = `Model ${modelName} - Shot ${shot.index}`;

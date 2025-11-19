@@ -2,11 +2,30 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { extname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 // https://astro.build/config
 export default defineConfig({
+  base: './',
+  build: {
+    inlineStylesheets: 'always',
+  },
+  integrations: [
+    stripHtmlCommentsIntegration(),
+  ],
   // 使用 vite 配置直接处理 tailwind
   vite: {
+    build: {
+      minify: 'terser',
+      terserOptions: {
+        format: {
+          comments: false,
+        },
+      },
+      cssMinify: true,
+    },
     css: {
       postcss: {
         plugins: [
@@ -82,3 +101,35 @@ export default defineConfig({
     },
   },
 });
+
+function stripHtmlCommentsIntegration() {
+  async function walk(dir) {
+    const entries = await readdir(dir, { withFileTypes: true });
+    await Promise.all(entries.map(async (entry) => {
+      const fullPath = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await walk(fullPath);
+        return;
+      }
+
+      if (extname(fullPath) !== '.html') {
+        return;
+      }
+      const original = await readFile(fullPath, 'utf8');
+      const stripped = original.replace(/<!--[\s\S]*?-->/g, '');
+      if (stripped !== original) {
+        await writeFile(fullPath, stripped, 'utf8');
+      }
+    }));
+  }
+
+  return {
+    name: 'strip-html-comments',
+    hooks: {
+      'astro:build:done': async ({ dir }) => {
+        const rootDir = typeof dir === 'string' ? dir : fileURLToPath(dir);
+        await walk(rootDir);
+      },
+    },
+  };
+}

@@ -27,3 +27,5 @@ one-igbench
 polar_v2.py
 Eurostile-LT-Bold-5.ttf
 *.pdf
+public/dataset_lite_avif/
+public/outputs_lite_avif/

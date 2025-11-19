@@ -1,12 +1,19 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getAssetBase, buildAssetPath } from "../utils/path";
 
 const pageTitle = "ViStoryBench Dataset Deep Dive";
 const activeNav = "dataset";
+const assetBase = getAssetBase(Astro.url.pathname);
+const baseUrlForClient = assetBase;
+const chartScriptPath = buildAssetPath(assetBase, 'js/chart.umd.js');
+const bigBrownRabbitRef = buildAssetPath(assetBase, 'dataset_lite_avif/01/image/Big Brown Rabbit/00.avif');
+const littleBrownRabbitRef = buildAssetPath(assetBase, 'dataset_lite_avif/01/image/Little Brown Rabbit/00.avif');
+
 ---
 
-<BaseLayout title={pageTitle} activeNav={activeNav}>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<BaseLayout title={pageTitle} activeNav={activeNav} assetBase={assetBase}>
+  <script src={chartScriptPath}></script>
   <main
     class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200"
   >
@@ -1268,12 +1275,6 @@ stories_data = {
         >
           Illustrative Data Examples
         </h2>
-                      <iframe
-              src="https://huggingface.co/datasets/ViStoryBench/ViStoryBench/embed/viewer"
-              frameborder="0"
-              width="100%"
-              height="800px"></iframe>
-              <br />
         <div class="grid lg:grid-cols-2 gap-8">
           <div
             class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700"
@@ -1360,12 +1361,14 @@ stories_data = {
                 >
                 <div class="mt-2 flex flex-wrap gap-3">
                   <img
-                    src="https://img.blenet.top/file/vistorybench/datasets_avif/01/image/Big+Brown+Rabbit/00.avif"
+                    src={bigBrownRabbitRef}
+                    id="ref1-big-brown-rabbit"
                     alt="Ref 1 for Little Brown Rabbit"
                     class="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-lg shadow-md border-2 border-purple-300 dark:border-purple-600 hover:scale-105 transition-transform"
                   />
                   <img
-                    src="https://img.blenet.top/file/vistorybench/datasets_avif/01/image/Little+Brown+Rabbit/00.avif"
+                    src={littleBrownRabbitRef}
+                    id="ref2-little-brown-rabbit"
                     alt="Ref 2 for Little Brown Rabbit"
                     class="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-lg shadow-md border-2 border-purple-300 dark:border-purple-600 hover:scale-105 transition-transform"
                   />
@@ -1403,4 +1406,3 @@ stories_data = {
   }
   /* Additional global styles or component-specific styles can be added here */
 </style>
-

@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { translations } from '../../public/js/translations.js'; // Assuming translations.js exports this
+import { translations } from '../data/translations';
+import { getAssetBase } from '../utils/path';
+import outputsIndexData from '../data/outputs_index.json';
+import detailedManifestData from '../data/detailed_manifest.json';
+import storyData from '../data/storyData';
 
 const pageSpecificTitle = "Result Explorer"; // Will be dynamically updated by JS
 const currentNav = "story_detail";
@@ -10,12 +14,13 @@ const initialTitleLangKey = "story_detail_title";
 // Assuming 'en' is a safe default if Astro cannot determine lang at build time for this.
 // The client-side JS will handle actual language-based title updates.
 const initialTitleText = translations['en']?.[initialTitleLangKey]?.replace('[Story ID]', '') || "Result Explorer";
-const baseUrlForClient = import.meta.env.BASE_URL;
+const assetBase = getAssetBase(Astro.url.pathname);
+const baseUrlForClient = assetBase;
 ---
-<BaseLayout title={initialTitleText} activeNav={currentNav}>
+<BaseLayout title={initialTitleText} activeNav={currentNav} assetBase={assetBase}>
   <div class="container mx-auto px-4 py-8 bg-gray-50 dark:bg-slate-900">
     <!-- Mode Toggle Section -->
-    <section id="mode-toggle-section" class="mb-6 p-4 flex justify-center items-center">
+    <!-- <section id="mode-toggle-section" class="mb-6 p-4 flex justify-center items-center">
       <div class="flex space-x-1 bg-slate-200 dark:bg-slate-700 p-1 rounded-xl shadow-md">
         <button id="lite-mode-btn" 
                 class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-200 dark:focus:ring-offset-slate-700 bg-sky-600 dark:bg-sky-500 text-white shadow-lg ring-2 ring-sky-500 ring-offset-2 ring-offset-slate-100 dark:ring-offset-slate-800" 
@@ -24,7 +29,7 @@ const baseUrlForClient = import.meta.env.BASE_URL;
                 class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-slate-200 dark:focus:ring-offset-slate-700 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 shadow" 
                 data-lang-key="button_full_mode">Full</button>
       </div>
-    </section>
+    </section> -->
 
     <!-- Story Selector Section -->
     <section id="story-selector-section" class="mb-8 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-2xl border border-gray-200 dark:border-slate-700">
@@ -124,15 +129,17 @@ const baseUrlForClient = import.meta.env.BASE_URL;
   </div>
 </BaseLayout>
 
-<script define:vars={{ initialTranslations: translations, clientSideBaseUrl: baseUrlForClient }}>
+<script define:vars={{ initialTranslations: translations, clientSideBaseUrl: baseUrlForClient, initialOutputsIndex: outputsIndexData, initialDetailedManifest: detailedManifestData, initialStoryData: storyData }}>
 // --- Result Explorer Specific JS ---
 
 
 // --- Configuration & State ---
 const astroBaseUrl = clientSideBaseUrl.replace(/\/$/, ''); // Ensure no trailing slash for clean joining
-const CDN_PATH = 'https://img.blenet.top';
-const OUTPUTS_INDEX_URL = 'https://img.blenet.top/file/vistorybench/outputs/outputs_index.json';
-const DATASET_ROOT_URL = 'https://img.blenet.top/file/vistorybench/datasets_avif';
+const CDN_PATH = `${astroBaseUrl}`;
+const inlineStoryData = initialStoryData || {};
+let detailedManifest = initialDetailedManifest || null;
+let outputsIndexRoot = initialOutputsIndex?.root || null;
+let outputsIndex = initialOutputsIndex?.index || initialOutputsIndex || {};
 
 let currentDisplayMode = 'lite'; // 'lite' or 'full'
 const storyIdMap = {
@@ -144,15 +151,12 @@ const modelKeyMap = {
   full:['CharaConsist','QwenImageEdit2509','NaiveBaseline','OmniGen2','StoryDiffusion', 'StoryAdapter', 'StoryGen', 'UNO', 'TheaterGen', 'SeedStory', 'Vlogger', 'MovieAgent', 'AnimDirector', 'MMStoryAgent']
 
 };
-let allAvailableStories = []; // To store all stories from manifest initially
+let allAvailableStories = (detailedManifest && detailedManifest.stories) ? [...detailedManifest.stories] : []; // To store all stories from manifest initially
 
 let currentStoryData = null;
 let currentStoryId = null;
 let currentDataset = null;
 let availableStories = [];
-let detailedManifest = null;
-let outputsIndexRoot = null;
-let outputsIndex = null;
 let currentShotIndex = 0;
 let totalShots = 0;
 let autoPlayTimer = null;
@@ -202,17 +206,10 @@ async function fetchStoryData(storyId) {
     return null;
   }
   currentDataset = storyInfo.dataset_base;
-  const storyJsonPath = `${DATASET_ROOT_URL}/${storyInfo.id}/story.json`;
 
-  console.log(`Fetching story data from: ${storyJsonPath}`);
-  try {
-    const response = await fetch(storyJsonPath);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching story data:", error);
+  const cachedStory = inlineStoryData[storyId];
+  if (!cachedStory) {
+    console.error(`Inline story data not found for ID: ${storyId}`);
     const lang = document.documentElement.lang || 'en';
     const errorCharMsg = initialTranslations[lang]?.['error_loading_character'] || initialTranslations.en?.['error_loading_character'] || "Error loading character data.";
     const errorResultsMsg = initialTranslations[lang]?.['error_loading_results'] || initialTranslations.en?.['error_loading_results'] || "Error loading results.";
@@ -220,6 +217,8 @@ async function fetchStoryData(storyId) {
     if(modelResultsArea) modelResultsArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${errorResultsMsg}</p>`;
     return null;
   }
+
+  return JSON.parse(JSON.stringify(cachedStory));
 }
 
 // --- UI Update Functions ---
@@ -287,7 +286,7 @@ function populateStorySelector() {
     card.onclick = () => loadStory(story.id);
 
     img.src = story.cover_image_path
-        ? `${CDN_PATH}/file/vistorybench/${story.cover_image_path}`
+        ? `${CDN_PATH}/${story.cover_image_path}`
         : `${astroBaseUrl}/img/placeholder_error.png`;
     img.alt = story.name;
     img.onerror = () => { img.src = `${astroBaseUrl}/img/placeholder_error.png`;};
@@ -369,7 +368,7 @@ async function updateCharacterReferences() {
   }
   // e.g., 'datasets/01/image/'
   const baseImageDirRel = coverRel.substring(0, segIdx + imageSeg.length);
-  const urlBase = `${CDN_PATH}/file/vistorybench/${baseImageDirRel}`;
+  const urlBase = `${CDN_PATH}/${baseImageDirRel}`;
 
   // Read characters lists with counts from manifest
   const enChars = Array.isArray(storyInfo.characters_en) ? storyInfo.characters_en : [];
@@ -825,7 +824,7 @@ function loadModelSequence(modelKey) {
   currentStoryData.Shots.forEach((shot, index) => {
     const img = document.createElement('img');
     const shotIndexStr = shot.index.toString().padStart(2, '0');
-    const imagePath = `${CDN_PATH}/file/vistorybench/outputs_avif/${modelKey}/${selectedMode}/${selectedLang}/${selectedTimestamp}/${currentStoryId}/shots/shot_${shotIndexStr}.avif?x-oss-process=image/resize,p_25`;
+    const imagePath = `${CDN_PATH}/outputs_lite_avif/${modelKey}/${selectedMode}/${selectedLang}/${selectedTimestamp}/${currentStoryId}/shots/shot_${shotIndexStr}.avif?x-oss-process=image/resize,p_25`;
     img.className = 'h-44 md:h-48 w-auto inline-block border-2 border-transparent cursor-pointer transition-all duration-300 rounded-md shadow-sm hover:shadow-md hover:scale-110 object-contain';
     img.src = imagePath;
     img.alt = `Model ${modelName} - Shot ${shot.index}`;
@@ -1287,36 +1286,29 @@ async function initializeExplorer() {
   }
 
   try {
-    // Fetch outputs index (models/modes/langs/timestamps) from CDN
-    const outputsIndexResponse = await fetch(OUTPUTS_INDEX_URL);
-    if (!outputsIndexResponse.ok) throw new Error(`HTTP error! status: ${outputsIndexResponse.status} - Check if outputs_index.json exists at CDN.`);
-    const outputsData = await outputsIndexResponse.json();
-    outputsIndexRoot = outputsData.root || null;
-    outputsIndex = outputsData.index || outputsData || {};
-  
-    // Fetch detailed manifest (stories list and metadata) from local
-    const response = await fetch(`${astroBaseUrl}/detailed_manifest.json`);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status} - Check if detailed_manifest.json exists.`);
-    detailedManifest = await response.json();
-    allAvailableStories = detailedManifest.stories || []; // Store all stories first
-    
-    // Filter stories based on the initial display mode (e.g., 'lite')
+    detailedManifest = initialDetailedManifest || detailedManifest;
+    outputsIndex = initialOutputsIndex?.index || initialOutputsIndex || outputsIndex || {};
+    outputsIndexRoot = initialOutputsIndex?.root || outputsIndexRoot;
+
+    if (!detailedManifest || !Array.isArray(detailedManifest.stories)) {
+      throw new Error("Detailed manifest data missing.");
+    }
+    if (!outputsIndex || typeof outputsIndex !== 'object') {
+      throw new Error("Outputs index data missing.");
+    }
+
+    allAvailableStories = [...(detailedManifest.stories || [])];
+
     const storyIdsForInitialMode = storyIdMap[currentDisplayMode];
     availableStories = allAvailableStories.filter(story => storyIdsForInitialMode.includes(story.id));
-    
-    // Initialize selected models from outputs index based on mode
-    if (outputsIndex && typeof outputsIndex === 'object') {
-        const modelKeysForInitialMode = modelKeyMap[currentDisplayMode];
-        Object.keys(outputsIndex)
-              .filter(key => modelKeysForInitialMode.includes(key))
-              .forEach(modelKey => selectedModels.add(modelKey));
-    } else {
-        console.warn("initializeExplorer: outputsIndex is missing or invalid. selectedModels will be empty.");
-    }
+
+    const modelKeysForInitialMode = modelKeyMap[currentDisplayMode];
+    Object.keys(outputsIndex)
+      .filter(key => modelKeysForInitialMode.includes(key))
+      .forEach(modelKey => selectedModels.add(modelKey));
     
     updateModeButtonStyles(); // Set initial button styles based on currentDisplayMode
     createModelVisibilitySelector();
-  
     populateStorySelector();
   
     const urlParams = new URLSearchParams(window.location.search);
@@ -1342,7 +1334,7 @@ async function initializeExplorer() {
       console.error("No stories available to load from manifest.");
     }
   } catch (error) {
-    console.error("Error fetching or parsing outputs_index.json or detailed_manifest.json:", error);
+    console.error("Error initializing explorer data:", error);
     if(storyWallContainer) storyWallContainer.innerHTML = `<p class="text-red-500 dark:text-red-400">Error loading story list: ${error.message}</p>`;
     if(modelResultsArea) modelResultsArea.innerHTML = '<p class="text-red-500 dark:text-red-400 p-6 bg-white dark:bg-slate-750 shadow-lg rounded-lg">Error loading configuration.</p>';
     if(modelVisibilitySelectorSection) modelVisibilitySelectorSection.innerHTML = `<p class="text-red-500 dark:text-red-400">Error loading model filters: ${error.message}</p>`;

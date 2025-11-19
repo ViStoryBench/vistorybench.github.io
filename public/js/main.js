@@ -1,4 +1,4 @@
-import { translations } from './translations.js';
+const translations = (typeof window !== 'undefined' && window.translations) ? window.translations : {};
 
 // Function to change language
 function changeLanguage(lang) {

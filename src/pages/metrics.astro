@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAssetBase } from '../utils/path';
 
 const pageTitle = "Benchmark Metrics Definition";
 const activeNav = "metrics";
+const assetBase = getAssetBase(Astro.url.pathname);
 ---
-<BaseLayout title={pageTitle} activeNav={activeNav}>
+<BaseLayout title={pageTitle} activeNav={activeNav} assetBase={assetBase}>
   <main class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 py-12 md:py-16 px-4">
     <div class="container mx-auto">
 

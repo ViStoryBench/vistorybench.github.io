@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAssetBase, buildAssetPath } from '../utils/path';
 
 // activeNav can be set based on how users navigate to this page, 
 // for now, we'll leave it undefined or make it dynamic if needed.
@@ -8,8 +9,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 // The page title will be dynamically set in the client-side script
 // based on the URL parameter.
 let pageTitle = "Model Details"; // Default title
+const assetBase = getAssetBase(Astro.url.pathname);
+const storyDetailBasePath = buildAssetPath(assetBase, 'story_detail/index.html');
 ---
-<BaseLayout title={pageTitle} activeNav={undefined}>
+<BaseLayout title={pageTitle} activeNav={undefined} assetBase={assetBase}>
     <main class="container mx-auto px-4 py-8 space-y-12">
         <section id="model-info" class="prose dark:prose-invert max-w-none">
             <h2 data-lang-key="model_detail_title" id="model-page-title">Model Details: [Model Name]</h2>
@@ -45,20 +48,20 @@ let pageTitle = "Model Details"; // Default title
                     <tbody class="text-gray-700 dark:text-gray-200" id="story-list-tbody">
                         {/* <!-- Placeholder Rows - Will be populated by JS --> */}
                         <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="py-3 px-4"><a href="/story_detail?model=[Model Name]&story=01" class="text-blue-600 hover:underline">WildStory_en_01</a></td>
+                            <td class="py-3 px-4"><a href={`${storyDetailBasePath}?model=[Model Name]&story=01`} class="text-blue-600 hover:underline">WildStory_en_01</a></td>
                             <td class="py-3 px-4">[Score]</td>
                             <td class="py-3 px-4">[Score]</td>
                             <td class="py-3 px-4">[Score]</td>
                             <td class="py-3 px-4">[Score]</td>
-                            <td class="py-3 px-4"><a href="/story_detail?model=[Model Name]&story=01" class="text-blue-600 hover:underline" data-lang-key="view_details">View Details</a></td>
+                            <td class="py-3 px-4"><a href={`${storyDetailBasePath}?model=[Model Name]&story=01`} class="text-blue-600 hover:underline" data-lang-key="view_details">View Details</a></td>
                         </tr>
                         <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="py-3 px-4"><a href="/story_detail?model=[Model Name]&story=02" class="text-blue-600 hover:underline">WildStory_en_02</a></td>
+                            <td class="py-3 px-4"><a href={`${storyDetailBasePath}?model=[Model Name]&story=02`} class="text-blue-600 hover:underline">WildStory_en_02</a></td>
                             <td class="py-3 px-4">[Score]</td>
                             <td class="py-3 px-4">[Score]</td>
                             <td class="py-3 px-4">[Score]</td>
                             <td class="py-3 px-4">[Score]</td>
-                            <td class="py-3 px-4"><a href="/story_detail?model=[Model Name]&story=02" class="text-blue-600 hover:underline" data-lang-key="view_details">View Details</a></td>
+                            <td class="py-3 px-4"><a href={`${storyDetailBasePath}?model=[Model Name]&story=02`} class="text-blue-600 hover:underline" data-lang-key="view_details">View Details</a></td>
                         </tr>
                         {/* <!-- Add more placeholder stories --> */}
                     </tbody>

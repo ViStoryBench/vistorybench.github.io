@@ -103,24 +103,42 @@ export default defineConfig({
 });
 
 function stripHtmlCommentsIntegration() {
-  async function walk(dir) {
+  // Avoid traversing extremely large static asset folders that only contain binary files.
+  const SKIP_DIRECTORIES = new Set([
+    'outputs_lite_avif',
+    'outputs_full_avif',
+    'outputs_lite',
+    'outputs_full',
+    'dataset_lite_avif',
+    'dataset_full_avif',
+    'dataset_lite',
+    'dataset_full',
+  ]);
+  const MAX_DEPTH = 4;
+
+  async function collectHtmlFiles(dir, depth = 0) {
+    if (depth > MAX_DEPTH) {
+      return [];
+    }
+
     const entries = await readdir(dir, { withFileTypes: true });
-    await Promise.all(entries.map(async (entry) => {
-      const fullPath = join(dir, entry.name);
+    const htmlFiles = [];
+
+    for (const entry of entries) {
       if (entry.isDirectory()) {
-        await walk(fullPath);
-        return;
+        if (SKIP_DIRECTORIES.has(entry.name)) {
+          continue;
+        }
+        htmlFiles.push(...await collectHtmlFiles(join(dir, entry.name), depth + 1));
+        continue;
       }
 
-      if (extname(fullPath) !== '.html') {
-        return;
+      if (extname(entry.name) === '.html') {
+        htmlFiles.push(join(dir, entry.name));
       }
-      const original = await readFile(fullPath, 'utf8');
-      const stripped = original.replace(/<!--[\s\S]*?-->/g, '');
-      if (stripped !== original) {
-        await writeFile(fullPath, stripped, 'utf8');
-      }
-    }));
+    }
+
+    return htmlFiles;
   }
 
   return {
@@ -128,7 +146,14 @@ function stripHtmlCommentsIntegration() {
     hooks: {
       'astro:build:done': async ({ dir }) => {
         const rootDir = typeof dir === 'string' ? dir : fileURLToPath(dir);
-        await walk(rootDir);
+        const htmlFiles = await collectHtmlFiles(rootDir);
+        await Promise.all(htmlFiles.map(async (htmlFilePath) => {
+          const original = await readFile(htmlFilePath, 'utf8');
+          const stripped = original.replace(/<!--[\s\S]*?-->/g, '');
+          if (stripped !== original) {
+            await writeFile(htmlFilePath, stripped, 'utf8');
+          }
+        }));
       },
     },
   };

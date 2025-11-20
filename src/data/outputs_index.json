@@ -1,0 +1,257 @@
+{
+  "root": "outputs_lite_avif",
+  "structure": {
+    "AIbrm": "stories-first",
+    "AnimDirector": "stories-first",
+    "CharaConsist": "stories-first",
+    "DouBao": "stories-first",
+    "GPT4o": "stories-first",
+    "Gemini": "stories-first",
+    "MMStoryAgent": "stories-first",
+    "MOKI": "stories-first",
+    "MorphicStudio": "stories-first",
+    "MovieAgent": "stories-first",
+    "NaiveBaseline": "stories-first",
+    "NanoBanana": "shots-first",
+    "OmniGen2": "stories-first",
+    "QwenImageEdit2509": "stories-first",
+    "SeedStory": "stories-first",
+    "Seedream4": "stories-first",
+    "ShenBi": "stories-first",
+    "Sora2": "stories-first",
+    "StoryAdapter": "stories-first",
+    "StoryDiffusion": "stories-first",
+    "StoryGen": "stories-first",
+    "TheaterGen": "stories-first",
+    "TypeMovie": "stories-first",
+    "UNO": "stories-first",
+    "Vlogger": "stories-first"
+  },
+  "index": {
+    "AIbrm": {
+      "Base": {
+        "en": [
+          "20250819_091354"
+        ]
+      }
+    },
+    "AnimDirector": {
+      "SD3": {
+        "en": [
+          "20250819_091354"
+        ]
+      }
+    },
+    "CharaConsist": {
+      "Base": {
+        "en": [
+          "20251103_001738"
+        ]
+      }
+    },
+    "DouBao": {
+      "Base": {
+        "en": [
+          "20250819_091355"
+        ]
+      }
+    },
+    "GPT4o": {
+      "Base": {
+        "en": [
+          "20250819_091419"
+        ]
+      }
+    },
+    "Gemini": {
+      "Base": {
+        "en": [
+          "20250819_091416"
+        ]
+      }
+    },
+    "MMStoryAgent": {
+      "Base": {
+        "en": [
+          "20250819_091357"
+        ]
+      }
+    },
+    "MOKI": {
+      "Base": {
+        "en": [
+          "20250819_091357"
+        ]
+      }
+    },
+    "MorphicStudio": {
+      "Base": {
+        "en": [
+          "20250819_091357"
+        ]
+      }
+    },
+    "MovieAgent": {
+      "ROICtrl": {
+        "en": [
+          "20250819_091358"
+        ]
+      },
+      "SD3": {
+        "en": [
+          "20250819_091358"
+        ]
+      }
+    },
+    "NaiveBaseline": {
+      "Base": {
+        "en": [
+          "20250819_091358"
+        ]
+      }
+    },
+    "NanoBanana": {
+      "Gemini2.5FlashImage": {
+        "en": [
+          "20251119_164338"
+        ]
+      },
+      "Gemini2.5FlashImagePreview": {
+        "en": [
+          "20250908_152837"
+        ]
+      }
+    },
+    "OmniGen2": {
+      "Base": {
+        "en": [
+          "20250914_125319"
+        ]
+      }
+    },
+    "QwenImageEdit2509": {
+      "base": {
+        "en": [
+          "20251023_194649"
+        ]
+      }
+    },
+    "SeedStory": {
+      "Base": {
+        "en": [
+          "20250819_091358"
+        ]
+      }
+    },
+    "Seedream4": {
+      "base": {
+        "en": [
+          "20251111_002231"
+        ]
+      }
+    },
+    "ShenBi": {
+      "Base": {
+        "en": [
+          "20250819_091358"
+        ]
+      }
+    },
+    "Sora2": {
+      "ALL_ImgRef": {
+        "en": [
+          "20251111_204340"
+        ]
+      },
+      "ALL_TextOnly": {
+        "en": [
+          "20251111_210351"
+        ]
+      }
+    },
+    "StoryAdapter": {
+      "ImgRef_Scale0": {
+        "en": [
+          "20250819_091400"
+        ]
+      },
+      "ImgRef_Scale5": {
+        "en": [
+          "20250819_091402"
+        ]
+      },
+      "TextOnly_Scale0": {
+        "en": [
+          "20250819_091404"
+        ]
+      },
+      "TextOnly_Scale5": {
+        "en": [
+          "20250819_091406"
+        ]
+      }
+    },
+    "StoryDiffusion": {
+      "ImgRef_Photomaker": {
+        "en": [
+          "20250819_091407"
+        ]
+      },
+      "Original": {
+        "en": [
+          "20250819_091409"
+        ]
+      }
+    },
+    "StoryGen": {
+      "AutoRegressive": {
+        "en": [
+          "20250819_091410"
+        ]
+      },
+      "Mix": {
+        "en": [
+          "20250819_091410"
+        ]
+      },
+      "MultiImageCondition": {
+        "en": [
+          "20250819_091411"
+        ]
+      }
+    },
+    "TheaterGen": {
+      "Base": {
+        "en": [
+          "20250819_091412"
+        ]
+      }
+    },
+    "TypeMovie": {
+      "Base": {
+        "en": [
+          "20250819_091414"
+        ]
+      }
+    },
+    "UNO": {
+      "Base": {
+        "en": [
+          "20250819_091414"
+        ]
+      }
+    },
+    "Vlogger": {
+      "ImgRef": {
+        "en": [
+          "20250819_091414"
+        ]
+      },
+      "TextOnly": {
+        "en": [
+          "20250819_091414"
+        ]
+      }
+    }
+  }
+}

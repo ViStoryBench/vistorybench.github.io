@@ -4,7 +4,19 @@ import { translations } from '../data/translations';
 import { getAssetBase } from '../utils/path';
 import outputsIndexData from '../data/outputs_index.json';
 import detailedManifestData from '../data/detailed_manifest.json';
-import storyData from '../data/storyData';
+
+const datasetStoryModules = import.meta.glob('../data/dataset_*_avif/*/story.json', {
+  eager: true,
+  import: 'default',
+});
+
+const preloadedStoryData = Object.entries(datasetStoryModules).reduce((acc, [path, storyData]) => {
+  const match = path.match(/dataset_[^/]+\/(\d+)\/story\.json$/);
+  if (!match) return acc;
+  const storyId = match[1];
+  acc[storyId] = storyData;
+  return acc;
+}, {});
 
 const pageSpecificTitle = "Result Explorer"; // Will be dynamically updated by JS
 const currentNav = "story_detail";
@@ -16,6 +28,7 @@ const initialTitleLangKey = "story_detail_title";
 const initialTitleText = translations['en']?.[initialTitleLangKey]?.replace('[Story ID]', '') || "Result Explorer";
 const assetBase = getAssetBase(Astro.url.pathname);
 const baseUrlForClient = assetBase;
+const datasetRootPrefix = import.meta.env.DEV ? 'src/data' : '../src/data';
 ---
 <BaseLayout title={initialTitleText} activeNav={currentNav} assetBase={assetBase}>
   <div class="container mx-auto px-4 py-8 bg-gray-50 dark:bg-slate-900">
@@ -129,17 +142,51 @@ const baseUrlForClient = assetBase;
   </div>
 </BaseLayout>
 
-<script define:vars={{ initialTranslations: translations, clientSideBaseUrl: baseUrlForClient, initialOutputsIndex: outputsIndexData, initialDetailedManifest: detailedManifestData, initialStoryData: storyData }}>
+<script define:vars={{ initialTranslations: translations, clientSideBaseUrl: baseUrlForClient, initialOutputsIndex: outputsIndexData, initialDetailedManifest: detailedManifestData, datasetRootPrefix, initialPreloadedStoryData: preloadedStoryData }}>
 // --- Result Explorer Specific JS ---
 
 
 // --- Configuration & State ---
 const astroBaseUrl = clientSideBaseUrl.replace(/\/$/, ''); // Ensure no trailing slash for clean joining
 const CDN_PATH = `${astroBaseUrl}`;
-const inlineStoryData = initialStoryData || {};
+const inlineStoryData = JSON.parse(JSON.stringify(initialPreloadedStoryData || {}));
 let detailedManifest = initialDetailedManifest || null;
+const outputsStructureMap = initialOutputsIndex?.structure || {};
 let outputsIndexRoot = initialOutputsIndex?.root || null;
 let outputsIndex = initialOutputsIndex?.index || initialOutputsIndex || {};
+
+const DATASET_RELATIVE_ROOT = (datasetRootPrefix || '').replace(/\\/g, '/').replace(/\/$/, '');
+const DATASET_FOLDER_MAP = {
+  lite: 'dataset_lite_avif',
+  dataset_lite_avif: 'dataset_lite_avif',
+  full: 'dataset_full_avif',
+  dataset_full_avif: 'dataset_full_avif'
+};
+
+function resolveDatasetPath(relativePath = '') {
+  if (typeof relativePath === 'string' && /^https?:\/\//i.test(relativePath)) {
+    return relativePath;
+  }
+  const normalizedBase = (CDN_PATH && CDN_PATH.length > 0 ? CDN_PATH : '.').replace(/\/$/, '');
+  const sanitizedRoot = DATASET_RELATIVE_ROOT ? DATASET_RELATIVE_ROOT.replace(/^\.?\//, '') : '';
+  const sanitizedRelative = (relativePath || '').replace(/^\.?\//, '');
+
+  const segments = [];
+  if (normalizedBase && normalizedBase !== '.') {
+    segments.push(normalizedBase);
+  } else if (normalizedBase === '.') {
+    segments.push('.');
+  }
+  if (sanitizedRoot) segments.push(sanitizedRoot);
+  if (sanitizedRelative) segments.push(sanitizedRelative);
+
+  if (segments.length === 0) {
+    if (normalizedBase && normalizedBase !== '.') return normalizedBase;
+    return '.';
+  }
+
+  return segments.join('/').replace(/\/{2,}/g, '/');
+}
 
 let currentDisplayMode = 'lite'; // 'lite' or 'full'
 const storyIdMap = {
@@ -194,8 +241,19 @@ const nextShotBtn = document.getElementById('next-shot-btn');
 const modelVisibilitySelectorSection = document.getElementById('model-visibility-selector-section'); // ADDED
 
 
+function getDatasetFolderName(datasetBase) {
+  if (!datasetBase) return DATASET_FOLDER_MAP.lite;
+  const lowered = String(datasetBase).toLowerCase();
+  if (DATASET_FOLDER_MAP[lowered]) {
+    return DATASET_FOLDER_MAP[lowered];
+  }
+  if (lowered.includes('full')) return DATASET_FOLDER_MAP.full;
+  return DATASET_FOLDER_MAP.lite;
+}
+
 // --- Data Fetching ---
 async function fetchStoryData(storyId) {
+  if (!storyId) return null;
   if (!detailedManifest || !detailedManifest.stories) {
     console.error("Detailed manifest not loaded yet.");
     return null;
@@ -207,19 +265,37 @@ async function fetchStoryData(storyId) {
   }
   currentDataset = storyInfo.dataset_base;
 
-  const cachedStory = inlineStoryData[storyId];
-  if (!cachedStory) {
-    console.error(`Inline story data not found for ID: ${storyId}`);
-    const lang = document.documentElement.lang || 'en';
-    const errorCharMsg = initialTranslations[lang]?.['error_loading_character'] || initialTranslations.en?.['error_loading_character'] || "Error loading character data.";
-    const errorResultsMsg = initialTranslations[lang]?.['error_loading_results'] || initialTranslations.en?.['error_loading_results'] || "Error loading results.";
-    if(characterReferenceArea) characterReferenceArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${errorCharMsg}</p>`;
-    if(modelResultsArea) modelResultsArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${errorResultsMsg}</p>`;
-    return null;
+  if (inlineStoryData[storyId]) {
+    return JSON.parse(JSON.stringify(inlineStoryData[storyId]));
   }
 
-  return JSON.parse(JSON.stringify(cachedStory));
+  const datasetFolder = getDatasetFolderName(storyInfo.dataset_base);
+  const storyJsonUrl = resolveDatasetPath(`${datasetFolder}/${storyId}/story.json`);
+  try {
+    const response = await fetch(storyJsonUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to load ${storyJsonUrl}: ${response.status}`);
+    }
+    const storyJson = await response.json();
+    inlineStoryData[storyId] = storyJson;
+    return JSON.parse(JSON.stringify(storyJson));
+  } catch (error) {
+    console.error(`Unable to fetch story data for ${storyId}`, error);
+    const lang = document.documentElement.lang || 'en';
+    const errorCharKey = 'error_loading_character';
+    const errorResultsKey = 'error_loading_results';
+    const errorCharMsg = initialTranslations[lang]?.[errorCharKey] || initialTranslations.en?.[errorCharKey] || "Error loading character data.";
+    const errorResultsMsg = initialTranslations[lang]?.[errorResultsKey] || initialTranslations.en?.[errorResultsKey] || "Error loading results.";
+    if (characterReferenceArea) {
+      characterReferenceArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${errorCharMsg}</p>`;
+    }
+    if (modelResultsArea) {
+      modelResultsArea.innerHTML = `<p class="text-red-500 dark:text-red-400">${errorResultsMsg}</p>`;
+    }
+    return null;
+  }
 }
+
 
 // --- UI Update Functions ---
 function populateStorySelector() {
@@ -286,7 +362,7 @@ function populateStorySelector() {
     card.onclick = () => loadStory(story.id);
 
     img.src = story.cover_image_path
-        ? `${CDN_PATH}/${story.cover_image_path}`
+        ? resolveDatasetPath(story.cover_image_path)
         : `${astroBaseUrl}/img/placeholder_error.png`;
     img.alt = story.name;
     img.onerror = () => { img.src = `${astroBaseUrl}/img/placeholder_error.png`;};
@@ -368,7 +444,7 @@ async function updateCharacterReferences() {
   }
   // e.g., 'datasets/01/image/'
   const baseImageDirRel = coverRel.substring(0, segIdx + imageSeg.length);
-  const urlBase = `${CDN_PATH}/${baseImageDirRel}`;
+  const urlBase = resolveDatasetPath(baseImageDirRel);
 
   // Read characters lists with counts from manifest
   const enChars = Array.isArray(storyInfo.characters_en) ? storyInfo.characters_en : [];

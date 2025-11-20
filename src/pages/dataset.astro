@@ -7,6 +7,7 @@ const activeNav = "dataset";
 const assetBase = getAssetBase(Astro.url.pathname);
 const baseUrlForClient = assetBase;
 const chartScriptPath = buildAssetPath(assetBase, 'js/chart.umd.js');
+const chartScriptTag = `<script src="${chartScriptPath}"></script>`;
 const datasetAssetPrefix = import.meta.env.DEV ? 'src/data/' : '../src/data/';
 const bigBrownRabbitRef = buildAssetPath(assetBase, `${datasetAssetPrefix}dataset_lite_avif/01/image/Big Brown Rabbit/00.avif`);
 const littleBrownRabbitRef = buildAssetPath(assetBase, `${datasetAssetPrefix}dataset_lite_avif/01/image/Little Brown Rabbit/00.avif`);
@@ -14,7 +15,7 @@ const littleBrownRabbitRef = buildAssetPath(assetBase, `${datasetAssetPrefix}dat
 ---
 
 <BaseLayout title={pageTitle} activeNav={activeNav} assetBase={assetBase}>
-  <script src={chartScriptPath}></script>
+  <Fragment set:html={chartScriptTag} />
   <main
     class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200"
   >

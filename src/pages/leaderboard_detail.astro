@@ -6,6 +6,7 @@ const pageTitle = "Detailed Leaderboard"; // Translations will apply to this via
 const currentNav = "leaderboard_detail";
 const assetBase = getAssetBase(Astro.url.pathname);
 const chartScriptPath = buildAssetPath(assetBase, 'js/chart.umd.js');
+const chartScriptTag = `<script src="${chartScriptPath}"></script>`;
 
 // Data provided by user - TSV format
 const fullDatasetTSV = `Method	model	mode	Cross CSD Score (Ref-Gen)	Self CSD Score (Gen-Gen)	Cross Cref Score (Ref-Gen)	Self Cref Score (Gen-Gen)	Aesthetics Score	Inception Score	Prompt Align (Scene)	Prompt Align (Camera)	Prompt Align (Character Existence|Number) OCCM	Prompt Align (Global Character Action|Script)	Prompt Align (Local/Single Character Action|Script)	Prompt Align Avg
@@ -122,7 +123,7 @@ const bestOfModeData = {
 
 ---
 <BaseLayout title={pageTitle} activeNav={currentNav} assetBase={assetBase}>
-  <script src={chartScriptPath}></script>
+  <Fragment set:html={chartScriptTag} />
     <div class="container mx-auto px-4 py-8">
         <section id="charts-section" class="mb-8 p-6 bg-white dark:bg-slate-800 shadow-lg rounded-lg">
             <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">

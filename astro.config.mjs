@@ -116,6 +116,11 @@ function stripHtmlCommentsIntegration() {
   ]);
   const MAX_DEPTH = 4;
 
+  /**
+   * @param {string} dir
+   * @param {number} [depth=0]
+   * @returns {Promise<string[]>}
+   */
   async function collectHtmlFiles(dir, depth = 0) {
     if (depth > MAX_DEPTH) {
       return [];
@@ -144,10 +149,13 @@ function stripHtmlCommentsIntegration() {
   return {
     name: 'strip-html-comments',
     hooks: {
+      /**
+       * @param {{ dir: string | URL }} param0
+       */
       'astro:build:done': async ({ dir }) => {
         const rootDir = typeof dir === 'string' ? dir : fileURLToPath(dir);
         const htmlFiles = await collectHtmlFiles(rootDir);
-        await Promise.all(htmlFiles.map(async (htmlFilePath) => {
+        await Promise.all(htmlFiles.map(async (/** @type {string} */ htmlFilePath) => {
           const original = await readFile(htmlFilePath, 'utf8');
           const stripped = original.replace(/<!--[\s\S]*?-->/g, '');
           if (stripped !== original) {

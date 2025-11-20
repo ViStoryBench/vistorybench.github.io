@@ -10,7 +10,7 @@ const datasetStoryModules = import.meta.glob('../data/dataset_*_avif/*/story.jso
   import: 'default',
 });
 
-const preloadedStoryData = Object.entries(datasetStoryModules).reduce((acc, [path, storyData]) => {
+const preloadedStoryData = Object.entries(datasetStoryModules).reduce<Record<string, any>>((acc, [path, storyData]) => {
   const match = path.match(/dataset_[^/]+\/(\d+)\/story\.json$/);
   if (!match) return acc;
   const storyId = match[1];

@@ -22,6 +22,7 @@ const {
 const resolvedAssetBase = assetBase && assetBase.length > 0 ? assetBase : '.';
 const mainJsPathWithBase = buildAssetPath(resolvedAssetBase, 'js/main.js');
 const faviconPathWithBase = buildAssetPath(resolvedAssetBase, 'favicon.png');
+const mainScriptTag = `<script src="${mainJsPathWithBase}"></script>`;
 ---
 <!DOCTYPE html>
 <html lang="en"> {/* The lang attribute will be dynamically set by main.js */}
@@ -43,7 +44,7 @@ const faviconPathWithBase = buildAssetPath(resolvedAssetBase, 'favicon.png');
     <script define:vars={{ initialTranslations: translations }}>
       window.translations = initialTranslations;
     </script>
-    <script src={mainJsPathWithBase}></script> 
+    <Fragment set:html={mainScriptTag} />
 </body>
 </html>
 

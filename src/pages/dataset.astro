@@ -8,7 +8,7 @@ const assetBase = getAssetBase(Astro.url.pathname);
 const baseUrlForClient = assetBase;
 const chartScriptPath = buildAssetPath(assetBase, 'js/chart.umd.js');
 const chartScriptTag = `<script src="${chartScriptPath}"></script>`;
-const datasetAssetPrefix = import.meta.env.DEV ? 'src/data/' : '../src/data/';
+const datasetAssetPrefix = import.meta.env.DEV ? 'src/data/' : 'dataset_assets/';
 const bigBrownRabbitRef = buildAssetPath(assetBase, `${datasetAssetPrefix}dataset_lite_avif/01/image/Big Brown Rabbit/00.avif`);
 const littleBrownRabbitRef = buildAssetPath(assetBase, `${datasetAssetPrefix}dataset_lite_avif/01/image/Little Brown Rabbit/00.avif`);
 
@@ -1203,7 +1203,7 @@ const littleBrownRabbitRef = buildAssetPath(assetBase, `${datasetAssetPrefix}dat
             class="bg-slate-900 dark:bg-gray-950 p-4 sm:p-6 rounded-md overflow-x-auto text-sm text-slate-100 shadow-inner ring-1 ring-slate-700"><code class="language-json">{`
 stories_data = {
     "story_id (e.g., 01)": {
-    "type": "[e.g., WildStory_en]", // Source or version identifier (e.g., dataset_language)
+    "type": "[e.g., Vistory_en]", // Source or version identifier (e.g., dataset_language)
         "shots": [
             {
         "shot_id": "00", // Unique identifier for the shot within the story

@@ -2,11 +2,11 @@
   "stories": [
     {
       "id": "01",
-      "dataset_base": "lite",
-      "name": "Story 01",
+      "dataset_base": "Vistory",
+      "name": "Vistory 01",
       "story_type_en": "Children's Picture Books",
       "story_type_ch": "儿童绘本",
-      "cover_image_path": "dataset_lite_avif/01/image/Big Brown Rabbit/00.avif",
+      "cover_image_path": "dataset_lite_avif/01/image/Little Brown Rabbit/00.avif",
       "characters_en": [
         {
           "name": "Big Brown Rabbit",
@@ -30,8 +30,8 @@
     },
     {
       "id": "02",
-      "dataset_base": "lite",
-      "name": "Story 02",
+      "dataset_base": "Vistory",
+      "name": "Vistory 02",
       "story_type_en": "Children's Picture Books",
       "story_type_ch": "儿童绘本",
       "cover_image_path": "dataset_lite_avif/02/image/David/00.avif",
@@ -58,11 +58,11 @@
     },
     {
       "id": "03",
-      "dataset_base": "lite",
-      "name": "Story 03",
+      "dataset_base": "Vistory",
+      "name": "Vistory 03",
       "story_type_en": "Chinese Ancient Court",
       "story_type_ch": "中国古代宫廷",
-      "cover_image_path": "dataset_lite_avif/03/image/An Lingrong/00.avif",
+      "cover_image_path": "dataset_lite_avif/03/image/Zhen Huan/00.avif",
       "characters_en": [
         {
           "name": "An Lingrong",
@@ -110,8 +110,8 @@
     },
     {
       "id": "04",
-      "dataset_base": "lite",
-      "name": "Story 04",
+      "dataset_base": "Vistory",
+      "name": "Vistory 04",
       "story_type_en": "Chinese Ancient Wuxia",
       "story_type_ch": "中国古代武侠",
       "cover_image_path": "dataset_lite_avif/04/image/Guo Jing/00.avif",
@@ -162,11 +162,11 @@
     },
     {
       "id": "05",
-      "dataset_base": "lite",
-      "name": "Story 05",
+      "dataset_base": "Vistory",
+      "name": "Vistory 05",
       "story_type_en": "Chinese Ancient Wuxia",
       "story_type_ch": "中国古代武侠",
-      "cover_image_path": "dataset_lite_avif/05/image/Black Snake/00.avif",
+      "cover_image_path": "dataset_lite_avif/05/image/Li Xunhuan/00.avif",
       "characters_en": [
         {
           "name": "Black Snake",
@@ -214,11 +214,11 @@
     },
     {
       "id": "06",
-      "dataset_base": "lite",
-      "name": "Story 06",
+      "dataset_base": "Vistory",
+      "name": "Vistory 06",
       "story_type_en": "Chinese Ancient Male Channel Novel",
       "story_type_ch": "中国古代男频小说",
-      "cover_image_path": "dataset_lite_avif/06/image/Aunt/00.avif",
+      "cover_image_path": "dataset_lite_avif/06/image/Fan Xian/00.avif",
       "characters_en": [
         {
           "name": "Aunt",
@@ -250,11 +250,11 @@
     },
     {
       "id": "07",
-      "dataset_base": "lite",
-      "name": "Story 07",
+      "dataset_base": "Vistory",
+      "name": "Vistory 07",
       "story_type_en": "Chinese Ancient Romance",
       "story_type_ch": "中国古代言情",
-      "cover_image_path": "dataset_lite_avif/07/image/Empress/00.avif",
+      "cover_image_path": "dataset_lite_avif/07/image/Lin Shangrong/00.avif",
       "characters_en": [
         {
           "name": "Empress",
@@ -294,8 +294,8 @@
     },
     {
       "id": "08",
-      "dataset_base": "lite",
-      "name": "Story 08",
+      "dataset_base": "Vistory",
+      "name": "Vistory 08",
       "story_type_en": "Chinese Ancient Romance",
       "story_type_ch": "中国古代言情",
       "cover_image_path": "dataset_lite_avif/08/image/Consort Jiang/00.avif",
@@ -330,11 +330,11 @@
     },
     {
       "id": "09",
-      "dataset_base": "lite",
-      "name": "Story 09",
+      "dataset_base": "Vistory",
+      "name": "Vistory 09",
       "story_type_en": "German Fairy Tales",
       "story_type_ch": "德国童话故事",
-      "cover_image_path": "dataset_lite_avif/09/image/Dwarf/00.avif",
+      "cover_image_path": "dataset_lite_avif/09/image/Snow White/00.avif",
       "characters_en": [
         {
           "name": "Dwarf",
@@ -390,11 +390,11 @@
     },
     {
       "id": "10",
-      "dataset_base": "lite",
-      "name": "Story 10",
+      "dataset_base": "Vistory",
+      "name": "Vistory 10",
       "story_type_en": "Strange Tales",
       "story_type_ch": "怪谈",
-      "cover_image_path": "dataset_lite_avif/10/image/Dula/00.avif",
+      "cover_image_path": "dataset_lite_avif/10/image/Mr. Qin/00.avif",
       "characters_en": [
         {
           "name": "Dula",
@@ -458,11 +458,11 @@
     },
     {
       "id": "11",
-      "dataset_base": "lite",
-      "name": "Story 11",
+      "dataset_base": "Vistory",
+      "name": "Vistory 11",
       "story_type_en": "Korean Folktales",
       "story_type_ch": "朝鲜民间故事",
-      "cover_image_path": "dataset_lite_avif/11/image/Byeon Hakdo/00.avif",
+      "cover_image_path": "dataset_lite_avif/11/image/Lee Mongryong/00.avif",
       "characters_en": [
         {
           "name": "Byeon Hakdo",
@@ -526,11 +526,11 @@
     },
     {
       "id": "12",
-      "dataset_base": "lite",
-      "name": "Story 12",
+      "dataset_base": "Vistory",
+      "name": "Vistory 12",
       "story_type_en": "Crime",
       "story_type_ch": "犯罪",
-      "cover_image_path": "dataset_lite_avif/12/image/An Xin/00.avif",
+      "cover_image_path": "dataset_lite_avif/12/image/Huang Yao/00.avif",
       "characters_en": [
         {
           "name": "An Xin",
@@ -618,11 +618,11 @@
     },
     {
       "id": "13",
-      "dataset_base": "lite",
-      "name": "Story 13",
+      "dataset_base": "Vistory",
+      "name": "Vistory 13",
       "story_type_en": "Esports",
       "story_type_ch": "电竞",
-      "cover_image_path": "dataset_lite_avif/13/image/Tian Qi/00.avif",
+      "cover_image_path": "dataset_lite_avif/13/image/Ye Xiu/00.avif",
       "characters_en": [
         {
           "name": "Tian Qi",
@@ -654,11 +654,11 @@
     },
     {
       "id": "14",
-      "dataset_base": "lite",
-      "name": "Story 14",
+      "dataset_base": "Vistory",
+      "name": "Vistory 14",
       "story_type_en": "Urban Novel",
       "story_type_ch": "都市小说",
-      "cover_image_path": "dataset_lite_avif/14/image/Chen Junjie/00.avif",
+      "cover_image_path": "dataset_lite_avif/14/image/Qi Xiaomu/00.avif",
       "characters_en": [
         {
           "name": "Chen Junjie",
@@ -690,11 +690,11 @@
     },
     {
       "id": "15",
-      "dataset_base": "lite",
-      "name": "Story 15",
+      "dataset_base": "Vistory",
+      "name": "Vistory 15",
       "story_type_en": "Urban Novel",
       "story_type_ch": "都市小说",
-      "cover_image_path": "dataset_lite_avif/15/image/Aunt Liu/00.avif",
+      "cover_image_path": "dataset_lite_avif/15/image/Zhao Qingqing/00.avif",
       "characters_en": [
         {
           "name": "Aunt Liu",
@@ -782,11 +782,11 @@
     },
     {
       "id": "16",
-      "dataset_base": "lite",
-      "name": "Story 16",
+      "dataset_base": "Vistory",
+      "name": "Vistory 16",
       "story_type_en": "Urban Novel",
       "story_type_ch": "都市小说",
-      "cover_image_path": "dataset_lite_avif/16/image/Aunt/00.avif",
+      "cover_image_path": "dataset_lite_avif/16/image/Chen Sihan/00.avif",
       "characters_en": [
         {
           "name": "Aunt",
@@ -858,8 +858,8 @@
     },
     {
       "id": "17",
-      "dataset_base": "lite",
-      "name": "Story 17",
+      "dataset_base": "Vistory",
+      "name": "Vistory 17",
       "story_type_en": "Arabian Folktales",
       "story_type_ch": "阿拉伯民间故事",
       "cover_image_path": "dataset_lite_avif/17/image/Aladdin/00.avif",
@@ -910,8 +910,8 @@
     },
     {
       "id": "18",
-      "dataset_base": "lite",
-      "name": "Story 18",
+      "dataset_base": "Vistory",
+      "name": "Vistory 18",
       "story_type_en": "African Folktales",
       "story_type_ch": "非洲民间故事",
       "cover_image_path": "dataset_lite_avif/18/image/Anansi/00.avif",
@@ -946,11 +946,11 @@
     },
     {
       "id": "19",
-      "dataset_base": "lite",
-      "name": "Story 19",
+      "dataset_base": "Vistory",
+      "name": "Vistory 19",
       "story_type_en": "African Picture Book Stories",
       "story_type_ch": "非洲绘本故事",
-      "cover_image_path": "dataset_lite_avif/19/image/Auntie Sisi/00.avif",
+      "cover_image_path": "dataset_lite_avif/19/image/Magwe/00.avif",
       "characters_en": [
         {
           "name": "Auntie Sisi",
@@ -990,11 +990,11 @@
     },
     {
       "id": "20",
-      "dataset_base": "lite",
-      "name": "Story 20",
+      "dataset_base": "Vistory",
+      "name": "Vistory 20",
       "story_type_en": "Military",
       "story_type_ch": "军事",
-      "cover_image_path": "dataset_lite_avif/20/image/Cheng Cai/00.avif",
+      "cover_image_path": "dataset_lite_avif/20/image/Xu Sanduo/00.avif",
       "characters_en": [
         {
           "name": "Cheng Cai",
@@ -1050,11 +1050,11 @@
     },
     {
       "id": "21",
-      "dataset_base": "lite",
-      "name": "Story 21",
+      "dataset_base": "Vistory",
+      "name": "Vistory 21",
       "story_type_en": "Biographies of Celebrities",
       "story_type_ch": "名人传记",
-      "cover_image_path": "dataset_lite_avif/21/image/Paul Terrell/00.avif",
+      "cover_image_path": "dataset_lite_avif/21/image/Steve Jobs/00.avif",
       "characters_en": [
         {
           "name": "Paul Terrell",
@@ -1094,8 +1094,8 @@
     },
     {
       "id": "22",
-      "dataset_base": "lite",
-      "name": "Story 22",
+      "dataset_base": "Vistory",
+      "name": "Vistory 22",
       "story_type_en": "Fantasy",
       "story_type_ch": "奇幻",
       "cover_image_path": "dataset_lite_avif/22/image/Tang San/00.avif",
@@ -1130,11 +1130,11 @@
     },
     {
       "id": "23",
-      "dataset_base": "lite",
-      "name": "Story 23",
+      "dataset_base": "Vistory",
+      "name": "Vistory 23",
       "story_type_en": "Fantasy",
       "story_type_ch": "奇幻",
-      "cover_image_path": "dataset_lite_avif/23/image/Ge Ye/00.avif",
+      "cover_image_path": "dataset_lite_avif/23/image/Nalan Yanran/00.avif",
       "characters_en": [
         {
           "name": "Ge Ye",
@@ -1182,11 +1182,11 @@
     },
     {
       "id": "24",
-      "dataset_base": "lite",
-      "name": "Story 24",
+      "dataset_base": "Vistory",
+      "name": "Vistory 24",
       "story_type_en": "Classics for Women",
       "story_type_ch": "女性经典",
-      "cover_image_path": "dataset_lite_avif/24/image/Amy/00.avif",
+      "cover_image_path": "dataset_lite_avif/24/image/Meg/00.avif",
       "characters_en": [
         {
           "name": "Amy",
@@ -1234,11 +1234,11 @@
     },
     {
       "id": "25",
-      "dataset_base": "lite",
-      "name": "Story 25",
+      "dataset_base": "Vistory",
+      "name": "Vistory 25",
       "story_type_en": "Bureaucracy",
       "story_type_ch": "官场",
-      "cover_image_path": "dataset_lite_avif/25/image/Airport Staff/00.avif",
+      "cover_image_path": "dataset_lite_avif/25/image/Hou Liangping/00.avif",
       "characters_en": [
         {
           "name": "Airport Staff",
@@ -1278,11 +1278,11 @@
     },
     {
       "id": "26",
-      "dataset_base": "lite",
-      "name": "Story 26",
+      "dataset_base": "Vistory",
+      "name": "Vistory 26",
       "story_type_en": "Horror",
       "story_type_ch": "恐怖",
-      "cover_image_path": "dataset_lite_avif/26/image/Aunt Zhang/00.avif",
+      "cover_image_path": "dataset_lite_avif/26/image/My Uncle/00.avif",
       "characters_en": [
         {
           "name": "Aunt Zhang",
@@ -1338,11 +1338,11 @@
     },
     {
       "id": "27",
-      "dataset_base": "lite",
-      "name": "Story 27",
+      "dataset_base": "Vistory",
+      "name": "Vistory 27",
       "story_type_en": "Horror",
       "story_type_ch": "恐怖",
-      "cover_image_path": "dataset_lite_avif/27/image/Bus Driver Uncle/00.avif",
+      "cover_image_path": "dataset_lite_avif/27/image/Li Shiqing/00.avif",
       "characters_en": [
         {
           "name": "Bus Driver Uncle",
@@ -1366,11 +1366,11 @@
     },
     {
       "id": "28",
-      "dataset_base": "lite",
-      "name": "Story 28",
+      "dataset_base": "Vistory",
+      "name": "Vistory 28",
       "story_type_en": "Japanese Children's Literature",
       "story_type_ch": "日本儿童文学",
-      "cover_image_path": "dataset_lite_avif/28/image/Ticket Inspector Uncle/00.avif",
+      "cover_image_path": "dataset_lite_avif/28/image/Totto-chan/00.avif",
       "characters_en": [
         {
           "name": "Ticket Inspector Uncle",
@@ -1402,11 +1402,11 @@
     },
     {
       "id": "29",
-      "dataset_base": "lite",
-      "name": "Story 29",
+      "dataset_base": "Vistory",
+      "name": "Vistory 29",
       "story_type_en": "Ancient Japanese Legends",
       "story_type_ch": "日本古代传说",
-      "cover_image_path": "dataset_lite_avif/29/image/Emperor/00.avif",
+      "cover_image_path": "dataset_lite_avif/29/image/Princess Kaguya/00.avif",
       "characters_en": [
         {
           "name": "Emperor",
@@ -1478,11 +1478,11 @@
     },
     {
       "id": "30",
-      "dataset_base": "lite",
-      "name": "Story 30",
+      "dataset_base": "Vistory",
+      "name": "Vistory 30",
       "story_type_en": "Modern Japanese Novels",
       "story_type_ch": "日本现代小说",
-      "cover_image_path": "dataset_lite_avif/30/image/German Flight Attendant/00.avif",
+      "cover_image_path": "dataset_lite_avif/30/image/Me (Watanabe)/00.avif",
       "characters_en": [
         {
           "name": "German Flight Attendant",
@@ -1514,11 +1514,11 @@
     },
     {
       "id": "31",
-      "dataset_base": "lite",
-      "name": "Story 31",
+      "dataset_base": "Vistory",
+      "name": "Vistory 31",
       "story_type_en": "Japanese Fantasy Light Novels",
       "story_type_ch": "日系幻想轻小说",
-      "cover_image_path": "dataset_lite_avif/31/image/Akihiko Kayaba/00.avif",
+      "cover_image_path": "dataset_lite_avif/31/image/Kirito/00.avif",
       "characters_en": [
         {
           "name": "Akihiko Kayaba",
@@ -1550,11 +1550,11 @@
     },
     {
       "id": "32",
-      "dataset_base": "lite",
-      "name": "Story 32",
+      "dataset_base": "Vistory",
+      "name": "Vistory 32",
       "story_type_en": "Japanese Fantasy Light Novels",
       "story_type_ch": "日式幻想轻小说",
-      "cover_image_path": "dataset_lite_avif/32/image/Emilia/00.avif",
+      "cover_image_path": "dataset_lite_avif/32/image/Natsuki Subaru/00.avif",
       "characters_en": [
         {
           "name": "Emilia",
@@ -1586,11 +1586,11 @@
     },
     {
       "id": "33",
-      "dataset_base": "lite",
-      "name": "Story 33",
+      "dataset_base": "Vistory",
+      "name": "Vistory 33",
       "story_type_en": "Doomsday ",
       "story_type_ch": "末日",
-      "cover_image_path": "dataset_lite_avif/33/image/Father/00.avif",
+      "cover_image_path": "dataset_lite_avif/33/image/Xixi/00.avif",
       "characters_en": [
         {
           "name": "Father",
@@ -1622,11 +1622,11 @@
     },
     {
       "id": "34",
-      "dataset_base": "lite",
-      "name": "Story 34",
+      "dataset_base": "Vistory",
+      "name": "Vistory 34",
       "story_type_en": "Doomsday Novel",
       "story_type_ch": "末日小说",
-      "cover_image_path": "dataset_lite_avif/34/image/Aunt Chen/00.avif",
+      "cover_image_path": "dataset_lite_avif/34/image/Yuan Yan/00.avif",
       "characters_en": [
         {
           "name": "Aunt Chen",
@@ -1658,8 +1658,8 @@
     },
     {
       "id": "35",
-      "dataset_base": "lite",
-      "name": "Story 35",
+      "dataset_base": "Vistory",
+      "name": "Vistory 35",
       "story_type_en": "Science Fiction",
       "story_type_ch": "科幻",
       "cover_image_path": "dataset_lite_avif/35/image/Gregory Powell/00.avif",
@@ -1702,11 +1702,11 @@
     },
     {
       "id": "36",
-      "dataset_base": "lite",
-      "name": "Story 36",
+      "dataset_base": "Vistory",
+      "name": "Vistory 36",
       "story_type_en": "Science Fiction",
       "story_type_ch": "科幻",
-      "cover_image_path": "dataset_lite_avif/36/image/Colonel Cromarty/00.avif",
+      "cover_image_path": "dataset_lite_avif/36/image/Passepartout/00.avif",
       "characters_en": [
         {
           "name": "Colonel Cromarty",
@@ -1754,8 +1754,8 @@
     },
     {
       "id": "37",
-      "dataset_base": "lite",
-      "name": "Story 37",
+      "dataset_base": "Vistory",
+      "name": "Vistory 37",
       "story_type_en": "Science Fiction",
       "story_type_ch": "科幻",
       "cover_image_path": "dataset_lite_avif/37/image/Lao Dao/00.avif",
@@ -1806,11 +1806,11 @@
     },
     {
       "id": "38",
-      "dataset_base": "lite",
-      "name": "Story 38",
+      "dataset_base": "Vistory",
+      "name": "Vistory 38",
       "story_type_en": "Science Fiction",
       "story_type_ch": "科幻",
-      "cover_image_path": "dataset_lite_avif/38/image/Kant/00.avif",
+      "cover_image_path": "dataset_lite_avif/38/image/Luo Ji/00.avif",
       "characters_en": [
         {
           "name": "Kant",
@@ -1842,11 +1842,11 @@
     },
     {
       "id": "39",
-      "dataset_base": "lite",
-      "name": "Story 39",
+      "dataset_base": "Vistory",
+      "name": "Vistory 39",
       "story_type_en": "Modern and Contemporary Romance",
       "story_type_ch": "近现代言情",
-      "cover_image_path": "dataset_lite_avif/39/image/Didi/00.avif",
+      "cover_image_path": "dataset_lite_avif/39/image/Weilong Ge/00.avif",
       "characters_en": [
         {
           "name": "Didi",
@@ -1886,11 +1886,11 @@
     },
     {
       "id": "40",
-      "dataset_base": "lite",
-      "name": "Story 40",
+      "dataset_base": "Vistory",
+      "name": "Vistory 40",
       "story_type_en": "Fan Fiction",
       "story_type_ch": "同人文",
-      "cover_image_path": "dataset_lite_avif/40/image/Hyuga Hizashi/00.avif",
+      "cover_image_path": "dataset_lite_avif/40/image/Xia Chuan Yu/00.avif",
       "characters_en": [
         {
           "name": "Hyuga Hizashi",
@@ -1938,8 +1938,8 @@
     },
     {
       "id": "41",
-      "dataset_base": "lite",
-      "name": "Story 41",
+      "dataset_base": "Vistory",
+      "name": "Vistory 41",
       "story_type_en": "American Novels",
       "story_type_ch": "美国小说",
       "cover_image_path": "dataset_lite_avif/41/image/Ennis Del Mar/00.avif",
@@ -1966,11 +1966,11 @@
     },
     {
       "id": "42",
-      "dataset_base": "lite",
-      "name": "Story 42",
+      "dataset_base": "Vistory",
+      "name": "Vistory 42",
       "story_type_en": "Romance",
       "story_type_ch": "言情",
-      "cover_image_path": "dataset_lite_avif/42/image/Bella/00.avif",
+      "cover_image_path": "dataset_lite_avif/42/image/Edward/00.avif",
       "characters_en": [
         {
           "name": "Bella",
@@ -1994,11 +1994,11 @@
     },
     {
       "id": "43",
-      "dataset_base": "lite",
-      "name": "Story 43",
+      "dataset_base": "Vistory",
+      "name": "Vistory 43",
       "story_type_en": "Japanese School Light Novels",
       "story_type_ch": "日系校园轻小说",
-      "cover_image_path": "dataset_lite_avif/43/image/Elderly Woman/00.avif",
+      "cover_image_path": "dataset_lite_avif/43/image/Suzune Horikita/00.avif",
       "characters_en": [
         {
           "name": "Elderly Woman",
@@ -2046,8 +2046,8 @@
     },
     {
       "id": "44",
-      "dataset_base": "lite",
-      "name": "Story 44",
+      "dataset_base": "Vistory",
+      "name": "Vistory 44",
       "story_type_en": "Fairy Tales",
       "story_type_ch": "童话",
       "cover_image_path": "dataset_lite_avif/44/image/Alice/00.avif",
@@ -2090,11 +2090,11 @@
     },
     {
       "id": "45",
-      "dataset_base": "lite",
-      "name": "Story 45",
+      "dataset_base": "Vistory",
+      "name": "Vistory 45",
       "story_type_en": "Fairy Tales",
       "story_type_ch": "童话",
-      "cover_image_path": "dataset_lite_avif/45/image/Mother Duck/00.avif",
+      "cover_image_path": "dataset_lite_avif/45/image/Ugly Duckling/00.avif",
       "characters_en": [
         {
           "name": "Mother Duck",
@@ -2126,11 +2126,11 @@
     },
     {
       "id": "46",
-      "dataset_base": "lite",
-      "name": "Story 46",
+      "dataset_base": "Vistory",
+      "name": "Vistory 46",
       "story_type_en": "Fairy Tales",
       "story_type_ch": "童话",
-      "cover_image_path": "dataset_lite_avif/46/image/Fox/00.avif",
+      "cover_image_path": "dataset_lite_avif/46/image/Little Prince/00.avif",
       "characters_en": [
         {
           "name": "Fox",
@@ -2178,8 +2178,8 @@
     },
     {
       "id": "47",
-      "dataset_base": "lite",
-      "name": "Story 47",
+      "dataset_base": "Vistory",
+      "name": "Vistory 47",
       "story_type_en": "Fairy Tales",
       "story_type_ch": "童话故事",
       "cover_image_path": "dataset_lite_avif/47/image/Dorothy/00.avif",
@@ -2214,8 +2214,8 @@
     },
     {
       "id": "48",
-      "dataset_base": "lite",
-      "name": "Story 48",
+      "dataset_base": "Vistory",
+      "name": "Vistory 48",
       "story_type_en": "Legends",
       "story_type_ch": "西方传说故事",
       "cover_image_path": "dataset_lite_avif/48/image/God/00.avif",
@@ -2250,11 +2250,11 @@
     },
     {
       "id": "49",
-      "dataset_base": "lite",
-      "name": "Story 49",
+      "dataset_base": "Vistory",
+      "name": "Vistory 49",
       "story_type_en": "Middle Ages Novels",
       "story_type_ch": "中世纪小说",
-      "cover_image_path": "dataset_lite_avif/49/image/Gentleman in White Waistcoat/00.avif",
+      "cover_image_path": "dataset_lite_avif/49/image/Oliver/00.avif",
       "characters_en": [
         {
           "name": "Gentleman in White Waistcoat",
@@ -2302,8 +2302,8 @@
     },
     {
       "id": "50",
-      "dataset_base": "lite",
-      "name": "Story 50",
+      "dataset_base": "Vistory",
+      "name": "Vistory 50",
       "story_type_en": "Fantasy Stories",
       "story_type_ch": "西方奇幻故事",
       "cover_image_path": "dataset_lite_avif/50/image/Anna/00.avif",
@@ -2354,8 +2354,8 @@
     },
     {
       "id": "51",
-      "dataset_base": "lite",
-      "name": "Story 51",
+      "dataset_base": "Vistory",
+      "name": "Vistory 51",
       "story_type_en": "Bureaucracy",
       "story_type_ch": "西方官场",
       "cover_image_path": "dataset_lite_avif/51/image/Charles Collingridge/00.avif",
@@ -2406,11 +2406,11 @@
     },
     {
       "id": "52",
-      "dataset_base": "lite",
-      "name": "Story 52",
+      "dataset_base": "Vistory",
+      "name": "Vistory 52",
       "story_type_en": "Fantasy",
       "story_type_ch": "西方幻想",
-      "cover_image_path": "dataset_lite_avif/52/image/Bloodrider/00.avif",
+      "cover_image_path": "dataset_lite_avif/52/image/Daenerys/00.avif",
       "characters_en": [
         {
           "name": "Bloodrider",
@@ -2458,11 +2458,11 @@
     },
     {
       "id": "53",
-      "dataset_base": "lite",
-      "name": "Story 53",
+      "dataset_base": "Vistory",
+      "name": "Vistory 53",
       "story_type_en": "Fantasy",
       "story_type_ch": "幻想",
-      "cover_image_path": "dataset_lite_avif/53/image/Goblin/00.avif",
+      "cover_image_path": "dataset_lite_avif/53/image/Harry Potter/00.avif",
       "characters_en": [
         {
           "name": "Goblin",
@@ -2510,8 +2510,8 @@
     },
     {
       "id": "54",
-      "dataset_base": "lite",
-      "name": "Story 54",
+      "dataset_base": "Vistory",
+      "name": "Vistory 54",
       "story_type_en": "Well-known Stories",
       "story_type_ch": "著名故事",
       "cover_image_path": "dataset_lite_avif/54/image/Santiago/00.avif",
@@ -2530,11 +2530,11 @@
     },
     {
       "id": "55",
-      "dataset_base": "lite",
-      "name": "Story 55",
+      "dataset_base": "Vistory",
+      "name": "Vistory 55",
       "story_type_en": "Science Fiction",
       "story_type_ch": "科幻",
-      "cover_image_path": "dataset_lite_avif/55/image/Captain Nemo/00.avif",
+      "cover_image_path": "dataset_lite_avif/55/image/Professor Aronnax/00.avif",
       "characters_en": [
         {
           "name": "Captain Nemo",
@@ -2582,8 +2582,8 @@
     },
     {
       "id": "56",
-      "dataset_base": "lite",
-      "name": "Story 56",
+      "dataset_base": "Vistory",
+      "name": "Vistory 56",
       "story_type_en": "Fairy Tales",
       "story_type_ch": "童话",
       "cover_image_path": "dataset_lite_avif/56/image/Hans/00.avif",
@@ -2610,11 +2610,11 @@
     },
     {
       "id": "57",
-      "dataset_base": "lite",
-      "name": "Story 57",
+      "dataset_base": "Vistory",
+      "name": "Vistory 57",
       "story_type_en": "Fairy Tales",
       "story_type_ch": "童话",
-      "cover_image_path": "dataset_lite_avif/57/image/Domestic Donkey/00.avif",
+      "cover_image_path": "dataset_lite_avif/57/image/Wild Donkey/00.avif",
       "characters_en": [
         {
           "name": "Domestic Donkey",
@@ -2646,11 +2646,11 @@
     },
     {
       "id": "58",
-      "dataset_base": "lite",
-      "name": "Story 58",
+      "dataset_base": "Vistory",
+      "name": "Vistory 58",
       "story_type_en": "Fairy Tales",
       "story_type_ch": "童话",
-      "cover_image_path": "dataset_lite_avif/58/image/Aunt Polly/00.avif",
+      "cover_image_path": "dataset_lite_avif/58/image/Tom/00.avif",
       "characters_en": [
         {
           "name": "Aunt Polly",
@@ -2698,8 +2698,8 @@
     },
     {
       "id": "59",
-      "dataset_base": "lite",
-      "name": "Story 59",
+      "dataset_base": "Vistory",
+      "name": "Vistory 59",
       "story_type_en": "Romance",
       "story_type_ch": "言情",
       "cover_image_path": "dataset_lite_avif/59/image/Bryce/00.avif",
@@ -2758,11 +2758,11 @@
     },
     {
       "id": "60",
-      "dataset_base": "lite",
-      "name": "Story 60",
+      "dataset_base": "Vistory",
+      "name": "Vistory 60",
       "story_type_en": "Ancient Chinese Novels",
       "story_type_ch": "中国古代小说",
-      "cover_image_path": "dataset_lite_avif/60/image/Guan Yu/00.avif",
+      "cover_image_path": "dataset_lite_avif/60/image/Liu Bei/00.avif",
       "characters_en": [
         {
           "name": "Guan Yu",
@@ -2794,8 +2794,8 @@
     },
     {
       "id": "61",
-      "dataset_base": "lite",
-      "name": "Story 61",
+      "dataset_base": "Vistory",
+      "name": "Vistory 61",
       "story_type_en": "Ancient Chinese Legends",
       "story_type_ch": "中国古代传说",
       "cover_image_path": "dataset_lite_avif/61/image/Niulang (Cowherd)/00.avif",
@@ -2838,11 +2838,11 @@
     },
     {
       "id": "62",
-      "dataset_base": "lite",
-      "name": "Story 62",
+      "dataset_base": "Vistory",
+      "name": "Vistory 62",
       "story_type_en": "Ancient Chinese Legends",
       "story_type_ch": "中国古代传说",
-      "cover_image_path": "dataset_lite_avif/62/image/Liang Shanbo/00.avif",
+      "cover_image_path": "dataset_lite_avif/62/image/Zhu Yingtai (female attire)/00.avif",
       "characters_en": [
         {
           "name": "Liang Shanbo",
@@ -2890,8 +2890,8 @@
     },
     {
       "id": "63",
-      "dataset_base": "lite",
-      "name": "Story 63",
+      "dataset_base": "Vistory",
+      "name": "Vistory 63",
       "story_type_en": "Chinese Folktales",
       "story_type_ch": "中国民间故事",
       "cover_image_path": "dataset_lite_avif/63/image/Afanti/00.avif",
@@ -2918,8 +2918,8 @@
     },
     {
       "id": "64",
-      "dataset_base": "lite",
-      "name": "Story 64",
+      "dataset_base": "Vistory",
+      "name": "Vistory 64",
       "story_type_en": "Modern and Contemporary China Novels",
       "story_type_ch": "中国近现代小说",
       "cover_image_path": "dataset_lite_avif/64/image/Ah Q/00.avif",
@@ -2962,11 +2962,11 @@
     },
     {
       "id": "65",
-      "dataset_base": "lite",
-      "name": "Story 65",
+      "dataset_base": "Vistory",
+      "name": "Vistory 65",
       "story_type_en": "Modern and Contemporary Chinese Story about Opera",
       "story_type_ch": "中国近现代戏曲故事",
-      "cover_image_path": "dataset_lite_avif/65/image/Cheng Dieyi/00.avif",
+      "cover_image_path": "dataset_lite_avif/65/image/Juxian/00.avif",
       "characters_en": [
         {
           "name": "Cheng Dieyi",
@@ -3030,11 +3030,11 @@
     },
     {
       "id": "66",
-      "dataset_base": "lite",
-      "name": "Story 66",
+      "dataset_base": "Vistory",
+      "name": "Vistory 66",
       "story_type_en": "Middle-Aged Romance",
       "story_type_ch": "中年言情",
-      "cover_image_path": "dataset_lite_avif/66/image/Barber/00.avif",
+      "cover_image_path": "dataset_lite_avif/66/image/Mo Sheng/00.avif",
       "characters_en": [
         {
           "name": "Barber",
@@ -3082,11 +3082,11 @@
     },
     {
       "id": "67",
-      "dataset_base": "lite",
-      "name": "Story 67",
+      "dataset_base": "Vistory",
+      "name": "Vistory 67",
       "story_type_en": "Medicine",
       "story_type_ch": "医学",
-      "cover_image_path": "dataset_lite_avif/67/image/College Roommate/00.avif",
+      "cover_image_path": "dataset_lite_avif/67/image/Director Lin/00.avif",
       "characters_en": [
         {
           "name": "College Roommate",
@@ -3150,8 +3150,8 @@
     },
     {
       "id": "68",
-      "dataset_base": "lite",
-      "name": "Story 68",
+      "dataset_base": "Vistory",
+      "name": "Vistory 68",
       "story_type_en": "Greek Mythology",
       "story_type_ch": "希腊神话",
       "cover_image_path": "dataset_lite_avif/68/image/Daedalus/00.avif",
@@ -3178,11 +3178,11 @@
     },
     {
       "id": "69",
-      "dataset_base": "lite",
-      "name": "Story 69",
+      "dataset_base": "Vistory",
+      "name": "Vistory 69",
       "story_type_en": "Greek Mythology Story",
       "story_type_ch": "希腊神话故事",
-      "cover_image_path": "dataset_lite_avif/69/image/Hercules/00.avif",
+      "cover_image_path": "dataset_lite_avif/69/image/Prometheus/00.avif",
       "characters_en": [
         {
           "name": "Hercules",
@@ -3214,11 +3214,11 @@
     },
     {
       "id": "70",
-      "dataset_base": "lite",
-      "name": "Story 70",
+      "dataset_base": "Vistory",
+      "name": "Vistory 70",
       "story_type_en": "Original Film and TV Scripts",
       "story_type_ch": "影视原文",
-      "cover_image_path": "dataset_lite_avif/70/image/Bubba/00.avif",
+      "cover_image_path": "dataset_lite_avif/70/image/Forrest Gump/00.avif",
       "characters_en": [
         {
           "name": "Bubba",
@@ -3266,11 +3266,11 @@
     },
     {
       "id": "71",
-      "dataset_base": "lite",
-      "name": "Story 71",
+      "dataset_base": "Vistory",
+      "name": "Vistory 71",
       "story_type_en": "Suspense",
       "story_type_ch": "悬疑",
-      "cover_image_path": "dataset_lite_avif/71/image/Aunt/00.avif",
+      "cover_image_path": "dataset_lite_avif/71/image/Me/00.avif",
       "characters_en": [
         {
           "name": "Aunt",
@@ -3342,8 +3342,8 @@
     },
     {
       "id": "72",
-      "dataset_base": "lite",
-      "name": "Story 72",
+      "dataset_base": "Vistory",
+      "name": "Vistory 72",
       "story_type_en": "Suspense",
       "story_type_ch": "悬疑",
       "cover_image_path": "dataset_lite_avif/72/image/Fang Fang/00.avif",
@@ -3394,11 +3394,11 @@
     },
     {
       "id": "73",
-      "dataset_base": "lite",
-      "name": "Story 73",
+      "dataset_base": "Vistory",
+      "name": "Vistory 73",
       "story_type_en": "Suspense",
       "story_type_ch": "悬疑",
-      "cover_image_path": "dataset_lite_avif/73/image/Li Xia/00.avif",
+      "cover_image_path": "dataset_lite_avif/73/image/Officer Feng/00.avif",
       "characters_en": [
         {
           "name": "Li Xia",
@@ -3446,11 +3446,11 @@
     },
     {
       "id": "74",
-      "dataset_base": "lite",
-      "name": "Story 74",
+      "dataset_base": "Vistory",
+      "name": "Vistory 74",
       "story_type_en": "Suspense",
       "story_type_ch": "悬疑",
-      "cover_image_path": "dataset_lite_avif/74/image/Kirihara/00.avif",
+      "cover_image_path": "dataset_lite_avif/74/image/Naoko/00.avif",
       "characters_en": [
         {
           "name": "Kirihara",
@@ -3490,11 +3490,11 @@
     },
     {
       "id": "75",
-      "dataset_base": "lite",
-      "name": "Story 75",
+      "dataset_base": "Vistory",
+      "name": "Vistory 75",
       "story_type_en": "War",
       "story_type_ch": "战争",
-      "cover_image_path": "dataset_lite_avif/75/image/Prince Andrei/00.avif",
+      "cover_image_path": "dataset_lite_avif/75/image/Tushin/00.avif",
       "characters_en": [
         {
           "name": "Prince Andrei",
@@ -3542,8 +3542,8 @@
     },
     {
       "id": "76",
-      "dataset_base": "lite",
-      "name": "Story 76",
+      "dataset_base": "Vistory",
+      "name": "Vistory 76",
       "story_type_en": "New Zealand Legends",
       "story_type_ch": "新西兰传说故事",
       "cover_image_path": "dataset_lite_avif/76/image/Maui/00.avif",
@@ -3570,11 +3570,11 @@
     },
     {
       "id": "77",
-      "dataset_base": "lite",
-      "name": "Story 77",
+      "dataset_base": "Vistory",
+      "name": "Vistory 77",
       "story_type_en": "Interstellar",
       "story_type_ch": "星际",
-      "cover_image_path": "dataset_lite_avif/77/image/Xiao Hui/00.avif",
+      "cover_image_path": "dataset_lite_avif/77/image/Ye Xiaobai/00.avif",
       "characters_en": [
         {
           "name": "Xiao Hui",
@@ -3598,11 +3598,11 @@
     },
     {
       "id": "78",
-      "dataset_base": "lite",
-      "name": "Story 78",
+      "dataset_base": "Vistory",
+      "name": "Vistory 78",
       "story_type_en": "Jewish Folktales",
       "story_type_ch": "犹太民间故事",
-      "cover_image_path": "dataset_lite_avif/78/image/False Mother/00.avif",
+      "cover_image_path": "dataset_lite_avif/78/image/King Solomon/00.avif",
       "characters_en": [
         {
           "name": "False Mother",
@@ -3634,11 +3634,11 @@
     },
     {
       "id": "79",
-      "dataset_base": "lite",
-      "name": "Story 79",
+      "dataset_base": "Vistory",
+      "name": "Vistory 79",
       "story_type_en": "Modern Romance",
       "story_type_ch": "现代言情",
-      "cover_image_path": "dataset_lite_avif/79/image/Jiao Jiao/00.avif",
+      "cover_image_path": "dataset_lite_avif/79/image/Jing Lan/00.avif",
       "characters_en": [
         {
           "name": "Jiao Jiao",
@@ -3686,11 +3686,11 @@
     },
     {
       "id": "80",
-      "dataset_base": "lite",
-      "name": "Story 80",
+      "dataset_base": "Vistory",
+      "name": "Vistory 80",
       "story_type_en": "Children's Picture Books",
       "story_type_ch": "儿童绘本",
-      "cover_image_path": "dataset_lite_avif/80/image/Butterfly/00.avif",
+      "cover_image_path": "dataset_lite_avif/80/image/Caterpillar/00.avif",
       "characters_en": [
         {
           "name": "Butterfly",

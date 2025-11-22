@@ -2,9 +2,19 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { readdir, readFile, writeFile, cp, mkdir, rm, stat } from 'node:fs/promises';
 import { extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+const PROJECT_ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
+const DATASET_SOURCE_DIR = join(PROJECT_ROOT_DIR, 'src', 'data');
+const DATASET_ASSET_OUTPUT = 'dataset_assets';
+const DATASET_FOLDERS_TO_COPY = [
+  'dataset_lite_avif',
+  'dataset_full_avif',
+  'dataset_lite',
+  'dataset_full',
+];
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,6 +23,7 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
   integrations: [
+    copyDatasetAssetsIntegration(),
     stripHtmlCommentsIntegration(),
   ],
   // 使用 vite 配置直接处理 tailwind
@@ -102,6 +113,56 @@ export default defineConfig({
   },
 });
 
+function copyDatasetAssetsIntegration() {
+  return {
+    name: 'copy-dataset-assets',
+    hooks: {
+      /**
+       * @param {{ dir: string | URL }} param0
+       */
+      'astro:build:done': async ({ dir }) => {
+        const distDir = typeof dir === 'string' ? dir : fileURLToPath(dir);
+        const destRoot = join(distDir, DATASET_ASSET_OUTPUT);
+        await mkdir(destRoot, { recursive: true });
+
+        await Promise.all(DATASET_FOLDERS_TO_COPY.map(async (datasetFolder) => {
+          const sourceDir = join(DATASET_SOURCE_DIR, datasetFolder);
+          let sourceStats;
+          try {
+            sourceStats = await stat(sourceDir);
+            if (!sourceStats.isDirectory()) {
+              return;
+            }
+          } catch (error) {
+            if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+              return;
+            }
+            throw error;
+          }
+
+          const targetDir = join(destRoot, datasetFolder);
+          let shouldCopy = true;
+          try {
+            const targetStats = await stat(targetDir);
+            if (targetStats.isDirectory() && targetStats.mtimeMs >= sourceStats.mtimeMs) {
+              shouldCopy = false;
+            }
+          } catch (targetError) {
+            if (!(targetError && typeof targetError === 'object' && 'code' in targetError && targetError.code === 'ENOENT')) {
+              throw targetError;
+            }
+          }
+
+          if (shouldCopy) {
+            await rm(targetDir, { recursive: true, force: true });
+            await cp(sourceDir, targetDir, { recursive: true });
+          }
+        }));
+      },
+    },
+  };
+}
+
 function stripHtmlCommentsIntegration() {
   // Avoid traversing extremely large static asset folders that only contain binary files.
   const SKIP_DIRECTORIES = new Set([
@@ -113,6 +174,7 @@ function stripHtmlCommentsIntegration() {
     'dataset_full_avif',
     'dataset_lite',
     'dataset_full',
+    'dataset_assets',
   ]);
   const MAX_DEPTH = 4;
 

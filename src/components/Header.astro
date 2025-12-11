@@ -1,22 +1,33 @@
 ---
 // src/components/Header.astro
+import { buildAssetPath } from '../utils/path.ts';
+
 export interface Props {
 	title?: string; // 允许外部传入页面标题
     activeNav?: string; // 用于高亮当前导航项，例如 'overview', 'leaderboard_detail'
+    assetBase?: string; // 用于在子路径部署时生成相对导航链接
 }
 
 const { 
     title = 'Storytelling Benchmark Overview & Leaderboard', // 默认标题
-    activeNav
+    activeNav,
+    assetBase,
 } = Astro.props;
 
-const base = "";
+const navLink = (target: string) => {
+    if (assetBase) {
+        return buildAssetPath(assetBase, target);
+    }
+    // 保持原有的根路径链接行为
+    return target ? `/${target}` : '/';
+};
+
 const navItems = [
-    { href: `${base}/`, key: "nav_overview", text: "Overview", id: "overview" },
-    { href: `${base}/leaderboard_detail`, key: "nav_leaderboard_detail", text: "Detailed Leaderboard", id: "leaderboard_detail" },
-    { href: `${base}/metrics`, key: "nav_metrics", text: "Metrics Definition", id: "metrics" },
-    { href: `${base}/dataset`, key: "nav_dataset", text: "Dataset", id: "dataset" },
-    { href: `${base}/story_detail`, key: "nav_explorer", text: "Result Explorer", id: "story_detail" },
+    { href: navLink(""), key: "nav_overview", text: "Overview", id: "overview" },
+    { href: navLink("leaderboard_detail"), key: "nav_leaderboard_detail", text: "Detailed Leaderboard", id: "leaderboard_detail" },
+    { href: navLink("metrics"), key: "nav_metrics", text: "Metrics Definition", id: "metrics" },
+    { href: navLink("dataset"), key: "nav_dataset", text: "Dataset", id: "dataset" },
+    { href: navLink("story_detail"), key: "nav_explorer", text: "Result Explorer", id: "story_detail" },
 ];
 ---
 {/* Always use dark background for header */}

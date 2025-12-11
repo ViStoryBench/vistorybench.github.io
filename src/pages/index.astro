@@ -10,48 +10,47 @@ const currentNav = "overview";
 // Data provided by user - CSV format for full, TSV for lite
 const fullDatasetCsvContent = `
 Method,model,mode,Character Consistency(CRef)_rank,Style Consistency(SRef)_rank,Prompt Alignment_rank,Generative Quality_rank,Diversity_rank,overall_rank,model_key
-Story image method,QwenImageEdit2509,base,5,4,1,5,5,1,Story image method - QwenImageEdit2509
-Story image method,StoryDiffusion,Original,6,5,6,3,1,2,Story image method - StoryDiffusion
-Story image method,OmniGen2,Base,2,2,2,7,9,3,Story image method - OmniGen2
-Story image method,UNO,Base,3,2,3,8,7,4,Story image method - UNO
-Story image method,StoryAdapter,ImgRef_Scale0,4,3,5,9,6,5,Story image method - StoryAdapter
-Story video method,MovieAgent,SD3,10,9,2,6,2,6,Story video method - MovieAgent
-Story video method,AnimDirector,SD3,8,9,2,4,8,7,Story video method - AnimDirector
-Story image method,CharaConsist,Base,14,8,4,2,4,8,Story image method - CharaConsist
-Story video method,MMStoryAgent,Base,9,6,8,1,11,9,Story video method - MMStoryAgent
-Naive baseline,NaiveBaseline,base,1,1,11,11,13,10,Naive baseline - NaiveBaseline
-Story image method,TheaterGen,Base,12,11,10,10,3,11,Story image method - TheaterGen
-Story image method,StoryGen,AutoRegressive,7,7,9,13,12,12,Story image method - StoryGen
-Story video method,Vlogger,ImgRef,11,10,7,12,10,13,Story video method - Vlogger
-Story image method,SeedStory,Base,13,5,12,14,14,14,Story image method - SeedStory
+Story image method,QwenImageEdit2509,base,5,3,1,5,5,1,Story image method - QwenImageEdit2509
+Story image method,StoryDiffusion,Original,4,4,7,3,1,1,Story image method - StoryDiffusion
+Story image method,OmniGen2,Base,1,1,3,7,9,2,Story image method - OmniGen2
+Story image method,UNO,Base,2,1,4,8,7,3,Story image method - UNO
+Story video method,MovieAgent,SD3,7,8,2,6,2,4,Story video method - MovieAgent
+Story image method,StoryAdapter,ImgRef_Scale0,3,2,6,9,6,5,Story image method - StoryAdapter
+Story video method,AnimDirector,SD3,5,8,2,4,8,6,Story video method - AnimDirector
+Story image method,CharaConsist,Base,9,7,5,2,4,6,Story image method - CharaConsist
+Story video method,MMStoryAgent,Base,6,5,9,1,11,7,Story video method - MMStoryAgent
+Story image method,TheaterGen,Base,7,10,11,10,3,8,Story image method - TheaterGen
+Story image method,StoryGen,AutoRegressive,6,6,10,12,12,9,Story image method - StoryGen
+Story video method,Vlogger,ImgRef,8,9,8,11,10,9,Story video method - Vlogger
+Story image method,SeedStory,Base,7,5,12,13,13,10,Story image method - SeedStory
 `.trim();
 
 const liteDatasetTsvContent = `
 Method,model,mode,Character Consistency(CRef)_rank,Style Consistency(SRef)_rank,Prompt Alignment_rank,Generative Quality_rank,Diversity_rank,overall_rank,model_key
-MLLM model,NanoBanana,Gemini2.5FlashImagePreview,6,6,2,7,9,1,MLLM model - NanoBanana
-MLLM model,GPT4o,Base,3,4,1,9,16,2,MLLM model - GPT4o
-Commercial platform,AIbrm,Base,4,3,12,5,15,3,Commercial platform - AIbrm
-Commercial platform,DouBao,Base,10,6,3,6,14,3,Commercial platform - DouBao
-Story image method,StoryDiffusion,Original,15,9,15,2,2,4,Story image method - StoryDiffusion
-Story image method,QwenImageEdit2509,base,9,10,7,10,8,5,Story image method - QwenImageEdit2509
-Story image method,CharaConsist,Base,15,11,9,4,7,6,Story image method - CharaConsist
-Story image method,OmniGen2,Base,4,5,6,13,19,7,Story image method - OmniGen2
-Story image method,UNO,Base,7,7,10,14,10,8,Story image method - UNO
-Commercial platform,Sora2,ALL_ImgRef,2,2,4,20,22,9,Commercial platform - Sora2
-Story image method,StoryAdapter,ImgRef_Scale0,8,7,11,19,5,9,Story image method - StoryAdapter
-Story video method,MovieAgent,SD3,13,14,9,12,3,10,Story video method - MovieAgent
-Commercial platform,TypeMovie,Base,11,11,14,11,6,11,Commercial platform - TypeMovie
-Story video method,AnimDirector,SD3,12,15,8,8,13,12,Story video method - AnimDirector
-Commercial platform,MorphicStudio,Base,5,6,12,16,17,12,Commercial platform - MorphicStudio
-Commercial platform,ShenBi,Base,16,15,6,15,4,12,Commercial platform - ShenBi
-MLLM model,Gemini,Base,14,13,5,18,12,13,MLLM model - Gemini
-Commercial platform,MOKI,Base,19,12,19,3,11,14,Commercial platform - MOKI
-Naive baseline,NaiveBaseline,base,1,1,20,21,23,15,Naive baseline - NaiveBaseline
-Story video method,MMStoryAgent,Base,18,12,16,1,20,16,Story video method - MMStoryAgent
-Story image method,TheaterGen,Base,19,17,18,17,1,17,Story image method - TheaterGen
-Story image method,StoryGen,AutoRegressive,12,12,17,23,21,18,Story image method - StoryGen
-Story video method,Vlogger,ImgRef,17,16,13,22,18,19,Story video method - Vlogger
-Story image method,SeedStory,Base,19,8,21,24,24,20,Story image method - SeedStory
+MLLM model,NanoBanana,Gemini2.5FlashImagePreview,6,5,1,7,10,1,MLLM model - NanoBanana
+Commercial platform,DouBao,Base,8,6,3,6,15,2,Commercial platform - DouBao
+Story image method,StoryDiffusion,Original,10,9,16,2,2,3,Story image method - StoryDiffusion
+Commercial platform,AIbrm,Base,4,2,13,5,16,4,Commercial platform - AIbrm
+Story image method,QwenImageEdit2509,base,11,9,6,10,9,5,Story image method - QwenImageEdit2509
+Story image method,CharaConsist,Base,17,10,7,4,8,6,Story image method - CharaConsist
+MLLM model,GPT4o,Base,16,3,2,9,17,7,MLLM model - GPT4o
+MLLM model,Seedream4,base,17,10,5,13,3,8,MLLM model - Seedream4
+Story image method,UNO,Base,7,7,10,15,11,9,Story image method - UNO
+MLLM model,Gemini,Base,3,12,4,19,13,10,MLLM model - Gemini
+Story image method,OmniGen2,Base,4,4,9,14,20,10,Story image method - OmniGen2
+Commercial platform,TypeMovie,Base,9,10,14,11,7,10,Commercial platform - TypeMovie
+Story video method,MovieAgent,SD3,13,13,11,12,4,11,Story video method - MovieAgent
+MLLM model,Sora2,ALL_ImgRef,1,1,8,21,23,12,MLLM model - Sora2
+Story image method,StoryAdapter,ImgRef_Scale0,9,7,12,20,6,12,Story image method - StoryAdapter
+Commercial platform,MorphicStudio,Base,2,5,13,17,18,13,Commercial platform - MorphicStudio
+Story video method,AnimDirector,SD3,12,14,8,8,14,14,Story video method - AnimDirector
+Commercial platform,ShenBi,Base,15,14,6,16,5,14,Commercial platform - ShenBi
+Commercial platform,MOKI,Base,14,11,20,3,12,15,Commercial platform - MOKI
+Story video method,MMStoryAgent,Base,14,11,18,1,21,16,Story video method - MMStoryAgent
+Story image method,TheaterGen,Base,17,16,19,18,1,17,Story image method - TheaterGen
+Story image method,SeedStory,Base,5,8,17,24,24,18,Story image method - SeedStory
+Story image method,StoryGen,AutoRegressive,11,11,19,23,22,19,Story image method - StoryGen
+Story video method,Vlogger,ImgRef,17,15,15,22,19,20,Story video method - Vlogger
 `.trim();
 
 interface DataRow {

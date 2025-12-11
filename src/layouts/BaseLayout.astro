@@ -2,25 +2,26 @@
 // src/layouts/BaseLayout.astro
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { buildAssetPath } from '../utils/path.ts';
 import '../styles/global.css'; // 我们稍后会创建这个文件，或者直接使用 Tailwind 的 base/components/utilities
 
 export interface Props {
 	title?: string; // Passed to Header
     activeNav?: string; // Passed to Header to highlight the current page
+    assetBase?: string; // Optional base path for static assets when hosted in a subdirectory
     // Add other props that all pages might need from the layout
 }
 
 const { 
     title, // This will be the specific page title from the page frontmatter
-    activeNav 
+    activeNav,
+    assetBase,
 } = Astro.props;
 
-const base = import.meta.env.BASE_URL; 
-// Ensure no double slashes if base ends with / and path starts with /
-// Though for public assets, paths like "/js/main.js" are usually resolved correctly by Astro by prepending base.
-// This explicit construction is a fallback if auto-resolution isn't working as expected in preview.
-const mainJsPathWithBase = `${base.replace(/\/$/, '')}/js/main.js`.replace(/\/\//g, '/'); 
-const faviconPathWithBase = `${base.replace(/\/$/, '')}/favicon.png`.replace(/\/\//g, '/');
+const base = assetBase ?? import.meta.env.BASE_URL;
+// Build asset URLs using the provided assetBase (for nested routes) or the site base.
+const mainJsPathWithBase = buildAssetPath(base, 'js/main.js');
+const faviconPathWithBase = buildAssetPath(base, 'favicon.png');
 ---
 <!DOCTYPE html>
 <html lang="en"> {/* The lang attribute will be dynamically set by main.js */}
@@ -34,7 +35,7 @@ const faviconPathWithBase = `${base.replace(/\/$/, '')}/favicon.png`.replace(/\/
     <title>{title || 'Storytelling Benchmark'}</title> 
 </head>
 <body class="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-200 font-sans flex flex-col min-h-screen transition-colors duration-300 ease-in-out">
-    <Header title={title} activeNav={activeNav} />
+    <Header title={title} activeNav={activeNav} assetBase={assetBase} />
     <main class="flex-grow">
         <slot /> {/* Page content will be injected here */}
     </main>

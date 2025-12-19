@@ -47,6 +47,8 @@ export const translations = {
         character_ref: "Character Reference",
         generated_output: "Generated Output for [Model Name]",
         select_models: "Compare Models:",
+        select_all_models: "Select All",
+        deselect_all_models: "Deselect All",
         shot: "Shot",
         shot_current_of_total: "Shot [Current Shot] of [Total Shots]",
         prev_shot: "Previous Shot",
@@ -206,6 +208,8 @@ export const translations = {
         script_perspective: "镜头视角设计",
         script_static_desc: "静态镜头描述",
         filter_models_title: "筛选模型：",
+        select_all_models: "全选",
+        deselect_all_models: "取消全选",
         no_models_to_filter: "没有可筛选的模型。",
         no_models_selected_msg: "没有选择要显示的模型。请使用上方的筛选器选择。"
     }

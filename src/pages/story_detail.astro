@@ -139,10 +139,60 @@ const storyIdMap = {
   lite: ["01", "08", "09", "15", "17", "19", "24", "27", "28", "29", "32", "41", "52", "53", "55", "57", "60", "64", "68", "79"],
   full: Array.from({ length: 80 }, (_, i) => (i + 1).toString().padStart(2, '0'))
 };
-const modelKeyMap = {
-  lite:['Sora2','Seedream4','CharaConsist','QwenImageEdit2509','GPT4o','Gemini','NaiveBaseline','OmniGen2','NanoBanana','StoryDiffusion', 'StoryAdapter', 'StoryGen', 'UNO', 'TheaterGen', 'SeedStory', 'Vlogger', 'MovieAgent', 'AnimDirector', 'MMStoryAgent', 'MOKI', 'MorphicStudio', 'AIbrm', 'ShenBi', 'TypeMovie', 'DouBao'],
-  full:['CharaConsist','QwenImageEdit2509','NaiveBaseline','OmniGen2','StoryDiffusion', 'StoryAdapter', 'StoryGen', 'UNO', 'TheaterGen', 'SeedStory', 'Vlogger', 'MovieAgent', 'AnimDirector', 'MMStoryAgent']
+const rankedModelOrder = [
+  'NanoBanana',
+  'GPT4o',
+  'Seedream4',
+  'Gemini',
+  'Sora2',
+  'StoryDiffusion',
+  'QwenImageEdit2509',
+  'CharaConsist',
+  'UNO',
+  'OmniGen2',
+  'StoryAdapter',
+  'TheaterGen',
+  'SeedStory',
+  'StoryGen',
+  'MovieAgent',
+  'AnimDirector',
+  'MMStoryAgent',
+  'Vlogger'
+];
 
+const unrankedModelOrder = [
+  'NaiveBaseline',
+  'MOKI',
+  'MorphicStudio',
+  'AIbrm',
+  'ShenBi',
+  'TypeMovie',
+  'DouBao'
+];
+
+const fullModeModelKeys = [
+  'CharaConsist',
+  'QwenImageEdit2509',
+  'NaiveBaseline',
+  'OmniGen2',
+  'StoryDiffusion',
+  'StoryAdapter',
+  'StoryGen',
+  'UNO',
+  'TheaterGen',
+  'SeedStory',
+  'Vlogger',
+  'MovieAgent',
+  'AnimDirector',
+  'MMStoryAgent'
+];
+
+const modelKeyMap = {
+  lite: [...rankedModelOrder, ...unrankedModelOrder],
+  full: [
+    ...rankedModelOrder.filter(key => fullModeModelKeys.includes(key)),
+    ...fullModeModelKeys.filter(key => !rankedModelOrder.includes(key))
+  ]
 };
 let allAvailableStories = []; // To store all stories from manifest initially
 
@@ -188,6 +238,7 @@ const modelResultsArea = document.getElementById('model-results-area');
 const prevShotBtn = document.getElementById('prev-shot-btn');
 const nextShotBtn = document.getElementById('next-shot-btn');
 const modelVisibilitySelectorSection = document.getElementById('model-visibility-selector-section'); // ADDED
+let selectAllToggleBtn = null;
 
 
 // --- Data Fetching ---
@@ -464,12 +515,62 @@ async function updateCharacterReferences() {
   });
 }
 
+const modelButtonClassNames = {
+  selected: 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-sky-600 text-white border-sky-700 hover:bg-sky-700 dark:bg-sky-500 dark:border-sky-600 dark:hover:bg-sky-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800',
+  unselected: 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-500 dark:hover:bg-slate-600 shadow focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800'
+};
+
+function setModelButtonStyle(buttonElement, isSelected) {
+  if (!buttonElement) return;
+  buttonElement.className = isSelected ? modelButtonClassNames.selected : modelButtonClassNames.unselected;
+}
+
+function getOrderedModelsForMode(mode) {
+  const preferredOrder = modelKeyMap[mode] || [];
+  if (!outputsIndex || typeof outputsIndex !== 'object') {
+    return [];
+  }
+  const availableModelKeys = new Set(Object.keys(outputsIndex));
+  return preferredOrder.filter(key => availableModelKeys.has(key));
+}
+
+function areAllModelsSelected() {
+  const modelsToDisplay = getOrderedModelsForMode(currentDisplayMode);
+  return modelsToDisplay.length > 0 && modelsToDisplay.every(modelKey => selectedModels.has(modelKey));
+}
+
+function updateSelectAllToggleButtonLabel() {
+  if (!selectAllToggleBtn) return;
+  const currentUiLang = document.documentElement.lang || 'en';
+  const allSelected = areAllModelsSelected();
+  const labelKey = allSelected ? 'deselect_all_models' : 'select_all_models';
+  const labelText = initialTranslations[currentUiLang]?.[labelKey] || initialTranslations.en?.[labelKey] || (allSelected ? 'Deselect All' : 'Select All');
+  selectAllToggleBtn.textContent = labelText;
+  selectAllToggleBtn.setAttribute('data-lang-key', labelKey);
+}
+
+function setAllModelsSelected(shouldSelect) {
+  const modelsToDisplay = getOrderedModelsForMode(currentDisplayMode);
+  modelsToDisplay.forEach(modelKey => {
+    if (shouldSelect) {
+      selectedModels.add(modelKey);
+    } else {
+      selectedModels.delete(modelKey);
+    }
+    const button = modelVisibilitySelectorSection?.querySelector(`button[data-model-key="${modelKey}"]`);
+    setModelButtonStyle(button, selectedModels.has(modelKey));
+  });
+  updateSelectAllToggleButtonLabel();
+  updateVisibleModels();
+}
+
 function createModelVisibilitySelector() {
   if (!modelVisibilitySelectorSection) {
     console.error("Model visibility selector section not found in DOM.");
     return;
   }
-  modelVisibilitySelectorSection.innerHTML = ''; 
+  modelVisibilitySelectorSection.innerHTML = '';
+  selectAllToggleBtn = null;
 
   if (!outputsIndex || Object.keys(outputsIndex).length === 0) {
     console.warn("Cannot create model visibility selector: outputs index missing, invalid, or no outputs defined.");
@@ -479,8 +580,7 @@ function createModelVisibilitySelector() {
   }
 
   const currentUiLang = document.documentElement.lang || 'en';
-  const modelKeysForCurrentMode = modelKeyMap[currentDisplayMode];
-  const modelsToDisplay = Object.keys(outputsIndex || {}).filter(key => modelKeysForCurrentMode.includes(key));
+  const modelsToDisplay = getOrderedModelsForMode(currentDisplayMode);
 
   if (modelsToDisplay.length === 0) {
       const noModelsMsg = initialTranslations[currentUiLang]?.['no_models_for_mode'] || initialTranslations.en?.['no_models_for_mode'] || `No models configured for ${currentDisplayMode} mode.`;
@@ -488,12 +588,29 @@ function createModelVisibilitySelector() {
       return;
   }
 
+  const contentWrapper = document.createElement('div');
+  contentWrapper.className = 'flex flex-col gap-4 w-full';
+
+  const headerRow = document.createElement('div');
+  headerRow.className = 'flex flex-wrap items-center gap-3';
+
   const titleEl = document.createElement('h3');
   titleEl.className = 'text-xl font-semibold text-sky-800 dark:text-sky-300';
   const selectorTitleKey = 'filter_models_title';
   titleEl.textContent = initialTranslations[currentUiLang]?.[selectorTitleKey] || initialTranslations.en?.[selectorTitleKey] || "Filter Models:";
-  titleEl.setAttribute('data-lang-key', selectorTitleKey); 
-  modelVisibilitySelectorSection.appendChild(titleEl);
+  titleEl.setAttribute('data-lang-key', selectorTitleKey);
+  headerRow.appendChild(titleEl);
+
+  selectAllToggleBtn = document.createElement('button');
+  selectAllToggleBtn.type = 'button';
+  selectAllToggleBtn.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-white text-slate-700 border-slate-300 hover:bg-slate-100 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-500 dark:hover:bg-slate-600 shadow focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800';
+  selectAllToggleBtn.addEventListener('click', () => {
+    const shouldSelectAll = !areAllModelsSelected();
+    setAllModelsSelected(shouldSelectAll);
+  });
+  headerRow.appendChild(selectAllToggleBtn);
+
+  contentWrapper.appendChild(headerRow);
 
   const buttonContainer = document.createElement('div');
   buttonContainer.className = 'flex flex-wrap gap-3';
@@ -511,27 +628,24 @@ function createModelVisibilitySelector() {
     button.setAttribute('data-model-key', modelKey);
     button.setAttribute('data-lang-model-name-key', modelNameKey); 
     
-    // Updated button styling
-    if (selectedModels.has(modelKey)) {
-        button.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-sky-600 text-white border-sky-700 hover:bg-sky-700 dark:bg-sky-500 dark:border-sky-600 dark:hover:bg-sky-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800'; 
-    } else {
-        button.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-500 dark:hover:bg-slate-600 shadow focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800';
-    }
+    setModelButtonStyle(button, selectedModels.has(modelKey));
     
     button.addEventListener('click', () => handleModelVisibilityToggle(modelKey, button));
     buttonContainer.appendChild(button);
   });
-  modelVisibilitySelectorSection.appendChild(buttonContainer);
+  contentWrapper.appendChild(buttonContainer);
+  modelVisibilitySelectorSection.appendChild(contentWrapper);
+  updateSelectAllToggleButtonLabel();
 }
 
 function handleModelVisibilityToggle(modelKey, buttonElement) {
   if (selectedModels.has(modelKey)) {
     selectedModels.delete(modelKey);
-    buttonElement.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-500 dark:hover:bg-slate-600 shadow focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800';
   } else {
     selectedModels.add(modelKey);
-    buttonElement.className = 'py-2 px-4 border rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 ease-in-out bg-sky-600 text-white border-sky-700 hover:bg-sky-700 dark:bg-sky-500 dark:border-sky-600 dark:hover:bg-sky-600 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800';
   }
+  setModelButtonStyle(buttonElement, selectedModels.has(modelKey));
+  updateSelectAllToggleButtonLabel();
   updateVisibleModels();
 }
 
@@ -604,13 +718,8 @@ async function populateModelContainers() {
     return;
   }
 
-  let hasModelsToDisplay = false;
-  const modelKeysForCurrentMode = modelKeyMap[currentDisplayMode];
-  const modelsToIterate = Object.keys(outputsIndex || {}).filter(key => modelKeysForCurrentMode.includes(key));
-
-  if (modelsToIterate.length > 0) {
-      hasModelsToDisplay = true;
-  }
+  const modelsToIterate = getOrderedModelsForMode(currentDisplayMode);
+  const hasModelsToDisplay = modelsToIterate.length > 0;
 
   if (!hasModelsToDisplay) {
     const noModelsMsg = initialTranslations[currentLang]?.['no_models_configured_for_mode'] || initialTranslations.en?.['no_models_configured_for_mode'] || `No models configured for ${currentDisplayMode} mode in the manifest.`;
@@ -1306,10 +1415,8 @@ async function initializeExplorer() {
     
     // Initialize selected models from outputs index based on mode
     if (outputsIndex && typeof outputsIndex === 'object') {
-        const modelKeysForInitialMode = modelKeyMap[currentDisplayMode];
-        Object.keys(outputsIndex)
-              .filter(key => modelKeysForInitialMode.includes(key))
-              .forEach(modelKey => selectedModels.add(modelKey));
+        getOrderedModelsForMode(currentDisplayMode)
+          .forEach(modelKey => selectedModels.add(modelKey));
     } else {
         console.warn("initializeExplorer: outputsIndex is missing or invalid. selectedModels will be empty.");
     }
@@ -1392,10 +1499,8 @@ async function switchDisplayMode(newMode) {
     // Re-populate selectedModels based on the new mode using outputs index
     let modelKeysForNewMode = [];
     if (outputsIndex && typeof outputsIndex === 'object') {
-        modelKeysForNewMode = modelKeyMap[currentDisplayMode];
-        Object.keys(outputsIndex)
-              .filter(key => modelKeysForNewMode.includes(key))
-              .forEach(modelKey => selectedModels.add(modelKey));
+        modelKeysForNewMode = getOrderedModelsForMode(currentDisplayMode);
+        modelKeysForNewMode.forEach(modelKey => selectedModels.add(modelKey));
     } else {
         console.warn("switchDisplayMode: outputsIndex is missing or invalid.");
     }
